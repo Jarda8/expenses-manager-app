@@ -9,6 +9,12 @@ import { AddTransactionControls } from './AddTransactionControls'
 
 export default class MainContentPieChart extends Component {
 
+  static route = {
+    navigationBar: {
+      title: 'Expenses Bar Chart'
+    },
+  }
+
   constructor(props : any) {
     super(props);
 
@@ -19,16 +25,16 @@ export default class MainContentPieChart extends Component {
     // TODO udělat podtřídy pro každý typ grafu/tabulky/whatever a tenhle if odstranit
     this.state.data = [
           [{
-              "v": 700,
+              "amount": 700,
               "name": "1. týden"
           }, {
-              "v": 1500,
+              "amount": 1500,
               "name": "2. týden"
           }, {
-              "v": 900,
+              "amount": 900,
               "name": "3. týden"
           }, {
-              "v": 3000,
+              "amount": 3000,
               "name": "4. týden"
           }]
       ];

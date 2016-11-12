@@ -49,7 +49,7 @@ export class ExpensesBarchart extends Component {
             <Bar
               data={this.props.data}
               options={options}
-              accessorKey="v" />
+              accessorKey="amount" />
         );
     }
 }

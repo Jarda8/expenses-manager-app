@@ -10,7 +10,7 @@
     "exponent": "~11.0.0",
     "react": "~15.3.2",
     "react-native": "github:exponentjs/react-native#sdk-11.0.0",
-    "react-native-pathjs-charts": "0.0.20"
+    "react-native-pathjs-charts": "~0.0.21"
   },
   "devDependencies": {
     "flow-bin": "^0.34.0"

@@ -9,6 +9,12 @@ import { AddTransactionControls } from './AddTransactionControls'
 
 export default class MainContentPieChart extends Component {
 
+  static route = {
+    navigationBar: {
+      title: 'Expenses Pie Chart'
+    },
+  }
+
   constructor(props : any) {
     super(props);
 

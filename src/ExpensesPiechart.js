@@ -16,7 +16,6 @@ export class ExpensesPiechart extends Component {
           width: 300,
           height: 300,
           color: '#2980B9',
-          center: [170, 170],
           r: 50,
           R: 100,
           legendPosition: 'topLeft',
@@ -27,9 +26,9 @@ export class ExpensesPiechart extends Component {
           },
           label: {
               fontFamily: 'Arial',
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: true,
-              color: '#ECF0F1'
+              color: '#000'
           }
       }
 
