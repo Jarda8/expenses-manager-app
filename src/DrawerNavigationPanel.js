@@ -10,7 +10,7 @@ import {
   DrawerNavigation,
   DrawerNavigationItem,
 } from '@exponent/ex-navigation';
-import { Foundation } from '@exponent/vector-icons';
+import { Foundation, MaterialIcons } from '@exponent/vector-icons';
 
 import { Router } from '../main';
 
@@ -30,13 +30,24 @@ export default class DrawerNavigationPanel extends Component {
 
   _renderIcon = (name: string, isSelected: bool) => {
     let extraStyle = {marginTop: 2};
-    return (
-      <Foundation
-        style={[styles.icon, isSelected ? styles.selectedText : null, extraStyle]}
-        name={name}
-        size={24}
-      />
-    );
+    if (name === "account-balance-wallet") {
+      return (
+        <MaterialIcons
+          style={[styles.icon, isSelected ? styles.selectedText : null, extraStyle]}
+          name={name}
+          size={24}
+        />
+      )
+    }
+    else {
+      return (
+        <Foundation
+          style={[styles.icon, isSelected ? styles.selectedText : null, extraStyle]}
+          name={name}
+          size={24}
+        />
+      );
+    }
   };
 
   render() {
@@ -70,6 +81,16 @@ export default class DrawerNavigationPanel extends Component {
           <StackNavigation
             id="barChart"
             initialRoute={Router.getRoute('barChart')}
+          />
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
+          id="accountsItem"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Accounts', isSelected)}
+          renderIcon={isSelected => this._renderIcon('account-balance-wallet', isSelected)}>
+          <StackNavigation
+            id="accounts"
+            initialRoute={Router.getRoute('accounts')}
           />
         </DrawerNavigationItem>
       </DrawerNavigation>

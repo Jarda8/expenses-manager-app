@@ -12,7 +12,7 @@ import { Ionicons } from '@exponent/vector-icons';
 //   onClick: () => void,
 // };
 
-export class TimeNavigation extends Component {
+export default class TimeNavigation extends Component {
 
   // declare props (default props a tak)
 
@@ -43,9 +43,9 @@ const months = ["leden", "únor", "březen", "duben", "květen", "červen", "če
 
 const styles = StyleSheet.create({
   timeNavigation: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+    backgroundColor: 'bisque'
   }
 });

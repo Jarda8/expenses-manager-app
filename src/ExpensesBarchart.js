@@ -5,7 +5,7 @@ import { Bar } from 'react-native-pathjs-charts'
 export class ExpensesBarchart extends Component {
   render() {
     var data;
-    if (this.props.date.getMonth() === 10) {
+    if (this.props.date.getMonth() === 10 && this.props.category == "vše") {
       data = [
         [{
           "amount": 700,
@@ -21,7 +21,7 @@ export class ExpensesBarchart extends Component {
           "name": "4. týden"
         }]
       ];
-    } else if (this.props.date.getMonth() === 11) {
+    } else if (this.props.date.getMonth() === 11 && this.props.category == "vše") {
       data = [
         [{
           "amount": 1000,
@@ -34,6 +34,38 @@ export class ExpensesBarchart extends Component {
           "name": "3. týden"
         }, {
           "amount": 700,
+          "name": "4. týden"
+        }]
+      ];
+    } else if (this.props.date.getMonth() === 10 && this.props.category == "potraviny") {
+      data = [
+        [{
+          "amount": 300,
+          "name": "1. týden"
+        }, {
+          "amount": 500,
+          "name": "2. týden"
+        }, {
+          "amount": 400,
+          "name": "3. týden"
+        }, {
+          "amount": 480,
+          "name": "4. týden"
+        }]
+      ];
+    } else if (this.props.date.getMonth() === 11 && this.props.category == "potraviny") {
+      data = [
+        [{
+          "amount": 500,
+          "name": "1. týden"
+        }, {
+          "amount": 450,
+          "name": "2. týden"
+        }, {
+          "amount": 600,
+          "name": "3. týden"
+        }, {
+          "amount": 350,
           "name": "4. týden"
         }]
       ];

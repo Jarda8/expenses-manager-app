@@ -3,23 +3,28 @@ import Exponent from 'exponent';
 import React, { Component } from 'react';
 import { StatusBar } from 'react-native';
 import { createRouter, NavigationProvider, } from '@exponent/ex-navigation';
+import { FormattedWrapper } from 'react-native-globalize';
 
 import DrawerNavigationPanel from './src/DrawerNavigationPanel'
-import MainContentPieChart from './src/MainContentPieChart'
-import MainContentBarChart from './src/MainContentBarChart'
+import ExpensesPieChartView from './src/ExpensesPieChartView'
+import ExpensesBarChartView from './src/ExpensesBarChartView'
+import AccountsView from './src/AccountsView'
 
 export const Router = createRouter(() => ({
-  pieChart: () => MainContentPieChart,
-  barChart: () => MainContentBarChart
+  pieChart: () => ExpensesPieChartView,
+  barChart: () => ExpensesBarChartView,
+  accounts: () => AccountsView
 }));
 
 class App extends Component {
   render() {
     return (
-      <NavigationProvider router={Router}>
-        <StatusBar barStyle="light-content" />
-        <DrawerNavigationPanel />
-      </NavigationProvider>
+      <FormattedWrapper locale="cs" currency="CZK">
+        <NavigationProvider router={Router}>
+          <StatusBar barStyle="light-content" />
+          <DrawerNavigationPanel />
+        </NavigationProvider>
+      </FormattedWrapper>
     );
   }
 }

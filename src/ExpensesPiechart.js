@@ -7,64 +7,61 @@ export class ExpensesPiechart extends Component {
     var data;
     if (this.props.date.getMonth() === 10) {
       data = [{
-        "name": "Alagoas",
-        "population": 1962903
+        "name": "potraviny",
+        "amount": 2500
       }, {
-        "name": "Maranhão",
-        "population": 2805387
+        "name": "oblečení",
+        "amount": 1200
       }, {
-        "name": "São Paulo",
-        "population": 6460102
+        "name": "doprava",
+        "amount": 600
       }, {
-        "name": "Goiás",
-        "population": 4157509
+        "name": "zábava",
+        "amount": 1000
       }, {
-        "name": "Sergipe",
-        "population": 2637097
+        "name": "domácí mazlíčci",
+        "amount": 500
       }, {
-        "name": "Rondônia",
-        "population": 3552899
+        "name": "zdraví",
+        "amount": 300
       }];
     } else if (this.props.date.getMonth() === 11) {
       data = [{
-        "name": "Alagoas",
-        "population": 196290
+        "name": "potraviny",
+        "amount": 2800
       }, {
-        "name": "Maranhão",
-        "population": 2387
+        "name": "doprava",
+        "amount": 750
       }, {
-        "name": "São Paulo",
-        "population": 4460102
+        "name": "zábava",
+        "amount": 600
       }, {
-        "name": "Goiás",
-        "population": 4687509
+        "name": "domácí mazlíčci",
+        "amount": 500
       }, {
-        "name": "Sergipe",
-        "population": 263709
-      }, {
-        "name": "Rondônia",
-        "population": 355289
+        "name": "dárky",
+        "amount": 450
       }];
     }
 
     var options = {
       margin: {
-        top: 20,
-        left: 20,
-        right: 20,
-        bottom: 20
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
       },
       width: 300,
       height: 300,
       color: '#2980B9',
       r: 50,
-      R: 100,
+      R: 120,
       legendPosition: 'topLeft',
-      animate: {
-        type: 'oneByOne',
-        duration: 200,
-        fillTransition: 3
-      },
+      // animate: {
+      //   type: 'oneByOne',
+      //   duration: 200,
+      //   fillTransition: 3
+      // },
       label: {
         fontFamily: 'Arial',
         fontSize: 12,
@@ -77,7 +74,7 @@ export class ExpensesPiechart extends Component {
       <Pie
         data={data}
         options={options}
-        accessorKey="population" />
+        accessorKey="amount" />
     );
   }
 }

@@ -1,10 +1,10 @@
 /* @flow */
 import React, { Component } from 'react';
 
-import MainContent from './MainContent'
+import ExpensesView from './ExpensesView'
 import { ExpensesPiechart } from './ExpensesPiechart'
 
-export default class MainContentPieChart extends Component {
+export default class ExpensesPieChartView extends Component {
 
   static route = {
     navigationBar: {
@@ -14,9 +14,9 @@ export default class MainContentPieChart extends Component {
 
   render() {
     return (
-      <MainContent>
+      <ExpensesView>
         <ExpensesPiechart/>
-      </MainContent>
+      </ExpensesView>
     );
   }
 }
