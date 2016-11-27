@@ -8,12 +8,12 @@ import { FormattedWrapper } from 'react-native-globalize';
 import DrawerNavigationPanel from './src/DrawerNavigationPanel'
 import ExpensesPieChartView from './src/ExpensesPieChartView'
 import ExpensesBarChartView from './src/ExpensesBarChartView'
-import AccountsView from './src/AccountsView'
+import AccountsListView from './src/AccountsListView'
 
 export const Router = createRouter(() => ({
   pieChart: () => ExpensesPieChartView,
   barChart: () => ExpensesBarChartView,
-  accounts: () => AccountsView
+  accounts: () => AccountsListView
 }));
 
 class App extends Component {
