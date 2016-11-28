@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
-import TimeNavigation from './TimeNavigation'
-import { AddTransactionControls } from './AddTransactionControls'
-import { ExpensesCategories } from './Categories'
-import CategorySelector from './CategorySelector'
-import Balance from './Balance'
+import TimeNavigation from './TimeNavigation';
+import { AddTransactionControls } from './AddTransactionControls';
+import { ExpensesCategories } from './Categories';
+import CategorySelector from './CategorySelector';
+import Balance from './Balance';
 
 export default class ExpensesView extends Component {
 
@@ -35,6 +35,7 @@ export default class ExpensesView extends Component {
   }
 
   handleCategoryChange(category : string) {
+    console.log('handleCategoryChange v ExpensesView');
     this.setState({category: category});
   }
 
@@ -56,6 +57,7 @@ export default class ExpensesView extends Component {
   }
 
   render() {
+    console.log('ExpensesView render');
     return (
       <View style={styles.expensesView}>
         <View style={styles.timeNavigation}>
@@ -64,7 +66,7 @@ export default class ExpensesView extends Component {
         <View style={styles.balance}>
           <Balance balance={this.state.balance} />
         </View>
-        <View style={styles.chart}>
+        <View style={styles.content}>
           {this.renderChild()}
         </View>
         <View style={styles.addTransactionControls}>
@@ -85,9 +87,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'powderblue',
     justifyContent: "center",
   },
-  chart: {
+  content: {
     flex: 4,
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "space-around",
     backgroundColor: 'skyblue'
   },

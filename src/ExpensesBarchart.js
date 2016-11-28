@@ -1,6 +1,7 @@
 /* @flow */
 import React, { Component } from 'react';
-import { Bar } from 'react-native-pathjs-charts'
+import { Bar } from 'react-native-pathjs-charts';
+import { View, StyleSheet } from 'react-native';
 
 export class ExpensesBarchart extends Component {
   render() {
@@ -112,10 +113,18 @@ export class ExpensesBarchart extends Component {
     };
 
     return (
+    <View style={styles.chart}>
       <Bar
         data={data}
         options={options}
         accessorKey="amount" />
+    </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  chart: {
+    alignItems: 'center'
+  }
+});

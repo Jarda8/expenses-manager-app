@@ -18,7 +18,6 @@ export default class CategorySelector extends Component {
   // declare props (default props a tak)
 
   handleCategorySelect(category: string) {
-    console.log("category: " + category);
     this.props.onCategoryChange(category);
   }
 
@@ -48,7 +47,8 @@ const styles = StyleSheet.create({
   pickerView: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'aquamarine'
+    backgroundColor: 'aquamarine',
+    justifyContent: 'center'
   },
   picker: {
     width: 160,

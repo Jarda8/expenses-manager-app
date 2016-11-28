@@ -1,6 +1,7 @@
 /* @flow */
 import React, { Component } from 'react';
-import { Pie } from 'react-native-pathjs-charts'
+import { Pie } from 'react-native-pathjs-charts';
+import { View, StyleSheet } from 'react-native';
 
 export class ExpensesPiechart extends Component {
   render() {
@@ -71,10 +72,18 @@ export class ExpensesPiechart extends Component {
     }
 
     return (
+    <View style={styles.chart}>
       <Pie
         data={data}
         options={options}
         accessorKey="amount" />
+    </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  chart: {
+    alignItems: 'center'
+  }
+});

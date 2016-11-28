@@ -60,7 +60,7 @@ export default class DrawerNavigationPanel extends Component {
         <DrawerNavigationItem
           id="pieChartItem"
           selectedStyle={styles.selectedItemStyle}
-          renderTitle={isSelected => this._renderTitle('Expenses Pie Chart', isSelected)}
+          renderTitle={isSelected => this._renderTitle('Výdaje', isSelected)}
           renderIcon={isSelected => this._renderIcon('graph-pie', isSelected)}>
           <StackNavigation
             id="pieChart"
@@ -76,7 +76,7 @@ export default class DrawerNavigationPanel extends Component {
         <DrawerNavigationItem
           id="barChartItem"
           selectedStyle={styles.selectedItemStyle}
-          renderTitle={isSelected => this._renderTitle('Expenses Bar Chart', isSelected)}
+          renderTitle={isSelected => this._renderTitle('Výdaje v čase', isSelected)}
           renderIcon={isSelected => this._renderIcon('graph-bar', isSelected)}>
           <StackNavigation
             id="barChart"
@@ -84,9 +84,19 @@ export default class DrawerNavigationPanel extends Component {
           />
         </DrawerNavigationItem>
         <DrawerNavigationItem
+          id="transactionsItem"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Transakce', isSelected)}
+          renderIcon={isSelected => this._renderIcon('list', isSelected)}>
+          <StackNavigation
+            id="transactions"
+            initialRoute={Router.getRoute('transactions')}
+          />
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
           id="accountsItem"
           selectedStyle={styles.selectedItemStyle}
-          renderTitle={isSelected => this._renderTitle('Accounts', isSelected)}
+          renderTitle={isSelected => this._renderTitle('Účty', isSelected)}
           renderIcon={isSelected => this._renderIcon('account-balance-wallet', isSelected)}>
           <StackNavigation
             id="accounts"

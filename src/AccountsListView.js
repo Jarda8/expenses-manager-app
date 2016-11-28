@@ -9,7 +9,7 @@ export default class AccountsListView extends Component {
 
     static route = {
       navigationBar: {
-        title: 'Accounts'
+        title: 'Účty'
       },
     }
 
