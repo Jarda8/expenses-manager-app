@@ -1,9 +1,9 @@
 /* @flow */
 import React, { Component } from 'react';
 
-import ExpensesView from './ExpensesView';
+import ExpensesView from '../ExpensesView';
 import { ExpensesBarchart } from './ExpensesBarchart';
-import CategorySelector from './CategorySelector';
+import CategorySelector from '../../Shared/CategorySelector';
 
 export default class ExpensesBarChartView extends Component {
 

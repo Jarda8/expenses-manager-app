@@ -6,10 +6,10 @@ import { createRouter, NavigationProvider, } from '@exponent/ex-navigation';
 import { FormattedWrapper } from 'react-native-globalize';
 
 import DrawerNavigationPanel from './src/DrawerNavigationPanel';
-import ExpensesPieChartView from './src/ExpensesPieChartView';
-import ExpensesBarChartView from './src/ExpensesBarChartView';
-import AccountsListView from './src/AccountsListView';
-import TransactionsListView from './src/TransactionsListView';
+import ExpensesPieChartView from './src/ExpensesOverviews/PieChart/ExpensesPieChartView';
+import ExpensesBarChartView from './src/ExpensesOverviews/BarChart/ExpensesBarChartView';
+import AccountsListView from './src/Accounts/AccountsListView';
+import TransactionsListView from './src/ExpensesOverviews/Transactions/TransactionsListView';
 
 export const Router = createRouter(() => ({
   pieChart: () => ExpensesPieChartView,

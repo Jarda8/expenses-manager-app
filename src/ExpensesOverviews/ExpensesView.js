@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
-import TimeNavigation from './TimeNavigation';
-import { AddTransactionControls } from './AddTransactionControls';
-import { ExpensesCategories } from './Categories';
-import CategorySelector from './CategorySelector';
-import Balance from './Balance';
+import TimeNavigation from '../Shared/TimeNavigation';
+import { AddTransactionControls } from '../Shared/AddTransactionControls';
+import { ExpensesCategories } from '../Shared/Categories';
+import CategorySelector from '../Shared/CategorySelector';
+import Balance from '../Shared/Balance';
 
 export default class ExpensesView extends Component {
 

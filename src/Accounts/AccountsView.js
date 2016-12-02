@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, TouchableHighlight, Text } from 'react-native';
 
-import Balance from './Balance';
+import Balance from '../Shared/Balance';
+import FullWidthButton from '../Shared/FullWidthButton'
 
 export default class AccountsView extends Component {
 
@@ -26,9 +27,10 @@ export default class AccountsView extends Component {
         <View style={styles.accounts}>
           {this.props.children}
         </View>
-        <TouchableHighlight style={styles.addAccount} onPress={this.addAccount.bind(this)} underlayColor= 'steelblue'>
+        {/* <TouchableHighlight style={styles.addAccount} onPress={this.addAccount.bind(this)} underlayColor= 'steelblue'>
           <Text style={styles.addAccountText}>Přidat účet</Text>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
+        <FullWidthButton text='Přidat účet' onPress={this.addAccount.bind(this)} flexSize={1} />
       </View>
     );
   }
@@ -48,14 +50,11 @@ const styles = StyleSheet.create({
     flex: 7
   },
   addAccount: {
-    flex: 1,
-    backgroundColor: 'powderblue',
-    justifyContent: 'center',
-    margin: 10
-  },
-  addAccountText: {
-    textAlign: 'center',
-    justifyContent: 'center',
-    fontSize: 20
+    flex: 1
   }
+  // addAccountText: {
+  //   textAlign: 'center',
+  //   justifyContent: 'center',
+  //   fontSize: 20
+  // }
 });
