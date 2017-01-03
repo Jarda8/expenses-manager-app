@@ -14,7 +14,7 @@ export default class ExpensesPieChartView extends Component {
 
   render() {
     return (
-      <ExpensesView>
+      <ExpensesView navigator={this.props.navigator}>
         <ExpensesPiechart/>
       </ExpensesView>
     );

@@ -10,12 +10,18 @@ import ExpensesPieChartView from './src/ExpensesOverviews/PieChart/ExpensesPieCh
 import ExpensesBarChartView from './src/ExpensesOverviews/BarChart/ExpensesBarChartView';
 import AccountsListView from './src/Accounts/AccountsListView';
 import TransactionsListView from './src/ExpensesOverviews/Transactions/TransactionsListView';
+import BudgetListView from './src/Budget/BudgetListView';
+import CalculatorView from './src/CalculatorView';
+import NewExpense from './src/NewTransaction/NewExpense';
 
 export const Router = createRouter(() => ({
   pieChart: () => ExpensesPieChartView,
   barChart: () => ExpensesBarChartView,
   accounts: () => AccountsListView,
-  transactions: () => TransactionsListView
+  transactions: () => TransactionsListView,
+  budgets: () => BudgetListView,
+  calculator: () => CalculatorView,
+  newExpense: () => NewExpense
 }));
 
 class App extends Component {

@@ -7,7 +7,6 @@ import TransactionsListItem from './TransactionsListItem';
 export default class TransactionsList extends Component {
 
   constructor(props : any) {
-    console.log('TransactionList constructor');
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {

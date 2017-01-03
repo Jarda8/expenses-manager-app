@@ -70,7 +70,7 @@ export default class ExpensesView extends Component {
           {this.renderChild()}
         </View>
         <View style={styles.addTransactionControls}>
-          <AddTransactionControls />
+          <AddTransactionControls navigator={this.props.navigator}/>
         </View>
       </View>
     );

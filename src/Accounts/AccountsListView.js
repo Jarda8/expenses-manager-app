@@ -1,9 +1,10 @@
 /* @flow */
 import React, { Component } from 'react';
-import { ListView, StyleSheet, Text } from 'react-native';
+import { ListView } from 'react-native';
 
 import AccountsView from './AccountsView';
 import AccountsListItem from './AccountsListItem';
+import { accountsDS } from '../Shared/DataSource';
 
 export default class AccountsListView extends Component {
 
@@ -17,11 +18,7 @@ export default class AccountsListView extends Component {
     super();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(
-        [
-          {name: 'Osobní účet', type: 'Bankovní účet', balance: 19500},
-          {name: 'Peněženka', type: 'Hotovost', balance: 2154}
-        ]),
+      dataSource: ds.cloneWithRows(accountsDS)
     };
     this.renderAccountItem = this.renderAccountItem.bind(this);
   }

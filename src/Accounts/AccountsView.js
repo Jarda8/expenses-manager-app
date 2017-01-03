@@ -1,6 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableHighlight, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import Balance from '../Shared/Balance';
 import FullWidthButton from '../Shared/FullWidthButton'
@@ -48,13 +48,5 @@ const styles = StyleSheet.create({
   },
   accounts: {
     flex: 7
-  },
-  addAccount: {
-    flex: 1
   }
-  // addAccountText: {
-  //   textAlign: 'center',
-  //   justifyContent: 'center',
-  //   fontSize: 20
-  // }
 });

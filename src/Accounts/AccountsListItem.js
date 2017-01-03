@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
   account: {
     height: 70,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
+    justifyContent: 'center'
   },
   nameAndBalance: {
     flexDirection: 'row',

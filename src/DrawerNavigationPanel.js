@@ -30,7 +30,7 @@ export default class DrawerNavigationPanel extends Component {
 
   _renderIcon = (name: string, isSelected: bool) => {
     let extraStyle = {marginTop: 2};
-    if (name === "account-balance-wallet") {
+    if (name === "account-balance-wallet" || name === "assignment-late") {
       return (
         <MaterialIcons
           style={[styles.icon, isSelected ? styles.selectedText : null, extraStyle]}
@@ -101,6 +101,26 @@ export default class DrawerNavigationPanel extends Component {
           <StackNavigation
             id="accounts"
             initialRoute={Router.getRoute('accounts')}
+          />
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
+          id="budgetsItem"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Limity', isSelected)}
+          renderIcon={isSelected => this._renderIcon('assignment-late', isSelected)}>
+          <StackNavigation
+            id="budgets"
+            initialRoute={Router.getRoute('budgets')}
+          />
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
+          id="calculatorItem"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Calculator Test', isSelected)}
+          renderIcon={isSelected => this._renderIcon('layout', isSelected)}>
+          <StackNavigation
+            id="calculator"
+            initialRoute={Router.getRoute('calculator')}
           />
         </DrawerNavigationItem>
       </DrawerNavigation>

@@ -2,13 +2,15 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, TouchableHighlight } from 'react-native';
 import { Entypo } from '@exponent/vector-icons';
+import NewExpense from '../NewTransaction/NewExpense';
+import { Router } from '../../main';
 
 export class AddTransactionControls extends Component {
 
   render() {
     return (
       <View style={styles.addTransactionControls}>
-        <TouchableHighlight onPress={() => null}>
+        <TouchableHighlight onPress={() => this.props.navigator.push(Router.getRoute('newExpense'))}>
           <Entypo name="squared-minus" size={64} color="red" />
         </TouchableHighlight>
         <TouchableHighlight onPress={() => null}>
