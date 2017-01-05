@@ -2,22 +2,22 @@
 import React, { Component } from 'react';
 
 import NewTransaction from './NewTransaction';
-import { ExpensesCategories } from '../Shared/Categories'
+import { IncomeCategories } from '../Shared/Categories'
 
 
-export default class NewExpense extends Component {
+export default class NewIncome extends Component {
 
   static route = {
     navigationBar: {
-      title: 'Nový výdaj'
+      title: 'Nový příjem'
     },
   }
 
   render() {
     return (
       <NewTransaction
-        categories={ExpensesCategories}
-        ifExpenseMinusOne={-1}
+        categories={IncomeCategories}
+        ifExpenseMinusOne={1}
         navigator={this.props.navigator}/>
     );
   }

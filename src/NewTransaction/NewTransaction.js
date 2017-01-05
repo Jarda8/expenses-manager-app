@@ -5,6 +5,7 @@ import { View, StyleSheet, Text, TextInput } from 'react-native';
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
 import { accountsDS } from '../Shared/DataSource';
+import { Router } from '../../main';
 
 
 export default class NewTransaction extends Component {
@@ -26,9 +27,18 @@ export default class NewTransaction extends Component {
     this.setState({displayedAmount: toDisplay});
   }
 
-  handleConfirmButtonPressed(result : number) {
+  handleConfirmButtonPressed(amount : number) {
     // TODO blokovat záporný result -> upozornit uživatele a jinak nic
-    console.log(result);
+    // console.log(amount);
+    this.props.navigator.push(
+      Router.getRoute(
+        'categories',
+        {
+          amount: amount,
+          categories: this.props.categories,
+          note: this.state.note,
+          ifExpenseMinusOne: this.props.ifExpenseMinusOne
+        }));
   }
 
   render() {

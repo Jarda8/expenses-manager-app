@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Picker } from 'react-native';
 
-import { ExpensesCategories } from './Categories';
+import { ExpensesCategories, All } from './Categories';
 
 
 // TODO typy pro props viz "flow react" na webu *************************************************************************************
@@ -22,9 +22,11 @@ export default class CategorySelector extends Component {
   }
 
   generateCategories() {
-    return Object.keys(ExpensesCategories).map(
-      (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={ExpensesCategories[category]} />
+    var items = Object.keys(ExpensesCategories).map(
+      (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={category} />
     )
+    items.push(<Picker.Item key={All} label={All} value={All} />);
+    return items;
   }
 
   render() {

@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, TouchableHighlight } from 'react-native';
 import { Entypo } from '@exponent/vector-icons';
-import NewExpense from '../NewTransaction/NewExpense';
 import { Router } from '../../main';
 
 export class AddTransactionControls extends Component {
@@ -13,7 +12,7 @@ export class AddTransactionControls extends Component {
         <TouchableHighlight onPress={() => this.props.navigator.push(Router.getRoute('newExpense'))}>
           <Entypo name="squared-minus" size={64} color="red" />
         </TouchableHighlight>
-        <TouchableHighlight onPress={() => null}>
+        <TouchableHighlight onPress={() => this.props.navigator.push(Router.getRoute('newIncome'))}>
           <Entypo name="squared-plus" size={64} color="green" />
         </TouchableHighlight>
       </View>

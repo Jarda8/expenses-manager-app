@@ -13,6 +13,8 @@ import TransactionsListView from './src/ExpensesOverviews/Transactions/Transacti
 import BudgetListView from './src/Budget/BudgetListView';
 import CalculatorView from './src/CalculatorView';
 import NewExpense from './src/NewTransaction/NewExpense';
+import NewIncome from './src/NewTransaction/NewIncome';
+import CategoriesList from './src/NewTransaction/CategoriesList';
 
 export const Router = createRouter(() => ({
   pieChart: () => ExpensesPieChartView,
@@ -21,7 +23,9 @@ export const Router = createRouter(() => ({
   transactions: () => TransactionsListView,
   budgets: () => BudgetListView,
   calculator: () => CalculatorView,
-  newExpense: () => NewExpense
+  categories: () => CategoriesList,
+  newExpense: () => NewExpense,
+  newIncome: () => NewIncome
 }));
 
 class App extends Component {

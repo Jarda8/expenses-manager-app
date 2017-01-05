@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { ListView, StyleSheet, Text } from 'react-native';
 
 import TransactionsListItem from './TransactionsListItem';
+import { transactionsDS } from '../../Shared/DataSource'
+import { All } from '../../Shared/Categories'
 
 export default class TransactionsList extends Component {
 
@@ -23,30 +25,36 @@ export default class TransactionsList extends Component {
 
   render() {
     var dataSource;
-    if (this.props.category === 'potraviny') {
-        dataSource = this.state.dataSource.cloneWithRows(
-          [
-            {category: 'Potraviny', amount: -160, date: '4.11.2016', note: ''},
-            {category: 'Potraviny', amount: -65, date: '5.11.2016', note: 'kebab'},
-            {category: 'Potraviny', amount: -420, date: '9.11.2016', note: ''},
-            {category: 'Potraviny', amount: -148, date: '10.11.2016', note: ''}
-          ]
-        );
+    if (this.props.category === All) {
+      dataSource = this.state.dataSource.cloneWithRows(transactionsDS);
     } else {
-        dataSource = this.state.dataSource.cloneWithRows(
-          [
-            {category: 'Mzda/Plat', amount: 22500, date: '4.11.2016', note: ''},
-            {category: 'Potraviny', amount: -160, date: '4.11.2016', note: ''},
-            {category: 'Doprava', amount: -120, date: '4.11.2016', note: 'vlak do Pardubic'},
-            {category: 'Potraviny', amount: -65, date: '5.11.2016', note: 'kebab'},
-            {category: 'Doprava', amount: -120, date: '5.11.2016', note: 'vlak z Pardubic'},
-            {category: 'Oblečení', amount: -1150, date: '8.11.2016', note: ''},
-            {category: 'Potraviny', amount: -420, date: '9.11.2016', note: ''},
-            {category: 'Zábava', amount: -380, date: '10.11.2016', note: ''},
-            {category: 'Potraviny', amount: -148, date: '10.11.2016', note: ''}
-          ]
-        );
+      let transactions = transactionsDS.filter((t) => t.category === this.props.category);
+      dataSource = this.state.dataSource.cloneWithRows(transactions);
     }
+    // if (this.props.category === 'FOOD') {
+    //     dataSource = this.state.dataSource.cloneWithRows(
+    //       [
+    //         {category: 'Potraviny', amount: -160, date: '4.11.2016', note: ''},
+    //         {category: 'Potraviny', amount: -65, date: '5.11.2016', note: 'kebab'},
+    //         {category: 'Potraviny', amount: -420, date: '9.11.2016', note: ''},
+    //         {category: 'Potraviny', amount: -148, date: '10.11.2016', note: ''}
+    //       ]
+    //     );
+    // } else {
+    //     dataSource = this.state.dataSource.cloneWithRows(
+    //       [
+    //         {category: 'Mzda/Plat', amount: 22500, date: '4.11.2016', note: ''},
+    //         {category: 'Potraviny', amount: -160, date: '4.11.2016', note: ''},
+    //         {category: 'Doprava', amount: -120, date: '4.11.2016', note: 'vlak do Pardubic'},
+    //         {category: 'Potraviny', amount: -65, date: '5.11.2016', note: 'kebab'},
+    //         {category: 'Doprava', amount: -120, date: '5.11.2016', note: 'vlak z Pardubic'},
+    //         {category: 'Oblečení', amount: -1150, date: '8.11.2016', note: ''},
+    //         {category: 'Potraviny', amount: -420, date: '9.11.2016', note: ''},
+    //         {category: 'Zábava', amount: -380, date: '10.11.2016', note: ''},
+    //         {category: 'Potraviny', amount: -148, date: '10.11.2016', note: ''}
+    //       ]
+    //     );
+    // }
     return (
         <ListView
           dataSource={dataSource}

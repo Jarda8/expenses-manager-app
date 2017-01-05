@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
+import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
+
 
 export default class TransactionsListItem extends Component {
 
@@ -24,15 +26,25 @@ export default class TransactionsListItem extends Component {
     console.log(this.props.transaction.category + this.props.transaction.amount);
   }
 
+  renderCategory(transaction: Object) {
+    let category: string = '';
+    if (transaction.amount < 0) {
+      category = ExpensesCategories[transaction.category];
+    } else {
+      category = IncomeCategories[transaction.category];
+    }
+    return category;
+  }
+
   render() {
     return (
       <TouchableHighlight onPress={this.editTransaction.bind(this)} underlayColor="steelblue">
         <View style={styles.transaction}>
           <View style={styles.categoryAndAmount}>
-            <Text style={styles.category}>{this.props.transaction.category}</Text>
+            <Text style={styles.category}>{this.renderCategory(this.props.transaction)}</Text>
             {this.renderAmount(this.props.transaction.amount)}
           </View>
-          <Text style={styles.dateAndNote}>{this.props.transaction.date} {this.props.transaction.note}</Text>
+          <Text style={styles.dateAndNote}>{this.props.transaction.date.getDate()}.{this.props.transaction.date.getMonth() + 1}.{this.props.transaction.date.getFullYear()} {this.props.transaction.note}</Text>
         </View>
       </TouchableHighlight>
     )

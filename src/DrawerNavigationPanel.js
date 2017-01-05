@@ -64,12 +64,11 @@ export default class DrawerNavigationPanel extends Component {
           renderIcon={isSelected => this._renderIcon('graph-pie', isSelected)}>
           <StackNavigation
             id="pieChart"
-            // defaultRouteConfig={{
-            //   navigationBar: {
-            //     backgroundColor: '#0084FF',
-            //     tintColor: '#fff',
-            //   },
-            // }}
+            defaultRouteConfig={{
+              navigationBar: {
+                tintColor: 'black'
+              },
+            }}
             initialRoute={Router.getRoute('pieChart')}
           />
         </DrawerNavigationItem>
@@ -80,6 +79,11 @@ export default class DrawerNavigationPanel extends Component {
           renderIcon={isSelected => this._renderIcon('graph-bar', isSelected)}>
           <StackNavigation
             id="barChart"
+            defaultRouteConfig={{
+              navigationBar: {
+                tintColor: 'black'
+              },
+            }}
             initialRoute={Router.getRoute('barChart')}
           />
         </DrawerNavigationItem>
@@ -90,6 +94,11 @@ export default class DrawerNavigationPanel extends Component {
           renderIcon={isSelected => this._renderIcon('list', isSelected)}>
           <StackNavigation
             id="transactions"
+            defaultRouteConfig={{
+              navigationBar: {
+                tintColor: 'black'
+              },
+            }}
             initialRoute={Router.getRoute('transactions')}
           />
         </DrawerNavigationItem>
@@ -100,6 +109,11 @@ export default class DrawerNavigationPanel extends Component {
           renderIcon={isSelected => this._renderIcon('account-balance-wallet', isSelected)}>
           <StackNavigation
             id="accounts"
+            defaultRouteConfig={{
+              navigationBar: {
+                tintColor: 'black'
+              },
+            }}
             initialRoute={Router.getRoute('accounts')}
           />
         </DrawerNavigationItem>
@@ -110,6 +124,11 @@ export default class DrawerNavigationPanel extends Component {
           renderIcon={isSelected => this._renderIcon('assignment-late', isSelected)}>
           <StackNavigation
             id="budgets"
+            defaultRouteConfig={{
+              navigationBar: {
+                tintColor: 'black'
+              },
+            }}
             initialRoute={Router.getRoute('budgets')}
           />
         </DrawerNavigationItem>
@@ -120,6 +139,11 @@ export default class DrawerNavigationPanel extends Component {
           renderIcon={isSelected => this._renderIcon('layout', isSelected)}>
           <StackNavigation
             id="calculator"
+            defaultRouteConfig={{
+              navigationBar: {
+                tintColor: 'black'
+              },
+            }}
             initialRoute={Router.getRoute('calculator')}
           />
         </DrawerNavigationItem>

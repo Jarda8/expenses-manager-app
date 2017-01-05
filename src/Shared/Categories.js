@@ -1,5 +1,4 @@
 var ExpensesCategories = {
-  ALL : "vše",
   FOOD : "potraviny",
   CLOTHES : "oblečení",
   TRANSPORT : "doprava",
@@ -20,7 +19,6 @@ var ExpensesCategories = {
 };
 
 var IncomeCategories = {
-  ALL : "vše",
   WAGES : "mzda/plat",
   LOAN : "půjčky",
   REPAYMENT : "splátky",
@@ -28,4 +26,6 @@ var IncomeCategories = {
   OTHERS : "ostatní"
 };
 
-export { ExpensesCategories, IncomeCategories }
+var All = 'vše';
+
+export { ExpensesCategories, IncomeCategories, All }

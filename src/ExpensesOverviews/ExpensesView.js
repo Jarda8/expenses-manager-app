@@ -4,7 +4,7 @@ import { View, StyleSheet, Text } from 'react-native';
 
 import TimeNavigation from '../Shared/TimeNavigation';
 import { AddTransactionControls } from '../Shared/AddTransactionControls';
-import { ExpensesCategories } from '../Shared/Categories';
+import { ExpensesCategories, All } from '../Shared/Categories';
 import CategorySelector from '../Shared/CategorySelector';
 import Balance from '../Shared/Balance';
 
@@ -14,7 +14,7 @@ export default class ExpensesView extends Component {
     super(props);
     this.state = {
       date: new Date(),
-      category: ExpensesCategories.ALL,
+      category: All,
       balance: 21654
     };
     this.state.date.setDate(1);
