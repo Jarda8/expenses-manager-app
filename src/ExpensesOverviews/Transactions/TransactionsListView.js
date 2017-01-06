@@ -29,7 +29,7 @@ export default class TransactionsListView extends Component {
   render() {
     console.log('TransctionListView is rendering');
     return (
-      <ExpensesView>
+      <ExpensesView navigator={this.props.navigator}>
         <CategorySelector />
         <TransactionsList />
       </ExpensesView>

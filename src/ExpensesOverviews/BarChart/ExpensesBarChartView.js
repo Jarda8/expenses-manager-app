@@ -15,7 +15,7 @@ export default class ExpensesBarChartView extends Component {
 
   render() {
     return (
-      <ExpensesView>
+      <ExpensesView navigator={this.props.navigator}>
         <CategorySelector />
         <ExpensesBarchart />
       </ExpensesView>

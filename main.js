@@ -11,7 +11,6 @@ import ExpensesBarChartView from './src/ExpensesOverviews/BarChart/ExpensesBarCh
 import AccountsListView from './src/Accounts/AccountsListView';
 import TransactionsListView from './src/ExpensesOverviews/Transactions/TransactionsListView';
 import BudgetListView from './src/Budget/BudgetListView';
-import CalculatorView from './src/CalculatorView';
 import NewExpense from './src/NewTransaction/NewExpense';
 import NewIncome from './src/NewTransaction/NewIncome';
 import CategoriesList from './src/NewTransaction/CategoriesList';
@@ -22,7 +21,6 @@ export const Router = createRouter(() => ({
   accounts: () => AccountsListView,
   transactions: () => TransactionsListView,
   budgets: () => BudgetListView,
-  calculator: () => CalculatorView,
   categories: () => CategoriesList,
   newExpense: () => NewExpense,
   newIncome: () => NewIncome

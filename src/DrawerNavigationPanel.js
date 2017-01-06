@@ -132,21 +132,6 @@ export default class DrawerNavigationPanel extends Component {
             initialRoute={Router.getRoute('budgets')}
           />
         </DrawerNavigationItem>
-        <DrawerNavigationItem
-          id="calculatorItem"
-          selectedStyle={styles.selectedItemStyle}
-          renderTitle={isSelected => this._renderTitle('Calculator Test', isSelected)}
-          renderIcon={isSelected => this._renderIcon('layout', isSelected)}>
-          <StackNavigation
-            id="calculator"
-            defaultRouteConfig={{
-              navigationBar: {
-                tintColor: 'black'
-              },
-            }}
-            initialRoute={Router.getRoute('calculator')}
-          />
-        </DrawerNavigationItem>
       </DrawerNavigation>
     );
   }
