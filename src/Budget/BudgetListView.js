@@ -5,12 +5,13 @@ import { ListView } from 'react-native';
 import BudgetView from './BudgetView';
 import BudgetListItem from './BudgetListItem';
 import { ExpensesCategories } from '../Shared/Categories';
+import { getBudgets } from '../Shared/DataSource';
 
 export default class BudgetListView extends Component {
 
     static route = {
       navigationBar: {
-        title: 'Limity'
+        title: 'Rozpočet'
       },
     }
 
@@ -18,12 +19,7 @@ export default class BudgetListView extends Component {
     super();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(
-        [
-          {category: ExpensesCategories.FOOD, budget: 5000},
-          {category: ExpensesCategories.TRANSPORT, budget: 500},
-          {category: ExpensesCategories.ALL, budget: 15000}
-        ]),
+      dataSource: ds.cloneWithRows([]),
     };
     this.renderBudgetItem = this.renderBudgetItem.bind(this);
   }
@@ -34,11 +30,15 @@ export default class BudgetListView extends Component {
     );
   }
 
+  getBudgetsDS() {
+    return this.state.dataSource.cloneWithRows(getBudgets());
+  }
+
   render() {
     return (
       <BudgetView>
         <ListView
-          dataSource={this.state.dataSource}
+          dataSource={this.getBudgetsDS()}
           renderRow={this.renderBudgetItem}
         />
       </BudgetView>

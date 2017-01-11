@@ -19,10 +19,10 @@ export default class Calculator extends Component {
   constructor(props: any) {
     super(props);
     this.state = {
-      result: 0,
+      result: props.initialNumber,
       operator: '',
       clearDisplay: false,
-      display: '0'
+      display: '' + props.initialNumber
     };
     this.handleNumber = this.handleNumber.bind(this);
     this.handleOperation = this.handleOperation.bind(this);

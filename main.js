@@ -14,6 +14,11 @@ import BudgetListView from './src/Budget/BudgetListView';
 import NewExpense from './src/NewTransaction/NewExpense';
 import NewIncome from './src/NewTransaction/NewIncome';
 import CategoriesList from './src/NewTransaction/CategoriesList';
+import EditTransaction from './src/ExpensesOverviews/Transactions/EditTransaction';
+import NewAccount from './src/Accounts/NewAccount';
+import EditAccount from './src/Accounts/EditAccount';
+import NewBudget from './src/Budget/NewBudget';
+import EditBudget from './src/Budget/EditBudget';
 
 export const Router = createRouter(() => ({
   pieChart: () => ExpensesPieChartView,
@@ -23,7 +28,12 @@ export const Router = createRouter(() => ({
   budgets: () => BudgetListView,
   categories: () => CategoriesList,
   newExpense: () => NewExpense,
-  newIncome: () => NewIncome
+  newIncome: () => NewIncome,
+  editTransaction: () => EditTransaction,
+  newAccount: () => NewAccount,
+  editAccount: () => EditAccount,
+  newBudget: () => NewBudget,
+  editBudget: () => EditBudget
 }));
 
 class App extends Component {

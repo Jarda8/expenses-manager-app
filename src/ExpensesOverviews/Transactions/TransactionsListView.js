@@ -14,18 +14,6 @@ export default class TransactionsListView extends Component {
     },
   }
 
-  constructor() {
-    super();
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.renderTransactionItem = this.renderTransactionItem.bind(this);
-  }
-
-  renderTransactionItem(transaction : any) {
-    return (
-      <TransactionsListItem transaction={transaction} />
-    );
-  }
-
   render() {
     console.log('TransctionListView is rendering');
     return (

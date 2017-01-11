@@ -1,31 +1,31 @@
 var ExpensesCategories = {
-  FOOD : "potraviny",
-  CLOTHES : "oblečení",
-  TRANSPORT : "doprava",
-  HOUSE : "domácnost",
-  ENTERTAINMENT : "zábava",
-  EDUCATION : "vzdělání",
-  HEALTH : "zdraví",
-  TOILETRY : "toaletní potřeby",
-  PETS : "domácí mazlíčci",
-  GIFTS : "dárky",
-  COMMUNICATIONS : "komunikace",
-  TOBACCO : "tabák",
-  LOAN : "půjčky",
-  REPAYMENT : "splátky",
-  INSURANCE : "pojištění",
-  INVESTMENTS : "investice",
-  OTHERS : "ostatní"
+  FOOD : "Potraviny",
+  CLOTHES : "Oblečení",
+  TRANSPORT : "Doprava",
+  HOUSE : "Domácnost",
+  ENTERTAINMENT : "Zábava",
+  EDUCATION : "Vzdělání",
+  HEALTH : "Zdraví",
+  TOILETRY : "Toaletní potřeby",
+  PETS : "Domácí mazlíčci",
+  GIFTS : "Dárky",
+  COMMUNICATIONS : "Komunikace",
+  TOBACCO : "Tabák",
+  LOAN : "Půjčky",
+  REPAYMENT : "Splátky",
+  INSURANCE : "Pojištění",
+  INVESTMENTS : "Investice",
+  OTHERS : "Ostatní"
 };
 
 var IncomeCategories = {
-  WAGES : "mzda/plat",
-  LOAN : "půjčky",
-  REPAYMENT : "splátky",
-  PROFIT : "zisk",
-  OTHERS : "ostatní"
+  WAGES : "Mzda/plat",
+  LOAN : "Půjčky",
+  REPAYMENT : "Splátky",
+  PROFIT : "Zisk",
+  OTHERS : "Ostatní"
 };
 
-var All = 'vše';
+var All = 'Vše';
 
 export { ExpensesCategories, IncomeCategories, All }

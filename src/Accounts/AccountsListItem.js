@@ -2,8 +2,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
+import { withNavigation } from '@exponent/ex-navigation'
 
+import { accountTypes } from '../Shared/DataSource';
+import { Router } from '../../main';
 
+@withNavigation
 export default class AccountsListItem extends Component {
 
   renderBalance(balance : number) {
@@ -21,7 +25,7 @@ export default class AccountsListItem extends Component {
   }
 
   editAccount() {
-    console.log(this.props.account.name);
+    this.props.navigator.push(Router.getRoute('editAccount', {account: this.props.account}));
   }
 
   render() {
@@ -32,7 +36,7 @@ export default class AccountsListItem extends Component {
             <Text style={styles.name}>{this.props.account.name}</Text>
             {this.renderBalance(this.props.account.balance)}
           </View>
-          <Text style={styles.type}>{this.props.account.type}</Text>
+          <Text style={styles.type}>{accountTypes.get(this.props.account.type)}</Text>
         </View>
       </TouchableHighlight>
     )

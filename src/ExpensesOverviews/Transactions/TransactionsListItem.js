@@ -22,8 +22,8 @@ export default class TransactionsListItem extends Component {
     );
   }
 
-  editTransaction() {
-    console.log(this.props.transaction.category + this.props.transaction.amount);
+  handleOnPress() {
+    this.props.onPress(this.props.transaction);
   }
 
   renderCategory(transaction: Object) {
@@ -38,7 +38,7 @@ export default class TransactionsListItem extends Component {
 
   render() {
     return (
-      <TouchableHighlight onPress={this.editTransaction.bind(this)} underlayColor="steelblue">
+      <TouchableHighlight onPress={this.handleOnPress.bind(this)} underlayColor="steelblue">
         <View style={styles.transaction}>
           <View style={styles.categoryAndAmount}>
             <Text style={styles.category}>{this.renderCategory(this.props.transaction)}</Text>

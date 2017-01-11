@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { View, ListView, StyleSheet, Text } from 'react-native';
 
 import CategoriesListItem from './CategoriesListItem';
-import { transactionsDS } from '../Shared/DataSource'
 
 export default class CategoriesList extends Component {
 
@@ -21,7 +20,6 @@ export default class CategoriesList extends Component {
       dataSource: ds.cloneWithRows(categories)
     };
     this.renderCategoryItem = this.renderCategoryItem.bind(this);
-    this.saveTransaction = this.saveTransaction.bind(this);
   }
 
   getCategoriesArray(categoriesObject: {[id:string]: string}): Array<string> {
@@ -35,21 +33,8 @@ export default class CategoriesList extends Component {
       <CategoriesListItem
         category={this.props.route.params.categories[categoryKey]}
         categoryKey={categoryKey}
-        onCategorySelected={this.saveTransaction} />
+        onCategorySelected={this.props.onCategorySelected} />
     );
-  }
-
-  saveTransaction(category: string) {
-    transactionsDS.push(
-      {
-        category: category,
-        amount: this.props.route.params.amount * this.props.route.params.ifExpenseMinusOne,
-        // category: 'FOOD',
-        // amount: -25,
-        date: new Date(),
-        note: this.props.route.params.note
-    });
-    this.props.navigator.popToTop();
   }
 
   render() {

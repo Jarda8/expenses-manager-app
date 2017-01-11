@@ -1,13 +1,16 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { withNavigation } from '@exponent/ex-navigation';
 
 import FullWidthButton from '../Shared/FullWidthButton'
+import { Router } from '../../main'
 
+@withNavigation
 export default class BudgetView extends Component {
 
   addBudget() {
-    console.log('addBudget tapped');
+    this.props.navigator.push(Router.getRoute('newBudget'));
   }
 
   render() {

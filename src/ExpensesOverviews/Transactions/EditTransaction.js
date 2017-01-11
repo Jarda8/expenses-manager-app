@@ -1,57 +1,110 @@
 /* @flow */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableHighlight } from 'react-native';
+import { FontAwesome } from '@exponent/vector-icons';
 import DatePicker from 'react-native-datepicker'
 
-import Calculator from '../Shared/Calculator/Calculator';
-import AccountSelector from '../Shared/AccountSelector';
-import { accountsDS, saveTransaction } from '../Shared/DataSource';
-import { Router } from '../../main';
+import Calculator from '../../Shared/Calculator/Calculator';
+import AccountSelector from '../../Shared/AccountSelector';
+import { accountsDS, getAccount, updateTransaction, deleteTransaction } from '../../Shared/DataSource';
+import { Router } from '../../../main';
+import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
+import SaveButton from '../../Shared/SaveButton'
+import DeleteButton from '../../Shared/DeleteButton'
 
 
 export default class NewTransaction extends Component {
 
+  static route = {
+    navigationBar: {
+      title: 'Úpravy transakce',
+      renderRight: (route) =>
+        <View style={styles.navbarMenu}>
+          <SaveButton onPress={route.params.update} />
+          <DeleteButton onPress={route.params.delete} />
+        </View>
+    },
+  }
+
   constructor(props : any) {
     super(props);
+    let transaction = props.route.params.transaction;
+    let ifExpenseMinusOne = 1;
+    if (transaction.amount < 0) {
+      ifExpenseMinusOne = -1;
+    }
+    let acc = getAccount(
+      transaction.accountName,
+      transaction.accountNumber
+    )
     this.state = {
-      displayedAmount: '0',
-      account: accountsDS[0],
-      note: '',
-      finalAmount: 0,
-      date: new Date()
+      displayedAmount: '' + (transaction.amount * ifExpenseMinusOne),
+      account: acc,
+      note: transaction.note,
+      date: transaction.date,
+      finalAmount: transaction.amount * ifExpenseMinusOne,
+      ifExpenseMinusOne: ifExpenseMinusOne
     };
     this.handleDisplayChange = this.handleDisplayChange.bind(this);
     this.handleConfirmButtonPressed = this.handleConfirmButtonPressed.bind(this);
-    this.saveNewTransaction = this.saveNewTransaction.bind(this);
+    this.updateThisTransactionWithCategory = this.updateThisTransactionWithCategory.bind(this);
+    this.updateThisTransaction = this.updateThisTransaction.bind(this);
+    this.deleteThisTransaction = this.deleteThisTransaction.bind(this);
     this.parseDate = this.parseDate.bind(this);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.navigator.updateCurrentRouteParams({
+        update: this.updateThisTransaction,
+        delete: this.deleteThisTransaction
+      })
+    }, 1000);
   }
 
   handleDisplayChange(toDisplay: string) {
     this.setState({displayedAmount: toDisplay});
   }
 
-  saveNewTransaction(category: string) {
-    saveTransaction({
-      accountName: this.state.account.name,
-      accountNumber: this.state.account.number,
-      category: category,
-      amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
-      date: this.state.date,
-      note: this.state.note
-    })
+  updateThisTransaction() {
+    this.updateThisTransactionWithCategory(this.props.route.params.transaction.category);
+  }
+
+  deleteThisTransaction() {
+    deleteTransaction(this.props.route.params.transaction);
     this.props.navigator.popToTop();
   }
 
+  updateThisTransactionWithCategory(category: string) {
+      updateTransaction(
+        this.props.route.params.transaction,
+        {
+        accountName: this.state.account.name,
+        accountNumber: this.state.account.number,
+        category: category,
+        // TODO Vyřešit problém s updatováním finalAmount. Správnou hodnotu zná, resp. musí spočítat, Calculator.
+        amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
+        date: this.state.date,
+        note: this.state.note
+      })
+      this.props.navigator.popToTop();
+  }
+
   handleConfirmButtonPressed(amount : number) {
-    // TODO blokovat záporný result -> upozornit uživatele a jinak nic
+    // TODO blokovat záporný a nulový amount -> upozornit uživatele a jinak nic
+    let categories = ExpensesCategories;
+    if (this.props.route.params.transaction.amount >= 0) {
+      categories = IncomeCategories;
+    }
+
     this.setState({finalAmount: amount});
     this.props.navigator.push(
       Router.getRoute(
         'categories',
         {
           amount: amount,
-          categories: this.props.categories,
-          onCategorySelected: this.saveNewTransaction
+          categories: categories,
+          onCategorySelected: this.updateThisTransactionWithCategory
         }));
   }
 
@@ -99,10 +152,10 @@ export default class NewTransaction extends Component {
         </View>
         <View style={styles.calculatorView}>
           <Calculator
-            initialNumber={0}
+            initialNumber={this.state.finalAmount}
             onDisplayChange={this.handleDisplayChange}
             onConfirmButtonPressed={this.handleConfirmButtonPressed}
-            confirmButtonText='Vybrat kategorii'  />
+            confirmButtonText='Změnit kategorii'  />
         </View>
       </View>
     );
@@ -149,5 +202,8 @@ const styles = StyleSheet.create({
   },
   calculatorView: {
     flex: 5
+  },
+  navbarMenu: {
+    flexDirection: 'row'
   }
 });

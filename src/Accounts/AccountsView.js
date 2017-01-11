@@ -4,7 +4,10 @@ import { View, StyleSheet } from 'react-native';
 
 import Balance from '../Shared/Balance';
 import FullWidthButton from '../Shared/FullWidthButton'
+import { Router } from '../../main';
+import { withNavigation } from '@exponent/ex-navigation';
 
+@withNavigation
 export default class AccountsView extends Component {
 
   constructor() {
@@ -15,7 +18,7 @@ export default class AccountsView extends Component {
   }
 
   addAccount() {
-    console.log('addAccount tapped');
+    this.props.navigator.push(Router.getRoute('newAccount'));
   }
 
   render() {
@@ -27,9 +30,6 @@ export default class AccountsView extends Component {
         <View style={styles.accounts}>
           {this.props.children}
         </View>
-        {/* <TouchableHighlight style={styles.addAccount} onPress={this.addAccount.bind(this)} underlayColor= 'steelblue'>
-          <Text style={styles.addAccountText}>Přidat účet</Text>
-        </TouchableHighlight> */}
         <FullWidthButton text='Přidat účet' onPress={this.addAccount.bind(this)} flexSize={1} />
       </View>
     );

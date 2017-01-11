@@ -6,13 +6,13 @@ import { accountsDS } from './DataSource';
 
 export default class AccountSelector extends Component {
 
-  handleAccountSelected(account: string) {
+  handleAccountSelected(account: any) {
     this.props.onAccountChange(account);
   }
 
   generateAccountsItems() {
     return accountsDS.map(
-      (account) => <Picker.Item key={account.name} label={account.name} value={account.name} />
+      (account) => <Picker.Item key={account.name} label={account.name} value={account} />
     )
   }
 
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   picker: {
-    width: 260,
+    width: 180,
     // backgroundColor: 'white'
   }
 });

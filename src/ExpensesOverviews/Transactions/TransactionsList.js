@@ -1,11 +1,16 @@
 /* @flow */
 import React, { Component } from 'react';
 import { ListView, StyleSheet, Text } from 'react-native';
+import { withNavigation } from '@exponent/ex-navigation';
 
 import TransactionsListItem from './TransactionsListItem';
-import { getTransactions } from '../../Shared/DataSource'
-import { All } from '../../Shared/Categories'
+import { getTransactions } from '../../Shared/DataSource';
+import { All } from '../../Shared/Categories';
+import { Router } from '../../../main';
 
+import type { Transaction } from '../../Shared/DataSource';
+
+@withNavigation
 export default class TransactionsList extends Component {
 
   constructor(props : any) {
@@ -14,11 +19,17 @@ export default class TransactionsList extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([])
     };
+    this.editTransaction = this.editTransaction.bind(this);
+    this.renderTransactionItem = this.renderTransactionItem.bind(this);
   }
 
-  renderTransactionItem(transaction : any) {
+  editTransaction(transaction: Transaction) {
+    this.props.navigator.push(Router.getRoute('editTransaction', {transaction: transaction}));
+  }
+
+  renderTransactionItem(transaction : Transaction) {
     return (
-      <TransactionsListItem transaction={transaction} />
+      <TransactionsListItem transaction={transaction} onPress={this.editTransaction} />
     );
   }
 

@@ -18,7 +18,7 @@ export default class AccountsListView extends Component {
     super();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(accountsDS)
+      dataSource: ds.cloneWithRows([])
     };
     this.renderAccountItem = this.renderAccountItem.bind(this);
   }
@@ -29,11 +29,15 @@ export default class AccountsListView extends Component {
     );
   }
 
+  getAccountsDS() {
+    return this.state.dataSource.cloneWithRows(accountsDS);
+  }
+
   render() {
     return (
       <AccountsView>
         <ListView
-          dataSource={this.state.dataSource}
+          dataSource={this.getAccountsDS()}
           renderRow={this.renderAccountItem}
         />
       </AccountsView>

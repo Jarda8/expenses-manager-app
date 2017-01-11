@@ -2,19 +2,23 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
+import { withNavigation } from '@exponent/ex-navigation';
 
+import { ExpensesCategories } from '../Shared/Categories';
+import { Router } from '../../main'
 
+@withNavigation
 export default class BudgetListItem extends Component {
 
   editBudget() {
-    console.log('budget: ' + this.props.budgetItem.category + ' ' + this.props.budgetItem.budget);
+    this.props.navigator.push(Router.getRoute('editBudget', {budget: this.props.budgetItem}));
   }
 
   render() {
     return (
       <TouchableHighlight onPress={this.editBudget.bind(this)} underlayColor="steelblue">
         <View style={styles.budgetItem}>
-          <Text style={styles.category}>{this.props.budgetItem.category}</Text>
+          <Text style={styles.category}>{ExpensesCategories[this.props.budgetItem.category]}</Text>
           <FormattedCurrency
             value={this.props.budgetItem.budget}
             style={styles.budget} />
