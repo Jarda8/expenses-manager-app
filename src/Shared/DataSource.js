@@ -57,6 +57,10 @@ function deleteAccount(account: Account) {
   accountsDS.splice(index, 1);
 }
 
+function getTotalBalance() {
+  return accountsDS.reduce((x, y) => {return {balance: x.balance + y.balance}}).balance;
+}
+
 var currencies = ['CZK'];
 
 export type Transaction = {
@@ -185,4 +189,4 @@ function deleteBudget(budget: Budget) {
   budgetsDS.splice(index, 1);
 }
 
-export { periods, accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory }
+export { periods, accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, getTotalBalance, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory }

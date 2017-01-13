@@ -1,10 +1,11 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { withNavigation } from '@exponent/ex-navigation';
 
 import FullWidthButton from '../Shared/FullWidthButton'
 import { Router } from '../../main';
-import { withNavigation } from '@exponent/ex-navigation';
+import TotalBalance from './TotalBalance';
 
 @withNavigation
 export default class AccountsView extends Component {
@@ -24,7 +25,7 @@ export default class AccountsView extends Component {
     return (
       <View style={styles.accountsView}>
         <View style={styles.balance}>
-          {/* <Balance balance={this.state.balance} /> */}
+          <TotalBalance/>
         </View>
         <View style={styles.accounts}>
           {this.props.children}
