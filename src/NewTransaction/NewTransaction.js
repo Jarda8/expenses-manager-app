@@ -2,10 +2,12 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 import DatePicker from 'react-native-datepicker'
+import { Notifications } from 'exponent';
 
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
-import { accountsDS, saveTransaction } from '../Shared/DataSource';
+import { ExpensesCategories } from '../Shared/Categories';
+import { accountsDS, saveTransaction, getBudget, getSumOfTransactions } from '../Shared/DataSource';
 import { Router } from '../../main';
 
 
@@ -39,8 +41,48 @@ export default class NewTransaction extends Component {
       date: this.state.date,
       note: this.state.note
     })
+    this.checkBudget(category);
     this.props.navigator.popToTop();
   }
+
+  checkBudget(category: string) {
+    let budget = getBudget(category);
+    if (budget === undefined) {
+      return;
+    }
+    let toDate = new Date();
+    let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 0, 0, 0, 0, 0)
+    let monthTotal = getSumOfTransactions(category, fromDate, toDate).amount * -1;
+
+    console.log('category: ' + category + ' total: ' + monthTotal + ' threshold: ' + (budget.budget * budget.notificationThreshold) + ' budget: ' + budget.budget);
+
+    if (budget.budget < monthTotal) {
+      this.presentNotification(category, true, monthTotal, budget.budget);
+    } else if (budget.budget * budget.notificationThreshold < monthTotal) {
+      this.presentNotification(category, false, monthTotal, budget.budget * budget.notificationThreshold);
+    }
+  }
+
+  presentNotification(category: string, overLimit: boolean, total: number, threshold: number) {
+    let title = 'Překročena hranice výdajů (' + ExpensesCategories[category] + ')!'
+    let body = 'Vaše výdaje: ' + total + '\nHranice: ' + threshold;
+    if (overLimit === true) {
+      title = 'Překročen rozpočet (' + ExpensesCategories[category] + ')!'
+      body = 'Vaše výdaje: ' + total + '\nRozpočet: ' + threshold;
+    }
+    Notifications.presentLocalNotificationAsync({
+      title: title,
+      body: body,
+      data: {},
+      ios: {
+        sound: true,
+      },
+      android: {
+        vibrate: true,
+      }
+    });
+    console.log('notification sent');
+}
 
   handleConfirmButtonPressed(amount : number) {
     // TODO blokovat záporný result -> upozornit uživatele a jinak nic
@@ -57,12 +99,11 @@ export default class NewTransaction extends Component {
 
   parseDate(date: string): Date {
     let dateArray = date.split('.');
-    let day = parseInt(dateArray[0]) + 1;
-    let dayString = '' + day;
-    if (day < 10) {
-      dayString = '0' + dayString;
-    }
-    return new Date(dateArray[2] + '-' + dateArray[1] + '-' + dayString);
+    let day = parseInt(dateArray[0]);
+    let month = parseInt(dateArray[1]) - 1;
+    let year = parseInt(dateArray[2]);
+
+    return new Date(year, month, day, 0, 0, 0, 0);
   }
 
   render() {
@@ -73,7 +114,6 @@ export default class NewTransaction extends Component {
             selectedAccount={this.state.account}
             onAccountChange={(acc) => this.setState({account: acc})} />
           <DatePicker
-            style={styles.datePicker}
             date={this.state.date}
             mode="date"
             placeholder="zvolte datum"
@@ -142,10 +182,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'aquamarine'
   },
   noteInput: {
-    flex: 4
+    width: 300
   },
   noteLabel: {
-    flex: 1
+    width: 80
   },
   calculatorView: {
     flex: 5

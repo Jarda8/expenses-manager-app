@@ -7,35 +7,48 @@ import { AddTransactionControls } from '../Shared/AddTransactionControls';
 import { ExpensesCategories, All } from '../Shared/Categories';
 import CategorySelector from '../Shared/CategorySelector';
 import Balance from '../Shared/Balance';
+import { periods } from '../Shared/DataSource';
 
 export default class ExpensesView extends Component {
 
   constructor(props : any) {
     super(props);
+    let date = new Date();
     this.state = {
-      date: new Date(),
+      fromDate: new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0),
+      toDate: new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, 0, -1),
       category: All,
-      balance: 21654
+      period: periods.get('month')
     };
-    this.state.date.setDate(1);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
   }
 
   handleDateChange(change : number) {
-    let newBalance = 0;
-    let newDate = new Date (this.state.date);
-    newDate.setMonth(newDate.getMonth() + change);
-    if (newDate.getMonth() === 11) {
-      newBalance = 18250;
-    } else if (newDate.getMonth() === 10) {
-      newBalance = 21654;
+    let newFromDate = new Date(this.state.fromDate);
+    let newToDate = new Date(this.state.toDate);
+    if (this.state.period === periods.get('month')) {
+      newFromDate.setMonth(newFromDate.getMonth() + change);
+      newToDate.setMonth(newToDate.getMonth() + change);
+
+      if (newToDate.getDate() === 1 || newToDate.getDate() === 2 || newToDate.getDate() === 3) {
+        newToDate.setDate(0);
+      } else if (newToDate.getDate() === 30 || newToDate.getDate() === 29 || newToDate.getDate() === 28) {
+        let testDate = new Date(newToDate);
+        testDate.setDate(31);
+        if (testDate.getDate() === 31) {
+          newToDate.setDate(31);
+        }
+      }
+
+    } else {
+      newFromDate.setDate(newFromDate.getDate() + change);
+      newToDate.setDate(newToDate.getDate() + change);
     }
-    this.setState({date: newDate, balance: newBalance});
+    this.setState({fromDate: newFromDate, toDate: newToDate});
   }
 
   handleCategoryChange(category : string) {
-    console.log('handleCategoryChange v ExpensesView');
     this.setState({category: category});
   }
 
@@ -44,27 +57,35 @@ export default class ExpensesView extends Component {
       if (child.type === CategorySelector) {
         return React.cloneElement(child, {
           category: this.state.category,
-          onCategoryChange: this.handleCategoryChange
+          onCategoryChange: this.handleCategoryChange,
+          style: {flex: 1}
         })
       }
       else {
         return React.cloneElement(child, {
-          date: this.state.date,
-          category: this.state.category
+          fromDate: this.state.fromDate,
+          toDate: this.state.toDate,
+          category: this.state.category,
+          period: this.state.period,
+          style: {flex: 6}
         })
       }
     })
   }
 
   render() {
-    console.log('ExpensesView render');
     return (
       <View style={styles.expensesView}>
         <View style={styles.timeNavigation}>
-          <TimeNavigation onDateChange={this.handleDateChange} date={this.state.date} />
+          <TimeNavigation
+            onDateChange={this.handleDateChange}
+            fromDate={this.state.fromDate}
+            toDate={this.state.toDate}
+            period={this.state.period}
+          />
         </View>
         <View style={styles.balance}>
-          <Balance balance={this.state.balance} />
+          <Balance fromDate={this.state.fromDate} toDate={this.state.toDate} />
         </View>
         <View style={styles.content}>
           {this.renderChild()}

@@ -3,46 +3,14 @@ import React, { Component } from 'react';
 import { Pie } from 'react-native-pathjs-charts';
 import { View, StyleSheet } from 'react-native';
 
+import { getSumsOfExpensesByCategory } from '../../Shared/DataSource';
+import { ExpensesCategories } from '../../Shared/Categories';
+
 export class ExpensesPiechart extends Component {
   render() {
-    var data;
-    if (this.props.date.getMonth() === 10) {
-      data = [{
-        "name": "potraviny",
-        "amount": 2500
-      }, {
-        "name": "oblečení",
-        "amount": 1200
-      }, {
-        "name": "doprava",
-        "amount": 600
-      }, {
-        "name": "zábava",
-        "amount": 1000
-      }, {
-        "name": "domácí mazlíčci",
-        "amount": 500
-      }, {
-        "name": "zdraví",
-        "amount": 300
-      }];
-    } else if (this.props.date.getMonth() === 11) {
-      data = [{
-        "name": "potraviny",
-        "amount": 2800
-      }, {
-        "name": "doprava",
-        "amount": 750
-      }, {
-        "name": "zábava",
-        "amount": 600
-      }, {
-        "name": "domácí mazlíčci",
-        "amount": 500
-      }, {
-        "name": "dárky",
-        "amount": 450
-      }];
+    let data = getSumsOfExpensesByCategory(this.props.fromDate, this.props.toDate);
+    for (category of data) {
+      category.name = ExpensesCategories[category.name];
     }
 
     var options = {
@@ -72,7 +40,7 @@ export class ExpensesPiechart extends Component {
     }
 
     return (
-    <View style={styles.chart}>
+    <View style={[styles.chart, this.props.style]}>
       <Pie
         data={data}
         options={options}
@@ -84,6 +52,7 @@ export class ExpensesPiechart extends Component {
 
 const styles = StyleSheet.create({
   chart: {
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

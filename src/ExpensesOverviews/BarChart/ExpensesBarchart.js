@@ -3,75 +3,45 @@ import React, { Component } from 'react';
 import { Bar } from 'react-native-pathjs-charts';
 import { View, StyleSheet } from 'react-native';
 
-export class ExpensesBarchart extends Component {
-  render() {
-    var data;
-    if (this.props.date.getMonth() === 10 && this.props.category == "vše") {
-      data = [
-        [{
-          "amount": 700,
-          "name": "1. týden"
-        }, {
-          "amount": 1500,
-          "name": "2. týden"
-        }, {
-          "amount": 900,
-          "name": "3. týden"
-        }, {
-          "amount": 3000,
-          "name": "4. týden"
-        }]
-      ];
-    } else if (this.props.date.getMonth() === 11 && this.props.category == "vše") {
-      data = [
-        [{
-          "amount": 1000,
-          "name": "1. týden"
-        }, {
-          "amount": 500,
-          "name": "2. týden"
-        }, {
-          "amount": 800,
-          "name": "3. týden"
-        }, {
-          "amount": 700,
-          "name": "4. týden"
-        }]
-      ];
-    } else if (this.props.date.getMonth() === 10 && this.props.category == "potraviny") {
-      data = [
-        [{
-          "amount": 300,
-          "name": "1. týden"
-        }, {
-          "amount": 500,
-          "name": "2. týden"
-        }, {
-          "amount": 400,
-          "name": "3. týden"
-        }, {
-          "amount": 480,
-          "name": "4. týden"
-        }]
-      ];
-    } else if (this.props.date.getMonth() === 11 && this.props.category == "potraviny") {
-      data = [
-        [{
-          "amount": 500,
-          "name": "1. týden"
-        }, {
-          "amount": 450,
-          "name": "2. týden"
-        }, {
-          "amount": 600,
-          "name": "3. týden"
-        }, {
-          "amount": 350,
-          "name": "4. týden"
-        }]
-      ];
-    }
+import { All } from '../../Shared/Categories';
+import { getSumOfTransactions, getSumOfExpenses } from '../../Shared/DataSource';
+import { periods } from '../../Shared/DataSource';
 
+export class ExpensesBarchart extends Component {
+
+  getData() {
+    let data = [];
+    let fromDate = new Date(this.props.fromDate);
+    let toDate = new Date(this.props.fromDate);
+
+    if (this.props.period === periods.get('month')) {
+      toDate.setDate(fromDate.getDate() + 7);
+      toDate.setMilliseconds(-1);
+
+      for (var i = 1; i <= 4; i++) {
+        if (i === 4) {
+          toDate = this.props.toDate;
+        }
+        if (this.props.category === All) {
+          data.push(getSumOfExpenses(fromDate, toDate));
+        } else {
+          data.push(getSumOfTransactions(this.props.category, fromDate, toDate));
+        }
+        data[i - 1].amount = -data[i - 1].amount;
+        data[i - 1].name = '' + i + '. týden';
+        fromDate = toDate;
+        toDate = new Date(toDate);
+        fromDate.setMilliseconds(fromDate.getMilliseconds() + 1);
+        toDate.setDate(toDate.getDate() + 7)
+      }
+    }
+    if (data.find((x) => x.amount !== 0) === undefined) {
+      return;
+    }
+    return [data];
+  }
+
+  render() {
     var options = {
       width: 250,
       height: 250,
@@ -113,9 +83,9 @@ export class ExpensesBarchart extends Component {
     };
 
     return (
-    <View style={styles.chart}>
+    <View style={[styles.chart, this.props.style]}>
       <Bar
-        data={data}
+        data={this.getData()}
         options={options}
         accessorKey="amount" />
     </View>
@@ -125,6 +95,7 @@ export class ExpensesBarchart extends Component {
 
 const styles = StyleSheet.create({
   chart: {
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

@@ -25,14 +25,14 @@ export default class CategorySelector extends Component {
     var items = Object.keys(ExpensesCategories).map(
       (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={category} />
     )
-    items.push(<Picker.Item key={All} label={All} value={All} />);
+    items.unshift(<Picker.Item key={All} label={All} value={All} />);
     return items;
   }
 
   render() {
 
     return (
-      <View style={styles.pickerView}>
+      <View style={[styles.pickerView, this.props.style]}>
         <Text>Kategorie:</Text>
         <Picker
           style={styles.picker}

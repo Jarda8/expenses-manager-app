@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { Ionicons } from '@exponent/vector-icons';
 
+import { periods } from './DataSource';
+
 
 // TODO typy pro props viz "flow react" na webu *************************************************************************************
 
@@ -12,34 +14,45 @@ import { Ionicons } from '@exponent/vector-icons';
 //   onClick: () => void,
 // };
 
+const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
+
 export default class TimeNavigation extends Component {
 
-  // declare props (default props a tak)
-
   handlePressArrow(change : number) {
-      console.log("You tapped " + change + "!");
       this.props.onDateChange(change);
     }
 
-  render() {
-    let year = this.props.date.getFullYear();
-    let month = months[this.props.date.getMonth()];
+    renderText() {
+      let year = this.props.fromDate.getFullYear();
+      let month = months[this.props.fromDate.getMonth()];
+      let monthNumber = this.props.fromDate.getMonth() + 1;
+      let day = this.props.fromDate.getDate();
 
+      let toYear = this.props.toDate.getFullYear();
+      let toMonthNumber = this.props.toDate.getMonth() + 1;
+      let toDay = this.props.toDate.getDate();
+
+      if (this.props.period === periods.get('month')) {
+        return <Text>{month} {year}</Text>;
+      } else {
+        return <Text>{day}.{monthNumber}.{year} - {toDay}.{toMonthNumber}.{toYear}</Text>;
+      }
+    }
+
+  render() {
     return (
       <View style={styles.timeNavigation}>
         <TouchableHighlight onPress={() => this.handlePressArrow(-1)}>
-          <Ionicons name="ios-arrow-back" size={32} color="black" />
+          <Ionicons name="ios-arrow-back" size={64} color="black" />
         </TouchableHighlight>
-        <Text>{month} {year}</Text>
+        {this.renderText()}
         <TouchableHighlight onPress={() => this.handlePressArrow(1)}>
-          <Ionicons name="ios-arrow-forward" size={32} color="black" />
+          <Ionicons name="ios-arrow-forward" size={64} color="black" />
         </TouchableHighlight>
       </View>
     );
   }
 }
-
-const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
 
 const styles = StyleSheet.create({
   timeNavigation: {

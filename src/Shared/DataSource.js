@@ -1,5 +1,11 @@
 /* @flow */
-import { All } from './Categories'
+import { All, ExpensesCategories } from './Categories'
+
+var periods = new Map();
+periods.set('year', 'year');
+periods.set('month', 'month');
+periods.set('week', 'week');
+periods.set('custom', 'custom');
 
 var accountTypes = new Map();
 accountTypes.set('Personal account', 'Osobní účet');
@@ -63,34 +69,36 @@ export type Transaction = {
 }
 
 var transactionsDS: Array<Transaction> = [
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'WAGES', amount: 22500, date: new Date('2016-11-01'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -160, date: new Date('2016-11-04'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'TRANSPORT', amount: -120, date: new Date('2016-11-04'), note: 'vlak do Pardubic'},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -65, date: new Date('2016-11-05'), note: 'kebab'},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'TRANSPORT', amount: -120, date: new Date('2016-11-05')},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'CLOTHES', amount: -1150, date: new Date('2016-11-08'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -420, date: new Date('2016-11-09'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'ENTERTAINMENT', amount: -380, date: new Date('2016-11-10'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -148, date: new Date('2016-11-10'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'ENTERTAINMENT', amount: -200, date: new Date('2016-12-08'), note: ''},
-  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -321, date: new Date('2016-12-31'), note: ''}
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'WAGES', amount: 22500, date: new Date(2017, 0, 1, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -160, date: new Date(2017, 0, 4, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'TRANSPORT', amount: -120, date: new Date(2017, 0, 4, 0, 0, 0, 0), note: 'vlak do Pardubic'},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -65, date: new Date(2017, 0, 5, 0, 0, 0, 0), note: 'kebab'},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'TRANSPORT', amount: -120, date: new Date(2017, 0, 5, 0, 0, 0, 0), note: 'vlak z Pardubic'},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'CLOTHES', amount: -1150, date: new Date(2017, 0, 8, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -420, date: new Date(2017, 0, 17, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'ENTERTAINMENT', amount: -380, date: new Date(2017, 0, 10, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -148, date: new Date(2017, 0, 10, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -160, date: new Date(2017, 0, 25, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'TRANSPORT', amount: -120, date: new Date(2017, 0, 28, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -65, date: new Date(2017, 0, 28, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'ENTERTAINMENT', amount: -200, date: new Date(2016, 11, 8, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'HEALTH', amount: -321, date: new Date(2016, 11, 31, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'TRANSPORT', amount: -420, date: new Date(2016, 11, 1, 0, 0, 0, 0), note: ''},
+  {accountName: 'Osobní účet', accountNumber: '123465798', category: 'FOOD', amount: -120, date: new Date(2016, 11, 17, 0, 0, 0, 0), note: ''}
 ]
 
 function saveTransaction(transaction: Transaction) {
   transactionsDS.push(transaction);
 }
 
-function getTransactions(category: string, date: Date): Array<Transaction> {
+function getTransactions(category: string, fromDate: Date, toDate: Date): Array<Transaction> {
   let transactions;
   if (category === All) {
     transactions = transactionsDS.filter((t) =>
-    t.date.getFullYear() === date.getFullYear()
-    && t.date.getMonth() === date.getMonth());
+    t.date >= fromDate && t.date <= toDate);
   } else {
     transactions = transactionsDS.filter((t) =>
-    t.category === category
-    && t.date.getFullYear() === date.getFullYear()
-    && t.date.getMonth() === date.getMonth());
+    t.category === category && t.date >= fromDate && t.date <= toDate);
   }
   return transactions;
 }
@@ -103,6 +111,44 @@ function deleteTransaction(transaction: Transaction) {
 function updateTransaction(oldTransaction: Transaction, newTransaction: Transaction) {
   let index = transactionsDS.indexOf(oldTransaction);
   transactionsDS[index] = newTransaction;
+}
+
+// function getSumOfTransactions(category: string, fromDate: Date, toDate: Date) {
+//   let transactions = transactionsDS.filter((t) => t.date >= fromDate && t.date <=toDate);
+//   let amounts = transactions.map((t) => t.amount);
+//   return amounts.reduce((x, y) => x + y, 0);
+// }
+
+function addTransactions(category: string, transactions: Array<Transaction>): {name: string, amount: number} {
+  return transactions.reduce((x, y) => {return {name: category, amount: x.amount + y.amount}}, {name: category, amount: 0});
+}
+
+function getSumOfTransactions(category: string, fromDate: Date, toDate: Date): {name: string, amount: number} {
+  let transactions;
+  if (category === All) {
+    transactions = transactionsDS.filter((t) => t.date >= fromDate && t.date <=toDate);
+  } else {
+    transactions = transactionsDS.filter((t) => t.date >= fromDate && t.date <=toDate && t.category === category);
+  }
+  return addTransactions(category, transactions);
+}
+
+function getSumOfIncomes(fromDate: Date, toDate: Date): {name: string, amount: number} {
+  let transactions = transactionsDS.filter((t) => t.date >= fromDate && t.date <=toDate && t.amount > 0);
+  return addTransactions(All, transactions);
+}
+
+function getSumOfExpenses(fromDate: Date, toDate: Date): {name: string, amount: number} {
+  let transactions = transactionsDS.filter((t) => t.date >= fromDate && t.date <=toDate && t.amount < 0);
+  return addTransactions(All, transactions);
+}
+
+function getSumsOfExpensesByCategory(fromDate: Date, toDate: Date): Array<{name: string, amount: number}> {
+  return (
+    Object.keys(ExpensesCategories)
+    .map((category) => getSumOfTransactions(category, fromDate, toDate))
+    .filter((sum) => sum.amount !== 0)
+  );
 }
 
 export type Budget = {
@@ -121,6 +167,10 @@ function getBudgets(): Array<Budget> {
   return budgetsDS;
 }
 
+function getBudget(category: string): Budget {
+  return budgetsDS.find((budget) => budget.category === category);
+}
+
 function saveBudget(budget: Budget) {
   budgetsDS.push(budget);
 }
@@ -135,4 +185,4 @@ function deleteBudget(budget: Budget) {
   budgetsDS.splice(index, 1);
 }
 
-export { accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget }
+export { periods, accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory }

@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   picker: {
-    width: 180,
+    width: 150,
     // backgroundColor: 'white'
   }
 });

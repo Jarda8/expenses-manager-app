@@ -1,6 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
-import { ListView, StyleSheet, Text } from 'react-native';
+import { ListView, StyleSheet, Text, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 
 import TransactionsListItem from './TransactionsListItem';
@@ -34,16 +34,18 @@ export default class TransactionsList extends Component {
   }
 
   getTransactionsDS() {
-    let transactionsArray = getTransactions(this.props.category, this.props.date);
+    let transactionsArray = getTransactions(this.props.category, this.props.fromDate, this.props.toDate);
     return this.state.dataSource.cloneWithRows(transactionsArray);
   }
 
   render() {
     return (
+      <View style={this.props.style}>
         <ListView
           dataSource={this.getTransactionsDS()}
           renderRow={this.renderTransactionItem}
         />
+      </View>
     );
   }
 }
