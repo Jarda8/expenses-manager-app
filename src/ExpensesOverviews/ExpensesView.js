@@ -6,8 +6,10 @@ import TimeNavigation from '../Shared/TimeNavigation';
 import { AddTransactionControls } from '../Shared/AddTransactionControls';
 import { ExpensesCategories, All } from '../Shared/Categories';
 import CategorySelector from '../Shared/CategorySelector';
-import Balance from '../Shared/Balance';
+import Balance from './Balance';
 import { periods } from '../Shared/DataSource';
+import SumOfExpenses from './SumOfExpenses'
+import SumOfIncomes from './SumOfIncomes'
 
 export default class ExpensesView extends Component {
 
@@ -85,13 +87,15 @@ export default class ExpensesView extends Component {
           />
         </View>
         <View style={styles.balance}>
+          <SumOfIncomes fromDate={this.state.fromDate} toDate={this.state.toDate} />
           <Balance fromDate={this.state.fromDate} toDate={this.state.toDate} />
+          <SumOfExpenses fromDate={this.state.fromDate} toDate={this.state.toDate} />
         </View>
         <View style={styles.content}>
           {this.renderChild()}
         </View>
         <View style={styles.addTransactionControls}>
-          <AddTransactionControls navigator={this.props.navigator}/>
+          <AddTransactionControls navigator={this.props.navigator} />
         </View>
       </View>
     );
@@ -104,13 +108,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF'
   },
   timeNavigation: {
-    flex: 1,
+    flex: 0.7,
     backgroundColor: 'powderblue',
     justifyContent: "center",
   },
   content: {
     flex: 4,
-    // alignItems: "center",
     justifyContent: "space-around",
     backgroundColor: 'skyblue'
   },
@@ -120,6 +123,9 @@ const styles = StyleSheet.create({
   },
   balance: {
     flex: 0.25,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     backgroundColor: 'cyan'
   }
 });

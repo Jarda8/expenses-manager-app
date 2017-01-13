@@ -33,9 +33,9 @@ export default class TimeNavigation extends Component {
       let toDay = this.props.toDate.getDate();
 
       if (this.props.period === periods.get('month')) {
-        return <Text>{month} {year}</Text>;
+        return <Text style={styles.datum}>{month} {year}</Text>;
       } else {
-        return <Text>{day}.{monthNumber}.{year} - {toDay}.{toMonthNumber}.{toYear}</Text>;
+        return <Text style={styles.datum}>{day}.{monthNumber}.{year} - {toDay}.{toMonthNumber}.{toYear}</Text>;
       }
     }
 
@@ -60,5 +60,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: 'bisque'
+  },
+  datum: {
+    fontSize: 20
   }
 });

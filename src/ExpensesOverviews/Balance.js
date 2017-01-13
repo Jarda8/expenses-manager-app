@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getSumOfTransactions } from './DataSource';
-import { All } from './Categories'
+import { getSumOfTransactions } from '../Shared/DataSource';
+import { All } from '../Shared/Categories'
 
 export default class Balance extends Component {
 
@@ -28,8 +28,7 @@ export default class Balance extends Component {
 
 const styles = StyleSheet.create({
   balance: {
-    // color: 'green',
     textAlign: 'center',
-    fontSize: 16
+    fontSize: 18
   }
 })
