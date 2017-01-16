@@ -4,9 +4,10 @@ import { View, StyleSheet, Text, Picker } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation'
 
 import Calculator from '../Shared/Calculator/Calculator';
-import { getBudgets, saveBudget, updateBudget, deleteBudget } from '../Shared/DataSource';
+import { getBudgets, deleteBudget } from '../Shared/DataSource';
 import { ExpensesCategories } from '../Shared/Categories';
 import { Router } from '../../main';
+import BudgetModificator from './BudgetModificator';
 
 @withNavigation
 export default class BudgetForm extends Component {
@@ -42,23 +43,36 @@ export default class BudgetForm extends Component {
   }
 
   saveNewBudget(budget: number) {
-    saveBudget({
+    // saveBudget({
+    //   category: this.state.category,
+    //   budget: budget,
+    //   notificationThreshold: this.state.notificationThreshold
+    // });
+    BudgetModificator.saveBudget({
       category: this.state.category,
       budget: budget,
       notificationThreshold: this.state.notificationThreshold
-    })
+    });
     this.props.navigator.pop();
   }
 
   updateOldBudget(budget: number) {
-    updateBudget(
+    // updateBudget(
+    //   this.props.budget,
+    //   {
+    //     category: this.state.category,
+    //     budget: budget,
+    //     notificationThreshold: this.state.notificationThreshold
+    //   }
+    // );
+    BudgetModificator.updateBudget(
       this.props.budget,
       {
         category: this.state.category,
         budget: budget,
         notificationThreshold: this.state.notificationThreshold
       }
-    )
+    );
     this.props.navigator.pop();
   }
 

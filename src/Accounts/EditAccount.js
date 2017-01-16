@@ -23,7 +23,7 @@ export default class EditAccount extends Component {
       this.props.navigator.updateCurrentRouteParams({
         navigateBack: () => this.props.navigator.pop()
       })
-    }, 1000);
+    }, 200);
   }
 
   render() {

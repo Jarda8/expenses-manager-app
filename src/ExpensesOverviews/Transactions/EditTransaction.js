@@ -6,11 +6,12 @@ import DatePicker from 'react-native-datepicker'
 
 import Calculator from '../../Shared/Calculator/Calculator';
 import AccountSelector from '../../Shared/AccountSelector';
-import { accountsDS, getAccount, updateTransaction, deleteTransaction } from '../../Shared/DataSource';
+import { getAccount, updateTransaction, deleteTransaction } from '../../Shared/DataSource';
 import { Router } from '../../../main';
 import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
 import SaveButton from '../../Shared/SaveButton'
 import DeleteButton from '../../Shared/DeleteButton'
+import TransactionModificator from './TransactionModificator';
 
 
 export default class NewTransaction extends Component {
@@ -20,7 +21,7 @@ export default class NewTransaction extends Component {
       title: 'Úpravy transakce',
       renderRight: (route) =>
         <View style={styles.navbarMenu}>
-          <SaveButton onPress={route.params.update} />
+          {/* <SaveButton onPress={route.params.update} /> */}
           <DeleteButton onPress={route.params.delete} />
         </View>
     },
@@ -48,7 +49,7 @@ export default class NewTransaction extends Component {
     this.handleDisplayChange = this.handleDisplayChange.bind(this);
     this.handleConfirmButtonPressed = this.handleConfirmButtonPressed.bind(this);
     this.updateThisTransactionWithCategory = this.updateThisTransactionWithCategory.bind(this);
-    this.updateThisTransaction = this.updateThisTransaction.bind(this);
+    // this.updateThisTransaction = this.updateThisTransaction.bind(this);
     this.deleteThisTransaction = this.deleteThisTransaction.bind(this);
     this.parseDate = this.parseDate.bind(this);
   }
@@ -56,7 +57,7 @@ export default class NewTransaction extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.props.navigator.updateCurrentRouteParams({
-        update: this.updateThisTransaction,
+        // update: this.updateThisTransaction,
         delete: this.deleteThisTransaction
       })
     }, 1000);
@@ -66,9 +67,10 @@ export default class NewTransaction extends Component {
     this.setState({displayedAmount: toDisplay});
   }
 
-  updateThisTransaction() {
-    this.updateThisTransactionWithCategory(this.props.route.params.transaction.category);
-  }
+  // updateThisTransaction() {
+  //   this.updateThisTransactionWithCategory(this.props.route.params.transaction.category);
+  // TODO Vyřešit problém s updatováním finalAmount. Správnou hodnotu zná, resp. musí spočítat, Calculator.
+  // }
 
   deleteThisTransaction() {
     deleteTransaction(this.props.route.params.transaction);
@@ -76,17 +78,26 @@ export default class NewTransaction extends Component {
   }
 
   updateThisTransactionWithCategory(category: string) {
-      updateTransaction(
+      // updateTransaction(
+      //   this.props.route.params.transaction,
+      //   {
+      //   accountName: this.state.account.name,
+      //   accountNumber: this.state.account.number,
+      //   category: category,
+      //   amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
+      //   date: this.state.date,
+      //   note: this.state.note
+      // });
+      TransactionModificator.updateTransaction(
         this.props.route.params.transaction,
         {
         accountName: this.state.account.name,
         accountNumber: this.state.account.number,
         category: category,
-        // TODO Vyřešit problém s updatováním finalAmount. Správnou hodnotu zná, resp. musí spočítat, Calculator.
         amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
         date: this.state.date,
         note: this.state.note
-      })
+      });
       this.props.navigator.popToTop();
   }
 
@@ -155,7 +166,7 @@ export default class NewTransaction extends Component {
             initialNumber={this.state.finalAmount}
             onDisplayChange={this.handleDisplayChange}
             onConfirmButtonPressed={this.handleConfirmButtonPressed}
-            confirmButtonText='Změnit kategorii'  />
+            confirmButtonText='Vybrat kategorii'  />
         </View>
       </View>
     );

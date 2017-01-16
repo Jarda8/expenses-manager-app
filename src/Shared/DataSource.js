@@ -93,6 +93,17 @@ var transactionsDS: Array<Transaction> = [
 
 function saveTransaction(transaction: Transaction) {
   transactionsDS.push(transaction);
+
+  let account = getAccount(transaction.accountName, transaction.accountNumber);
+  updateAccount(account,
+    {
+      name: account.name,
+      number: account.number,
+      bankName: account.bankName,
+      type: account.type,
+      balance: account.balance + transaction.amount,
+      currency: account.currency
+    });
 }
 
 function getTransactions(category: string, fromDate: Date, toDate: Date): Array<Transaction> {
@@ -110,11 +121,44 @@ function getTransactions(category: string, fromDate: Date, toDate: Date): Array<
 function deleteTransaction(transaction: Transaction) {
   let index = transactionsDS.indexOf(transaction);
   transactionsDS.splice(index, 1);
+
+  let account = getAccount(transaction.accountName, transaction.accountNumber);
+  updateAccount(account,
+    {
+      name: account.name,
+      number: account.number,
+      bankName: account.bankName,
+      type: account.type,
+      balance: account.balance - transaction.amount,
+      currency: account.currency
+    });
 }
 
 function updateTransaction(oldTransaction: Transaction, newTransaction: Transaction) {
   let index = transactionsDS.indexOf(oldTransaction);
   transactionsDS[index] = newTransaction;
+
+
+  let oldAccount = getAccount(oldTransaction.accountName, oldTransaction.accountNumber);
+  updateAccount(oldAccount,
+    {
+      name: oldAccount.name,
+      number: oldAccount.number,
+      bankName: oldAccount.bankName,
+      type: oldAccount.type,
+      balance: oldAccount.balance - oldTransaction.amount,
+      currency: oldAccount.currency
+    });
+  let newAccount = getAccount(newTransaction.accountName, newTransaction.accountNumber);
+  updateAccount(newAccount,
+    {
+      name: newAccount.name,
+      number: newAccount.number,
+      bankName: newAccount.bankName,
+      type: newAccount.type,
+      balance: newAccount.balance + newTransaction.amount,
+      currency: newAccount.currency
+    });
 }
 
 // function getSumOfTransactions(category: string, fromDate: Date, toDate: Date) {

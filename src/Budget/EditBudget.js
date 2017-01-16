@@ -12,8 +12,7 @@ export default class EditBudget extends Component {
       renderRight: (route, props) =>
         <DeleteButton onPress={() =>
           {
-            deleteBudget(route.params.budget);
-            route.params.navigateBack();
+            route.params.deleteBudget();
           }} />
     },
   }
@@ -21,9 +20,14 @@ export default class EditBudget extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.props.navigator.updateCurrentRouteParams({
-        navigateBack: () => this.props.navigator.pop()
+        deleteBudget: this.deleteBudget.bind(this)
       })
-    }, 1000);
+    }, 200);
+  }
+
+  deleteBudget(budget) {
+    deleteBudget(budget);
+    this.props.navigator.pop();
   }
 
   render() {

@@ -2,12 +2,13 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 import DatePicker from 'react-native-datepicker'
-import { Notifications } from 'exponent';
+// import { Notifications } from 'exponent';
 
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
 import { ExpensesCategories } from '../Shared/Categories';
-import { accountsDS, saveTransaction, getBudget, getSumOfTransactions } from '../Shared/DataSource';
+import { getAccounts, saveTransaction, getBudget, getSumOfTransactions } from '../Shared/DataSource';
+import TransactionModificator from '../ExpensesOverviews/Transactions/TransactionModificator';
 import { Router } from '../../main';
 
 
@@ -17,7 +18,7 @@ export default class NewTransaction extends Component {
     super(props);
     this.state = {
       displayedAmount: '0',
-      account: accountsDS[0],
+      account: getAccounts()[0],
       note: '',
       finalAmount: 0,
       date: new Date()
@@ -33,56 +34,63 @@ export default class NewTransaction extends Component {
   }
 
   saveNewTransaction(category: string) {
-    saveTransaction({
+    // saveTransaction({
+    //   accountName: this.state.account.name,
+    //   accountNumber: this.state.account.number,
+    //   category: category,
+    //   amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
+    //   date: this.state.date,
+    //   note: this.state.note
+    // });
+    TransactionModificator.saveTransaction({
       accountName: this.state.account.name,
       accountNumber: this.state.account.number,
       category: category,
       amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
       date: this.state.date,
       note: this.state.note
-    })
-    this.checkBudget(category);
+    });
+    // this.checkBudget(category);
     this.props.navigator.popToTop();
   }
 
-  checkBudget(category: string) {
-    let budget = getBudget(category);
-    if (budget === undefined) {
-      return;
-    }
-    let toDate = new Date();
-    let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 0, 0, 0, 0, 0)
-    let monthTotal = getSumOfTransactions(category, fromDate, toDate).amount * -1;
+  // checkBudget(category: string) {
+  //   let budget = getBudget(category);
+  //   if (budget === undefined) {
+  //     return;
+  //   }
+  //   let toDate = new Date();
+  //   let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0)
+  //   let monthTotal = getSumOfTransactions(category, fromDate, toDate).amount * -1;
+  //
+  //   if (budget.budget < monthTotal
+  //     && budget.budget >= monthTotal - this.state.finalAmount) {
+  //     this.presentNotification(category, true, monthTotal, budget.budget);
+  //   } else if (budget.budget * budget.notificationThreshold < monthTotal
+  //   && budget.budget * budget.notificationThreshold >= monthTotal - this.state.finalAmount) {
+  //     this.presentNotification(category, false, monthTotal, budget.budget * budget.notificationThreshold);
+  //   }
+  // }
 
-    console.log('category: ' + category + ' total: ' + monthTotal + ' threshold: ' + (budget.budget * budget.notificationThreshold) + ' budget: ' + budget.budget);
-
-    if (budget.budget < monthTotal) {
-      this.presentNotification(category, true, monthTotal, budget.budget);
-    } else if (budget.budget * budget.notificationThreshold < monthTotal) {
-      this.presentNotification(category, false, monthTotal, budget.budget * budget.notificationThreshold);
-    }
-  }
-
-  presentNotification(category: string, overLimit: boolean, total: number, threshold: number) {
-    let title = 'Překročena hranice výdajů (' + ExpensesCategories[category] + ')!'
-    let body = 'Vaše výdaje: ' + total + '\nHranice: ' + threshold;
-    if (overLimit === true) {
-      title = 'Překročen rozpočet (' + ExpensesCategories[category] + ')!'
-      body = 'Vaše výdaje: ' + total + '\nRozpočet: ' + threshold;
-    }
-    Notifications.presentLocalNotificationAsync({
-      title: title,
-      body: body,
-      data: {},
-      ios: {
-        sound: true,
-      },
-      android: {
-        vibrate: true,
-      }
-    });
-    console.log('notification sent');
-}
+//   presentNotification(category: string, overLimit: boolean, total: number, threshold: number) {
+//     let title = 'Překročena stanovená hranice výdajů! (' + ExpensesCategories[category] + ')'
+//     let body = 'Vaše výdaje: ' + total + '\nHranice: ' + threshold;
+//     if (overLimit === true) {
+//       title = 'Překročen rozpočet! (' + ExpensesCategories[category] + ')'
+//       body = 'Vaše výdaje: ' + total + '\nRozpočet: ' + threshold;
+//     }
+//     Notifications.presentLocalNotificationAsync({
+//       title: title,
+//       body: body,
+//       data: {},
+//       ios: {
+//         sound: true,
+//       },
+//       android: {
+//         vibrate: true,
+//       }
+//     });
+// }
 
   handleConfirmButtonPressed(amount : number) {
     // TODO blokovat záporný result -> upozornit uživatele a jinak nic

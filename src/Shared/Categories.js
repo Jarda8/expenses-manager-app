@@ -11,19 +11,19 @@ var ExpensesCategories = {
   GIFTS : "Dárky",
   COMMUNICATIONS : "Komunikace",
   TOBACCO : "Tabák",
-  LOAN : "Půjčky",
-  REPAYMENT : "Splátky",
+  LOAN_EXPENSE : "Půjčky",
+  REPAYMENT_EXPENSE : "Splátky",
   INSURANCE : "Pojištění",
   INVESTMENTS : "Investice",
-  OTHERS : "Ostatní"
+  OTHERS_EXPENSE : "Ostatní"
 };
 
 var IncomeCategories = {
   WAGES : "Mzda/plat",
-  LOAN : "Půjčky",
-  REPAYMENT : "Splátky",
+  LOAN_INCOME : "Půjčky",
+  REPAYMENT_INCOME : "Splátky",
   PROFIT : "Zisk",
-  OTHERS : "Ostatní"
+  OTHERS_INCOME : "Ostatní"
 };
 
 var All = 'Vše';
