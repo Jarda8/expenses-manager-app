@@ -106,6 +106,16 @@ function saveTransaction(transaction: Transaction) {
     });
 }
 
+function compareTransactionsByDate(a: Transaction, b: Transaction) {
+  if (a.date < b.date) {
+    return 1;
+  } else if (a.date > b.date) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
 function getTransactions(category: string, fromDate: Date, toDate: Date): Array<Transaction> {
   let transactions;
   if (category === All) {
@@ -115,7 +125,7 @@ function getTransactions(category: string, fromDate: Date, toDate: Date): Array<
     transactions = transactionsDS.filter((t) =>
     t.category === category && t.date >= fromDate && t.date <= toDate);
   }
-  return transactions;
+  return transactions.sort(compareTransactionsByDate);
 }
 
 function deleteTransaction(transaction: Transaction) {
@@ -199,6 +209,73 @@ function getSumsOfExpensesByCategory(fromDate: Date, toDate: Date): Array<{name:
   );
 }
 
+export type Transfer = {
+  fromAccountName: string,
+  fromAccountNumber: string,
+  toAccountName: string,
+  toAccountNumber: string,
+  amount: number,
+  date: Date,
+  note: string
+}
+
+var transfersDS: Array<Transfer> = [
+  {fromAccountName: 'Osobní účet', fromAccountNumber: '123465798', toAccountName: 'Peněženka', toAccountNumber: null, amount: 2000, date: new Date(2017, 0, 10, 0, 0, 0, 0), note: ''}
+]
+
+function saveTransfer(transfer: Transfer) {
+  transfersDS.push(transfer);
+
+  let account = getAccount(transfer.fromAccountName, transfer.fromAccountNumber);
+  updateAccount(account,
+    {
+      name: account.name,
+      number: account.number,
+      bankName: account.bankName,
+      type: account.type,
+      balance: account.balance - transfer.amount,
+      currency: account.currency
+    });
+
+  account = getAccount(transfer.toAccountName, transfer.toAccountNumber);
+  updateAccount(account,
+    {
+      name: account.name,
+      number: account.number,
+      bankName: account.bankName,
+      type: account.type,
+      balance: account.balance + transfer.amount,
+      currency: account.currency
+    });
+}
+
+function deleteTransfer(transfer: Transfer) {
+  let index = transfersDS.indexOf(transfer);
+  transfersDS.splice(index, 1);
+
+  let account = getAccount(transfer.fromAccountName, transfer.fromAccountNumber);
+  updateAccount(account,
+    {
+      name: account.name,
+      number: account.number,
+      bankName: account.bankName,
+      type: account.type,
+      balance: account.balance + transaction.amount,
+      currency: account.currency
+    });
+
+  account = getAccount(transfer.toAccountName, transfer.toAccountNumber);
+  updateAccount(account,
+    {
+      name: account.name,
+      number: account.number,
+      bankName: account.bankName,
+      type: account.type,
+      balance: account.balance - transaction.amount,
+      currency: account.currency
+    });
+}
+
 export type Budget = {
   category: string,
   budget: number,
@@ -233,4 +310,4 @@ function deleteBudget(budget: Budget) {
   budgetsDS.splice(index, 1);
 }
 
-export { periods, accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, getTotalBalance, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory }
+export { periods, accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, getTotalBalance, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory, saveTransfer, deleteTransfer }

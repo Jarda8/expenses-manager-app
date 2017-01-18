@@ -10,13 +10,6 @@ import TotalBalance from './TotalBalance';
 @withNavigation
 export default class AccountsView extends Component {
 
-  constructor() {
-    super();
-    this.state = {
-      balance: 21654
-    };
-  }
-
   addAccount() {
     this.props.navigator.push(Router.getRoute('newAccount'));
   }

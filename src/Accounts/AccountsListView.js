@@ -5,12 +5,15 @@ import { ListView } from 'react-native';
 import AccountsView from './AccountsView';
 import AccountsListItem from './AccountsListItem';
 import { accountsDS } from '../Shared/DataSource';
+import TransferButton from './TransferButton';
 
 export default class AccountsListView extends Component {
 
     static route = {
       navigationBar: {
-        title: 'Účty'
+        title: 'Účty',
+        renderRight: (route, props) =>
+          <TransferButton />
       },
     }
 

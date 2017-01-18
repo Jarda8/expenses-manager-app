@@ -1,32 +1,36 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
-import DatePicker from 'react-native-datepicker'
-// import { Notifications } from 'exponent';
+import DatePicker from 'react-native-datepicker';
+import { Ionicons } from '@exponent/vector-icons';
 
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
-import { ExpensesCategories } from '../Shared/Categories';
-import { getAccounts, saveTransaction, getBudget, getSumOfTransactions } from '../Shared/DataSource';
-import TransactionModificator from '../ExpensesOverviews/Transactions/TransactionModificator';
+import { Transfer } from '../Shared/Categories';
+import { getAccounts, saveTransfer } from '../Shared/DataSource';
 import Note from '../Shared/Note';
-import { Router } from '../../main';
 
 
-export default class NewTransaction extends Component {
+export default class NewTransfer extends Component {
+
+    static route = {
+      navigationBar: {
+        title: 'Převod'
+      },
+    }
 
   constructor(props : any) {
     super(props);
     this.state = {
       displayedAmount: '0',
-      account: getAccounts()[0],
+      fromAccount: getAccounts()[0],
+      toAccount: getAccounts()[1],
       note: '',
       finalAmount: 0,
       date: new Date()
     };
     this.handleDisplayChange = this.handleDisplayChange.bind(this);
-    this.handleConfirmButtonPressed = this.handleConfirmButtonPressed.bind(this);
-    this.saveNewTransaction = this.saveNewTransaction.bind(this);
+    this.saveNewTransfer = this.saveNewTransfer.bind(this);
     this.parseDate = this.parseDate.bind(this);
   }
 
@@ -34,29 +38,17 @@ export default class NewTransaction extends Component {
     this.setState({displayedAmount: toDisplay});
   }
 
-  saveNewTransaction(category: string) {
-    TransactionModificator.saveTransaction({
-      accountName: this.state.account.name,
-      accountNumber: this.state.account.number,
-      category: category,
-      amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
+  saveNewTransfer(amount: number) {
+    saveTransfer({
+      fromAccountName: this.state.fromAccount.name,
+      fromAccountNumber: this.state.fromAccount.number,
+      toAccountName: this.state.toAccount.name,
+      toAccountNumber: this.state.toAccount.number,
+      amount: amount,
       date: this.state.date,
       note: this.state.note
     });
     this.props.navigator.popToTop();
-  }
-
-  handleConfirmButtonPressed(amount : number) {
-    // TODO blokovat záporný result -> upozornit uživatele a jinak nic
-    this.setState({finalAmount: amount});
-    this.props.navigator.push(
-      Router.getRoute(
-        'categories',
-        {
-          amount: amount,
-          categories: this.props.categories,
-          onCategorySelected: this.saveNewTransaction
-        }));
   }
 
   parseDate(date: string): Date {
@@ -70,12 +62,21 @@ export default class NewTransaction extends Component {
 
   render() {
     return (
-      <View style={styles.newTransaction}>
-        <View style={styles.accountView}>
+      <View style={styles.newTransfer}>
+        <View style={styles.accountsView}>
           <AccountSelector
+            selectedAccount={this.state.fromAccount}
             style={styles.AccountSelector}
-            selectedAccount={this.state.account}
-            onAccountChange={(acc) => this.setState({account: acc})} />
+            onAccountChange={(acc) => this.setState({fromAccount: acc})} />
+          <View style={styles.arrowView}>
+            <Ionicons name='ios-arrow-forward' size={32} color='black' />
+          </View>
+          <AccountSelector
+            selectedAccount={this.state.toAccount}
+            style={styles.AccountSelector}
+            onAccountChange={(acc) => this.setState({toAccount: acc})} />
+        </View>
+        <View style={styles.dateAmountView}>
           <DatePicker
             date={this.state.date}
             mode="date"
@@ -85,22 +86,21 @@ export default class NewTransaction extends Component {
             cancelBtnText="Zrušit"
             onDateChange={(date) => {
               this.setState({date: this.parseDate(date)})
-              // console.log(date);
             }}
           />
-        </View>
-        <View style={styles.amountDisplay}>
-          <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
-          {/* TODO lokalizovat měnu */}
-          <Text style={styles.currency}>CZK</Text>
+          <View style={styles.amountDisplay}>
+            <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
+            {/* TODO lokalizovat měnu */}
+            <Text style={styles.currency}>CZK</Text>
+          </View>
         </View>
         <Note />
         <View style={styles.calculatorView}>
           <Calculator
             initialNumber={0}
             onDisplayChange={this.handleDisplayChange}
-            onConfirmButtonPressed={this.handleConfirmButtonPressed}
-            confirmButtonText='Vybrat kategorii'  />
+            onConfirmButtonPressed={this.saveNewTransfer}
+            confirmButtonText='Uložit'  />
         </View>
       </View>
     );
@@ -108,20 +108,25 @@ export default class NewTransaction extends Component {
 }
 
 const styles = StyleSheet.create({
-  newTransaction: {
+  newTransfer: {
     flex: 1,
     backgroundColor: '#F5FCFF',
     margin: 10
   },
-  accountView: {
+  accountsView: {
     flex: 1,
     backgroundColor: 'powderblue',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row'
   },
-  amountDisplay: {
+  dateAmountView: {
     flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  amountDisplay: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center'
@@ -137,6 +142,10 @@ const styles = StyleSheet.create({
     flex: 5
   },
   AccountSelector: {
-    width: 180
+    flex: 1
+  },
+  arrowView: {
+    flex: 0.2,
+    alignItems: 'center'
   }
 });

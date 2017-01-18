@@ -1,7 +1,7 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput, Picker } from 'react-native';
-import { withNavigation } from '@exponent/ex-navigation'
+import { withNavigation } from '@exponent/ex-navigation';
 
 import { accountTypes, banks, saveAccount, updateAccount, currencies } from '../Shared/DataSource';
 import FullWidthButton from '../Shared/FullWidthButton'
@@ -25,7 +25,7 @@ export default class AccountForm extends Component {
         type: props.account.type,
         currency: props.account.currency,
         name: props.account.name,
-        number: props.account.number,
+        number: props.account.number ? props.account.number : '',
         bank: props.account.bankName,
         initialBalance: props.account.balance
       };
@@ -100,8 +100,10 @@ export default class AccountForm extends Component {
       return;
     }
     return (
-    <View style={styles.formItem}>
-      <Text style={styles.label}>Číslo: </Text>
+    <View style={styles.formTextInputItem}>
+      <View style={styles.labelView}>
+        <Text style={styles.label}>Číslo: </Text>
+      </View>
       <TextInput
         defaultValue={'' + this.state.number}
         style={styles.textInput}
@@ -157,8 +159,10 @@ export default class AccountForm extends Component {
               {this.generateCurrenciesItems()}
             </Picker>
           </View>
-          <View style={styles.formItem}>
-            <Text style={styles.label}>Název: </Text>
+          <View style={styles.formTextInputItem}>
+            <View style={styles.labelView}>
+              <Text style={styles.label}>Název: </Text>
+            </View>
             <TextInput
               defaultValue={'' + this.state.name}
               style={styles.textInput}
@@ -166,11 +170,13 @@ export default class AccountForm extends Component {
           </View>
           {this.renderAccountNumber()}
           {this.renderBank()}
-          <View style={styles.formItem}>
-            <Text style={styles.label}>Bilance: </Text>
+          <View style={styles.formTextInputItem}>
+            <View style={styles.labelView}>
+              <Text style={styles.label}>Bilance: </Text>
+            </View>
             <TextInput
               defaultValue={'' + this.state.initialBalance}
-              style={styles.textInput}
+              style={styles.balanceTextInput}
               keyboardType={'numeric'}
               onChangeText={(text) => this.setState({initialBalance: parseFloat(text)})} />
           </View>
@@ -197,6 +203,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row'
   },
+  formTextInputItem: {
+    flex: 1,
+    backgroundColor: 'powderblue',
+    justifyContent: 'flex-start',
+    flexDirection: 'row'
+  },
+  labelView: {
+    height: 80,
+    justifyContent: 'center'
+  },
   label: {
     fontSize: 20,
     // flex: 1
@@ -207,9 +223,13 @@ const styles = StyleSheet.create({
     width: 200
   },
   textInput: {
-    // flex: 4,
     width: 250,
     fontSize: 25
+  },
+  balanceTextInput: {
+    width: 250,
+    fontSize: 25,
+    textAlign: 'right'
   },
   balanceView: {
     flex: 1,

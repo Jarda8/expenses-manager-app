@@ -7,7 +7,6 @@ export default class DeleteButton extends Component {
     return (
       <TouchableHighlight
         onPress={this.props.onPress}
-        // onPress={() => console.log('baf')}
         underlayColor= 'steelblue'
         style={styles.deleteButton}>
         <FontAwesome name='trash-o' size={32} color='black' />

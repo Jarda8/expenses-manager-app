@@ -12,6 +12,7 @@ import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
 import SaveButton from '../../Shared/SaveButton'
 import DeleteButton from '../../Shared/DeleteButton'
 import TransactionModificator from './TransactionModificator';
+import Note from '../../Shared/Note'
 
 
 export default class NewTransaction extends Component {
@@ -78,16 +79,6 @@ export default class NewTransaction extends Component {
   }
 
   updateThisTransactionWithCategory(category: string) {
-      // updateTransaction(
-      //   this.props.route.params.transaction,
-      //   {
-      //   accountName: this.state.account.name,
-      //   accountNumber: this.state.account.number,
-      //   category: category,
-      //   amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
-      //   date: this.state.date,
-      //   note: this.state.note
-      // });
       TransactionModificator.updateTransaction(
         this.props.route.params.transaction,
         {
@@ -135,6 +126,7 @@ export default class NewTransaction extends Component {
         <View style={styles.accountView}>
           <AccountSelector
             selectedAccount={this.state.account}
+            style={styles.AccountSelector}
             onAccountChange={(acc) => this.setState({account: acc})} />
           <DatePicker
             style={styles.datePicker}
@@ -155,12 +147,7 @@ export default class NewTransaction extends Component {
           {/* TODO lokalizovat měnu */}
           <Text style={styles.currency}>CZK</Text>
         </View>
-        <View style={styles.noteView}>
-          <Text style={styles.noteLabel}>Poznámka: </Text>
-          <TextInput
-            style={styles.noteInput}
-            onChangeText={(text) => this.setState({note: text})} />
-        </View>
+        <Note handleOnChangeText={(text) => this.setState({note: text})}/>
         <View style={styles.calculatorView}>
           <Calculator
             initialNumber={this.state.finalAmount}
@@ -199,22 +186,13 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginLeft: 10
   },
-  noteView: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'aquamarine'
-  },
-  noteInput: {
-    flex: 4
-  },
-  noteLabel: {
-    flex: 1
-  },
   calculatorView: {
     flex: 5
   },
   navbarMenu: {
     flexDirection: 'row'
+  },
+  AccountSelector: {
+    width: 180
   }
 });

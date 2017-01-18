@@ -1,8 +1,8 @@
 /* @flow */
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Picker } from 'react-native';
+import { View, StyleSheet, Picker } from 'react-native';
 
-import { accountsDS } from './DataSource';
+import { getAccounts } from './DataSource';
 
 export default class AccountSelector extends Component {
 
@@ -11,7 +11,7 @@ export default class AccountSelector extends Component {
   }
 
   generateAccountsItems() {
-    return accountsDS.map(
+    return getAccounts().map(
       (account) => <Picker.Item key={account.name} label={account.name} value={account} />
     )
   }
@@ -19,8 +19,8 @@ export default class AccountSelector extends Component {
   render() {
 
     return (
-      <View style={styles.pickerView}>
-        <Text>Účet:</Text>
+      <View style={this.props.style}>
+        {/* <Text>Účet:</Text> */}
         <Picker
           style={styles.picker}
           selectedValue={this.props.selectedAccount}
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'aquamarine',
     justifyContent: 'center'
   },
-  picker: {
-    width: 150,
-    // backgroundColor: 'white'
-  }
+  // picker: {
+  //   width: 180,
+  //   // backgroundColor: 'white'
+  // }
 });

@@ -26,6 +26,8 @@ var IncomeCategories = {
   OTHERS_INCOME : "Ostatní"
 };
 
+var Transfer = 'Převod';
+
 var All = 'Vše';
 
-export { ExpensesCategories, IncomeCategories, All }
+export { ExpensesCategories, IncomeCategories, All, Transfer }
