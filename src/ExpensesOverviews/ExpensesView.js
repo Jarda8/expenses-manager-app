@@ -109,13 +109,13 @@ const styles = StyleSheet.create({
   },
   timeNavigation: {
     flex: 0.7,
-    backgroundColor: 'powderblue',
+    // backgroundColor: 'powderblue',
     justifyContent: "center",
   },
   content: {
     flex: 4,
     justifyContent: "space-around",
-    backgroundColor: 'skyblue'
+    // backgroundColor: 'skyblue'
   },
   addTransactionControls: {
     flex: 1,
@@ -126,6 +126,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'cyan'
+    // backgroundColor: 'cyan'
   }
 });

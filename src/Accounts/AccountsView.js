@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   balance: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'cyan'
+    // backgroundColor: 'cyan'
   },
   accounts: {
     flex: 7

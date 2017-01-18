@@ -198,14 +198,13 @@ const styles = StyleSheet.create({
   },
   formItem: {
     flex: 1,
-    backgroundColor: 'powderblue',
+    // backgroundColor: 'powderblue',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
   formTextInputItem: {
     flex: 1,
-    backgroundColor: 'powderblue',
     justifyContent: 'flex-start',
     flexDirection: 'row'
   },

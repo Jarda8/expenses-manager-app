@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   accountView: {
     flex: 1,
-    backgroundColor: 'powderblue',
+    // backgroundColor: 'powderblue',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row'

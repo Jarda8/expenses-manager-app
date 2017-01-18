@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   noteView: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'aquamarine'
+    // backgroundColor: 'aquamarine'
   },
   noteInput: {
     flex: 1

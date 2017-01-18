@@ -15,7 +15,7 @@ export default class FullWidthButton extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'powderblue',
+    backgroundColor: 'steelblue',
     justifyContent: 'center',
     margin: 10
   },

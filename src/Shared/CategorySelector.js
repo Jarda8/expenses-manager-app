@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   pickerView: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'aquamarine',
+    // backgroundColor: 'aquamarine',
     justifyContent: 'center'
   },
   picker: {
