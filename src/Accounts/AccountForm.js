@@ -1,7 +1,8 @@
 /* @flow */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput, Picker } from 'react-native';
+import ReactNative, { Keyboard, View, ScrollView, StyleSheet, Text, TextInput, Picker } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { accountTypes, banks, saveAccount, updateAccount, currencies } from '../Shared/DataSource';
 import FullWidthButton from '../Shared/FullWidthButton'
@@ -18,7 +19,8 @@ export default class AccountForm extends Component {
         name: '',
         number: '',
         bank: banks[0].name,
-        initialBalance: 0
+        initialBalance: 0,
+        padding: 0
       };
     } else {
       this.state = {
@@ -27,9 +29,28 @@ export default class AccountForm extends Component {
         name: props.account.name,
         number: props.account.number ? props.account.number : '',
         bank: props.account.bankName,
-        initialBalance: props.account.balance
+        initialBalance: props.account.balance,
+        padding: 0
       };
     }
+  }
+
+  componentDidMount() {
+    Keyboard.addListener('keyboardDidShow', this.addPadding.bind(this))
+    Keyboard.addListener('keyboardDidHide', this.removePadding.bind(this))
+  }
+
+  componentWillUnmount() {
+    Keyboard.removeListener('keyboardDidShow', (message) => {})
+    Keyboard.removeListener('keyboardDidHide', (message) => {})
+  }
+
+  addPadding(event: any) {
+    this.setState({padding: event.endCoordinates.height});
+  }
+
+  removePadding(event: any) {
+    this.setState({padding: 0});
   }
 
   saveNewAccount() {
@@ -137,49 +158,62 @@ export default class AccountForm extends Component {
     }
   }
 
+  _scrollToInput (reactNode: any) {
+    // Add a 'scroll' ref to your ScrollView
+    this.refs.scroll.scrollToFocusedInput(reactNode)
+  }
+
   render() {
     return (
-      <View style={styles.newAccount}>
+      <View style={styles.accountForm}>
+        {/* <ScrollView style={{flex: 1}} contentContainerStyle={{flex: 1}} > */}
         <View style={styles.formItems}>
-          <View style={styles.formItem}>
-            <Text style={styles.label}>Typ: </Text>
-            <Picker
-              style={styles.pickerInput}
-              selectedValue={this.state.type}
-              onValueChange={(newType) => this.setState({type: newType})}>
-              {this.generateAccountsTypesItems()}
-            </Picker>
-          </View>
-          <View style={styles.formItem}>
-            <Text style={styles.label}>Měna: </Text>
-            <Picker
-              style={styles.pickerInput}
-              selectedValue={this.state.currency}
-              onValueChange={(newCurrency) => this.setState({currency: newCurrency})}>
-              {this.generateCurrenciesItems()}
-            </Picker>
-          </View>
-          <View style={styles.formTextInputItem}>
-            <View style={styles.labelView}>
-              <Text style={styles.label}>Název: </Text>
+          <KeyboardAwareScrollView ref='scroll'>
+            <View style={styles.formItem}>
+              <Text style={styles.label}>Typ: </Text>
+              <Picker
+                style={styles.pickerInput}
+                selectedValue={this.state.type}
+                onValueChange={(newType) => this.setState({type: newType})}>
+                {this.generateAccountsTypesItems()}
+              </Picker>
             </View>
-            <TextInput
-              defaultValue={'' + this.state.name}
-              style={styles.textInput}
-              onChangeText={(text) => this.setState({name: text})} />
-          </View>
-          {this.renderAccountNumber()}
-          {this.renderBank()}
-          <View style={styles.formTextInputItem}>
-            <View style={styles.labelView}>
-              <Text style={styles.label}>Bilance: </Text>
+            <View style={styles.formItem}>
+              <Text style={styles.label}>Měna: </Text>
+              <Picker
+                style={styles.pickerInput}
+                selectedValue={this.state.currency}
+                onValueChange={(newCurrency) => this.setState({currency: newCurrency})}>
+                {this.generateCurrenciesItems()}
+              </Picker>
             </View>
-            <TextInput
-              defaultValue={'' + this.state.initialBalance}
-              style={styles.balanceTextInput}
-              keyboardType={'numeric'}
-              onChangeText={(text) => this.setState({initialBalance: parseFloat(text)})} />
-          </View>
+            <View style={styles.formTextInputItem}>
+              <View style={styles.labelView}>
+                <Text style={styles.label}>Název: </Text>
+              </View>
+              <TextInput
+                defaultValue={'' + this.state.name}
+                style={styles.textInput}
+                onChangeText={(text) => this.setState({name: text})} />
+            </View>
+            {this.renderAccountNumber()}
+            {this.renderBank()}
+            <View style={[styles.formTextInputItem, {paddingBottom: this.state.padding}]}>
+              <View style={styles.labelView}>
+                <Text style={styles.label}>Bilance: </Text>
+              </View>
+              <TextInput
+                onFocus={(event: Event) => {
+                  // `bind` the function if you're using ES6 classes
+                  // this.setState({padding: 300});
+                  this._scrollToInput(ReactNative.findNodeHandle(event.target));
+                }}
+                defaultValue={'' + this.state.initialBalance}
+                style={styles.balanceTextInput}
+                keyboardType={'numeric'}
+                onChangeText={(text) => this.setState({initialBalance: parseFloat(text)})} />
+            </View>
+          </KeyboardAwareScrollView>
         </View>
         <FullWidthButton text='Uložit' onPress={this.handleOnPress.bind(this)} flexSize={1} />
       </View>
@@ -188,7 +222,7 @@ export default class AccountForm extends Component {
 }
 
 const styles = StyleSheet.create({
-  newAccount: {
+  accountForm: {
     flex: 1,
     backgroundColor: '#F5FCFF'
   },
@@ -197,14 +231,16 @@ const styles = StyleSheet.create({
     margin: 10
   },
   formItem: {
-    flex: 1,
+    // flex: 1,
+    height: 80,
     // backgroundColor: 'powderblue',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
   formTextInputItem: {
-    flex: 1,
+    // flex: 1,
+    height: 80,
     justifyContent: 'flex-start',
     flexDirection: 'row'
   },
@@ -214,36 +250,20 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 20,
-    // flex: 1
     width: 80
-  },
-  balanceLabel: {
-    fontSize: 20,
-    width: 200
   },
   textInput: {
     width: 250,
-    fontSize: 25
+    fontSize: 20,
+    height: 80
   },
   balanceTextInput: {
     width: 250,
-    fontSize: 25,
-    textAlign: 'right'
-  },
-  balanceView: {
-    flex: 1,
-    backgroundColor: 'powderblue',
-    justifyContent: 'flex-start',
-    justifyContent: 'center'
-  },
-  balanceInput: {
-    // flex: 4,
-    fontSize: 25,
-    width: 330
-    // alignItems: 'flex-end'
+    fontSize: 20,
+    textAlign: 'right',
+    height: 80
   },
   pickerInput: {
-    // flex: 4,
     width: 250
   }
 });

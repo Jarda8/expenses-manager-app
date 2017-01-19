@@ -13,6 +13,7 @@
     "react-native": "github:exponentjs/react-native#sdk-12.0.0",
     "react-native-datepicker": "^1.4.3",
     "react-native-globalize": "^0.7.0",
+    "react-native-keyboard-aware-scroll-view": "^0.2.6",
     "react-native-pathjs-charts": "~0.0.21"
   },
   "devDependencies": {

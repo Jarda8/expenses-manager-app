@@ -43,11 +43,6 @@ export default class BudgetForm extends Component {
   }
 
   saveNewBudget(budget: number) {
-    // saveBudget({
-    //   category: this.state.category,
-    //   budget: budget,
-    //   notificationThreshold: this.state.notificationThreshold
-    // });
     BudgetModificator.saveBudget({
       category: this.state.category,
       budget: budget,
@@ -57,14 +52,6 @@ export default class BudgetForm extends Component {
   }
 
   updateOldBudget(budget: number) {
-    // updateBudget(
-    //   this.props.budget,
-    //   {
-    //     category: this.state.category,
-    //     budget: budget,
-    //     notificationThreshold: this.state.notificationThreshold
-    //   }
-    // );
     BudgetModificator.updateBudget(
       this.props.budget,
       {
@@ -171,20 +158,20 @@ const styles = StyleSheet.create({
   formItem: {
     flex: 1,
     // backgroundColor: 'powderblue',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row'
   },
   label: {
     fontSize: 20,
-    width: 80
+    width: 100
   },
   thresholdLabel: {
     fontSize: 20,
     width: 250
   },
   pickerInput: {
-    width: 250
+    width: 230
   },
   notificationThresholdPicker: {
     width: 80
@@ -199,7 +186,8 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   numberDisplay: {
-    flex: 1,
+    // flex: 1,
+    width: 230,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center'
