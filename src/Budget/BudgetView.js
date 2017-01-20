@@ -19,7 +19,7 @@ export default class BudgetView extends Component {
         <View style={styles.budgets}>
           {this.props.children}
         </View>
-        <FullWidthButton text='Přidat limit' onPress={this.addBudget.bind(this)} flexSize={1} />
+        <FullWidthButton text='Přidat rozpočet' onPress={this.addBudget.bind(this)} flexSize={1} />
       </View>
     );
   }

@@ -98,7 +98,7 @@ export default class BudgetForm extends Component {
     let items = [];
     for (var i = 25; i <= 100; i+= 5) {
       items.push(
-        <Picker.Item key={i} label={'' + i} value={i} />
+        <Picker.Item key={i} label={'' + i + ' %'} value={i} />
       );
     }
     return items;
@@ -125,14 +125,13 @@ export default class BudgetForm extends Component {
           </View>
         </View>
         <View style={styles.formItem}>
-          <Text style={styles.thresholdLabel}>Upozornit při překročení </Text>
+          <Text style={styles.label}>Upozornit při překročení </Text>
           <Picker
-            style={styles.notificationThresholdPicker}
+            style={styles.pickerInput}
             selectedValue={this.state.notificationThreshold * 100}
             onValueChange={(newThreshold) => this.setState({notificationThreshold: newThreshold / 100})}>
             {this.generateThresholdItems()}
           </Picker>
-          <Text style={styles.currency}>%</Text>
         </View>
         <View style={styles.calculatorView}>
           <Calculator
@@ -158,36 +157,24 @@ const styles = StyleSheet.create({
   formItem: {
     flex: 1,
     // backgroundColor: 'powderblue',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
   label: {
     fontSize: 20,
-    width: 100
-  },
-  thresholdLabel: {
-    fontSize: 20,
-    width: 250
+    width: 130
   },
   pickerInput: {
-    width: 230
-  },
-  notificationThresholdPicker: {
-    width: 80
+    width: 200
   },
   currency: {
     fontSize: 25,
     marginLeft: 10
   },
-  textInput: {
-    // flex: 4,
-    width: 250,
-    fontSize: 25
-  },
   numberDisplay: {
     // flex: 1,
-    width: 230,
+    width: 200,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center'

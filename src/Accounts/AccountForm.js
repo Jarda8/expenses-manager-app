@@ -158,6 +158,14 @@ export default class AccountForm extends Component {
     }
   }
 
+  changeBalance(text: string) {
+    let number = parseFloat(text);
+    if (text === '') {
+      number = 0;
+    }
+    this.setState({initialBalance: number});
+  }
+
   _scrollToInput (reactNode: any) {
     // Add a 'scroll' ref to your ScrollView
     this.refs.scroll.scrollToFocusedInput(reactNode)
@@ -211,7 +219,7 @@ export default class AccountForm extends Component {
                 defaultValue={'' + this.state.initialBalance}
                 style={styles.balanceTextInput}
                 keyboardType={'numeric'}
-                onChangeText={(text) => this.setState({initialBalance: parseFloat(text)})} />
+                onChangeText={this.changeBalance.bind(this)} />
             </View>
           </KeyboardAwareScrollView>
         </View>
@@ -232,7 +240,7 @@ const styles = StyleSheet.create({
   },
   formItem: {
     // flex: 1,
-    height: 80,
+    height: 70,
     // backgroundColor: 'powderblue',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -240,12 +248,12 @@ const styles = StyleSheet.create({
   },
   formTextInputItem: {
     // flex: 1,
-    height: 80,
+    height: 70,
     justifyContent: 'flex-start',
     flexDirection: 'row'
   },
   labelView: {
-    height: 80,
+    height: 70,
     justifyContent: 'center'
   },
   label: {
@@ -255,13 +263,13 @@ const styles = StyleSheet.create({
   textInput: {
     width: 250,
     fontSize: 20,
-    height: 80
+    height: 70
   },
   balanceTextInput: {
     width: 250,
     fontSize: 20,
     textAlign: 'right',
-    height: 80
+    height: 70
   },
   pickerInput: {
     width: 250

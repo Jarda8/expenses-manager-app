@@ -120,7 +120,7 @@ export default class DrawerNavigationPanel extends Component {
         <DrawerNavigationItem
           id="budgetsItem"
           selectedStyle={styles.selectedItemStyle}
-          renderTitle={isSelected => this._renderTitle('Limity', isSelected)}
+          renderTitle={isSelected => this._renderTitle('Rozpočet', isSelected)}
           renderIcon={isSelected => this._renderIcon('assignment-late', isSelected)}>
           <StackNavigation
             id="budgets"
