@@ -7,7 +7,8 @@ import { Ionicons } from '@exponent/vector-icons';
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
 import { Transfer } from '../Shared/Categories';
-import { getAccounts, saveTransfer } from '../Shared/DataSource';
+import { saveTransferAsync } from '../DataSources/TransfersDS';
+import { getAccountsAsync } from '../DataSources/AccountsDS';
 import Note from '../Shared/Note';
 
 
@@ -23,23 +24,29 @@ export default class NewTransfer extends Component {
     super(props);
     this.state = {
       displayedAmount: '0',
-      fromAccount: getAccounts()[0],
-      toAccount: getAccounts()[1],
+      fromAccount: '',
+      toAccount: '',
       note: '',
       finalAmount: 0,
       date: new Date()
     };
     this.handleDisplayChange = this.handleDisplayChange.bind(this);
-    this.saveNewTransfer = this.saveNewTransfer.bind(this);
+    this.saveTransfer = this.saveTransfer.bind(this);
     this.parseDate = this.parseDate.bind(this);
+  }
+
+  componentWillMount() {
+    getAccountsAsync(result => {
+      this.setState({fromAccount: result[0], toAccount: result[1]});
+    });
   }
 
   handleDisplayChange(toDisplay: string) {
     this.setState({displayedAmount: toDisplay});
   }
 
-  saveNewTransfer(amount: number) {
-    saveTransfer({
+  saveTransfer(amount: number) {
+    saveTransferAsync({
       fromAccountName: this.state.fromAccount.name,
       fromAccountNumber: this.state.fromAccount.number,
       toAccountName: this.state.toAccount.name,
@@ -99,7 +106,7 @@ export default class NewTransfer extends Component {
           <Calculator
             initialNumber={0}
             onDisplayChange={this.handleDisplayChange}
-            onConfirmButtonPressed={this.saveNewTransfer}
+            onConfirmButtonPressed={this.saveTransfer}
             confirmButtonText='Uložit'  />
         </View>
       </View>

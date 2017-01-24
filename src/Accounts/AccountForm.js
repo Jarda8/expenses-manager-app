@@ -4,7 +4,8 @@ import ReactNative, { Keyboard, View, ScrollView, StyleSheet, Text, TextInput, P
 import { withNavigation } from '@exponent/ex-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import { accountTypes, banks, saveAccount, updateAccount, currencies } from '../Shared/DataSource';
+import { banks, currencies } from '../Shared/DataSource';
+import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
 import FullWidthButton from '../Shared/FullWidthButton'
 
 @withNavigation
@@ -60,7 +61,7 @@ export default class AccountForm extends Component {
       number = '';
       bank = '';
     }
-    saveAccount(
+    saveAccountAsync(
       {
         name: this.state.name,
         number: number,
@@ -80,7 +81,7 @@ export default class AccountForm extends Component {
       number = '';
       bank = '';
     }
-    updateAccount(
+    updateAccountAsync(
       this.props.account,
       {
         name: this.state.name,

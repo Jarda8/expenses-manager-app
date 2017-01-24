@@ -3,23 +3,33 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getTotalBalance } from '../Shared/DataSource';
+import { getTotalBalanceAsync } from '../DataSources/AccountsDS';
 
 export default class TotalBalance extends Component {
 
-  getCurrentTotalBalance() {
-    return getTotalBalance();
+  constructor(){
+    super();
+    this.state = {
+      balance: 0
+    }
+  }
+
+  componentWillMount(){
+    this.loadTotalBalance();
+  }
+
+  loadTotalBalance() {
+    getTotalBalanceAsync(result => this.setState({balance: result}));
   }
 
   render() {
-    let balance = this.getCurrentTotalBalance();
     let color = 'green';
-    if (balance < 0) {
+    if (this.state.balance < 0) {
       color = 'red';
     }
     return (
       <FormattedCurrency
-        value={balance}
+        value={this.state.balance}
         style={[styles.expenses, {color: color}]} />
       );
     }

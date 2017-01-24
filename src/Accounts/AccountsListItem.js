@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 import { withNavigation } from '@exponent/ex-navigation'
 
-import { accountTypes } from '../Shared/DataSource';
+import { accountTypes } from '../DataSources/AccountsDS';
 import { Router } from '../../main';
 
 @withNavigation

@@ -1,16 +1,12 @@
 /* @flow */
 import { All, ExpensesCategories } from './Categories'
+import { DB } from '../DataSources/DB';
 
 var periods = new Map();
 periods.set('year', 'year');
 periods.set('month', 'month');
 periods.set('week', 'week');
 periods.set('custom', 'custom');
-
-var accountTypes = new Map();
-accountTypes.set('Personal account', 'Osobní účet');
-accountTypes.set('Payment card', 'Platební karta');
-accountTypes.set('Cash', 'Hotovost');
 
 export type Bank = {
   name: string,
@@ -20,46 +16,6 @@ export type Bank = {
 var banks: Array<Bank> = [
   {name: 'Česká spořitelna', code: "0800"}
 ]
-
-export type Account = {
-  name: string,
-  number: string,
-  bankName: string,
-  type: string,
-  balance: number,
-  currency: string
-}
-
-var accountsDS: Array<Account> = [
-  {name: 'Osobní účet', number: '123465798', bankName: 'Česká spořitelna', type: 'Personal account', balance: 19500, currency: 'CZK'},
-  {name: 'Peněženka', number: null, bankName: null, type: 'Cash', balance: 2154, currency: 'CZK'}
-]
-
-function getAccounts(): Array<Account> {
-  return accountsDS;
-}
-
-function getAccount(name: string, number: string) {
-  return accountsDS.find((acc) => acc.name === name && acc.number === number);
-}
-
-function saveAccount(account: Account) {
-  accountsDS.push(account);
-}
-
-function updateAccount(oldAccount: Account, newAccount: Account) {
-  let index = accountsDS.indexOf(oldAccount);
-  accountsDS[index] = newAccount;
-}
-
-function deleteAccount(account: Account) {
-  let index = accountsDS.indexOf(account);
-  accountsDS.splice(index, 1);
-}
-
-function getTotalBalance() {
-  return accountsDS.reduce((x, y) => {return {balance: x.balance + y.balance}}).balance;
-}
 
 var currencies = ['CZK'];
 
@@ -209,73 +165,6 @@ function getSumsOfExpensesByCategory(fromDate: Date, toDate: Date): Array<{name:
   );
 }
 
-export type Transfer = {
-  fromAccountName: string,
-  fromAccountNumber: string,
-  toAccountName: string,
-  toAccountNumber: string,
-  amount: number,
-  date: Date,
-  note: string
-}
-
-var transfersDS: Array<Transfer> = [
-  {fromAccountName: 'Osobní účet', fromAccountNumber: '123465798', toAccountName: 'Peněženka', toAccountNumber: null, amount: 2000, date: new Date(2017, 0, 10, 0, 0, 0, 0), note: ''}
-]
-
-function saveTransfer(transfer: Transfer) {
-  transfersDS.push(transfer);
-
-  let account = getAccount(transfer.fromAccountName, transfer.fromAccountNumber);
-  updateAccount(account,
-    {
-      name: account.name,
-      number: account.number,
-      bankName: account.bankName,
-      type: account.type,
-      balance: account.balance - transfer.amount,
-      currency: account.currency
-    });
-
-  account = getAccount(transfer.toAccountName, transfer.toAccountNumber);
-  updateAccount(account,
-    {
-      name: account.name,
-      number: account.number,
-      bankName: account.bankName,
-      type: account.type,
-      balance: account.balance + transfer.amount,
-      currency: account.currency
-    });
-}
-
-function deleteTransfer(transfer: Transfer) {
-  let index = transfersDS.indexOf(transfer);
-  transfersDS.splice(index, 1);
-
-  let account = getAccount(transfer.fromAccountName, transfer.fromAccountNumber);
-  updateAccount(account,
-    {
-      name: account.name,
-      number: account.number,
-      bankName: account.bankName,
-      type: account.type,
-      balance: account.balance + transaction.amount,
-      currency: account.currency
-    });
-
-  account = getAccount(transfer.toAccountName, transfer.toAccountNumber);
-  updateAccount(account,
-    {
-      name: account.name,
-      number: account.number,
-      bankName: account.bankName,
-      type: account.type,
-      balance: account.balance - transaction.amount,
-      currency: account.currency
-    });
-}
-
 export type Budget = {
   category: string,
   budget: number,
@@ -310,4 +199,4 @@ function deleteBudget(budget: Budget) {
   budgetsDS.splice(index, 1);
 }
 
-export { periods, accountTypes, banks, accountsDS, getAccount, getAccounts, saveAccount, updateAccount, getTotalBalance, currencies, deleteAccount, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory, saveTransfer, deleteTransfer }
+export { periods, banks, currencies, transactionsDS, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory, }

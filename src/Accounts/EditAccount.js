@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import AccountForm from './AccountForm'
 import DeleteButton from '../Shared/DeleteButton'
-import { deleteAccount } from '../Shared/DataSource';
+import { deleteAccountAsync } from '../DataSources/AccountsDS';
 
 export default class EditAccount extends Component {
 
@@ -12,7 +12,7 @@ export default class EditAccount extends Component {
       renderRight: (route, props) =>
         <DeleteButton onPress={() =>
           {
-            deleteAccount(route.params.account);
+            deleteAccountAsync(route.params.account);
             route.params.navigateBack();
           }} />
     },

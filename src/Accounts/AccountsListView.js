@@ -4,7 +4,7 @@ import { ListView } from 'react-native';
 
 import AccountsView from './AccountsView';
 import AccountsListItem from './AccountsListItem';
-import { accountsDS } from '../Shared/DataSource';
+import { getAccountsAsync } from '../DataSources/AccountsDS';
 import TransferButton from './TransferButton';
 
 export default class AccountsListView extends Component {
@@ -26,21 +26,27 @@ export default class AccountsListView extends Component {
     this.renderAccountItem = this.renderAccountItem.bind(this);
   }
 
+  componentWillMount(){
+    this.loadAccounts();
+  }
+
   renderAccountItem(account : any) {
     return (
       <AccountsListItem account={account} />
     );
   }
 
-  getAccountsDS() {
-    return this.state.dataSource.cloneWithRows(accountsDS);
+  loadAccounts() {
+    getAccountsAsync(result => {
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(result)});
+    });
   }
 
   render() {
     return (
       <AccountsView>
         <ListView
-          dataSource={this.getAccountsDS()}
+          dataSource={this.state.dataSource}
           renderRow={this.renderAccountItem}
         />
       </AccountsView>

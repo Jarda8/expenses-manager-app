@@ -2,16 +2,27 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Picker } from 'react-native';
 
-import { getAccounts } from './DataSource';
+import { getAccountsAsync } from '../DataSources/AccountsDS';
 
 export default class AccountSelector extends Component {
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      accounts: []
+    }
+  }
+
+  componentWillMount(){
+    getAccountsAsync(result => {this.setState({accounts: result});});
+  }
 
   handleAccountSelected(account: any) {
     this.props.onAccountChange(account);
   }
 
   generateAccountsItems() {
-    return getAccounts().map(
+    return this.state.accounts.map(
       (account) => <Picker.Item key={account.name} label={account.name} value={account} />
     )
   }
