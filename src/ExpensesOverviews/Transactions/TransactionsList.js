@@ -4,7 +4,7 @@ import { ListView, StyleSheet, Text, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 
 import TransactionsListItem from './TransactionsListItem';
-import { getTransactions } from '../../Shared/DataSource';
+import { getTransactionsAsync } from '../../DataSources/TransactionsDS';
 import { All } from '../../Shared/Categories';
 import { Router } from '../../../main';
 
@@ -23,6 +23,12 @@ export default class TransactionsList extends Component {
     this.renderTransactionItem = this.renderTransactionItem.bind(this);
   }
 
+  componentWillMount() {
+    getTransactionsAsync(this.props.category, this.props.fromDate, this.props.toDate, result =>
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(result)})
+    );
+  }
+
   editTransaction(transaction: Transaction) {
     this.props.navigator.push(Router.getRoute('editTransaction', {transaction: transaction}));
   }
@@ -33,16 +39,16 @@ export default class TransactionsList extends Component {
     );
   }
 
-  getTransactionsDS() {
-    let transactionsArray = getTransactions(this.props.category, this.props.fromDate, this.props.toDate);
-    return this.state.dataSource.cloneWithRows(transactionsArray);
-  }
+  // getTransactionsDS() {
+  //   let transactionsArray = getTransactions(this.props.category, this.props.fromDate, this.props.toDate);
+  //   return this.state.dataSource.cloneWithRows(transactionsArray);
+  // }
 
   render() {
     return (
       <View style={this.props.style}>
         <ListView
-          dataSource={this.getTransactionsDS()}
+          dataSource={this.state.dataSource}
           renderRow={this.renderTransactionItem}
         />
       </View>

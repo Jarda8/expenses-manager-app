@@ -3,18 +3,26 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getSumOfExpenses } from '../Shared/DataSource';
+import { getSumOfExpensesAsync } from '../DataSources/TransactionsDS';
 
 export default class SumOfExpenses extends Component {
 
-  getExpensesTotal() {
-    return getSumOfExpenses(this.props.fromDate, this.props.toDate).amount;
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      sum: 0
+    }
+  }
+
+  componentWillMount(){
+    getSumOfExpensesAsync(this.props.fromDate, this.props.toDate, result =>
+      this.setState({sum: result.amount}));
   }
 
   render() {
     return (
       <FormattedCurrency
-        value={this.getExpensesTotal()}
+        value={this.state.sum}
         style={styles.expenses} />
       );
     }

@@ -43,11 +43,6 @@ function getAccount(name: string, number: string) {
 }
 
 function getAccountAsync(name: string, number: string, callback: (result: Account) => void) {
-  console.log('getAccountAsync');
-  console.log('name:');
-  console.log(name);
-  console.log('number:');
-  console.log(number);
   DB.accounts.get({name: name, number: number}, result => {
     callback(result[0]);
   });
@@ -67,11 +62,6 @@ function updateAccount(oldAccount: Account, newAccount: Account) {
 }
 
 function updateAccountAsync(oldAccount: Account, newAccount: Account, callback: any) {
-  console.log('updateAccountAsync');
-  console.log('oldAccount:');
-  console.log(oldAccount);
-  console.log('newAccount:');
-  console.log(newAccount);
   DB.accounts.update(oldAccount, newAccount, callback);
 }
 

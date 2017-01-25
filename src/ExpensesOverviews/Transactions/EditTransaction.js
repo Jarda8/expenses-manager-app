@@ -6,7 +6,8 @@ import DatePicker from 'react-native-datepicker'
 
 import Calculator from '../../Shared/Calculator/Calculator';
 import AccountSelector from '../../Shared/AccountSelector';
-import { getAccount, updateTransaction, deleteTransaction } from '../../Shared/DataSource';
+import { getAccountAsync } from '../../DataSources/AccountsDS';
+import { deleteTransactionAsync } from '../../DataSources/TransactionsDS';
 import { Router } from '../../../main';
 import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
 import SaveButton from '../../Shared/SaveButton'
@@ -35,13 +36,9 @@ export default class NewTransaction extends Component {
     if (transaction.amount < 0) {
       ifExpenseMinusOne = -1;
     }
-    let acc = getAccount(
-      transaction.accountName,
-      transaction.accountNumber
-    )
     this.state = {
       displayedAmount: '' + (transaction.amount * ifExpenseMinusOne),
-      account: acc,
+      account: '',
       note: transaction.note,
       date: transaction.date,
       finalAmount: transaction.amount * ifExpenseMinusOne,
@@ -53,6 +50,14 @@ export default class NewTransaction extends Component {
     // this.updateThisTransaction = this.updateThisTransaction.bind(this);
     this.deleteThisTransaction = this.deleteThisTransaction.bind(this);
     this.parseDate = this.parseDate.bind(this);
+  }
+
+  componentWillMount() {
+    getAccountAsync(
+      this.props.route.params.transaction.accountName,
+      this.props.route.params.transaction.accountNumber,
+      account => this.setState({account: account})
+    );
   }
 
   componentDidMount() {
@@ -74,7 +79,7 @@ export default class NewTransaction extends Component {
   // }
 
   deleteThisTransaction() {
-    deleteTransaction(this.props.route.params.transaction);
+    deleteTransactionAsync(this.props.route.params.transaction);
     this.props.navigator.popToTop();
   }
 

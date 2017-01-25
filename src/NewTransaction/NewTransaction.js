@@ -1,13 +1,13 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
-import DatePicker from 'react-native-datepicker'
-// import { Notifications } from 'exponent';
+import DatePicker from 'react-native-datepicker';
 
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
 import { ExpensesCategories } from '../Shared/Categories';
-import { getAccounts, saveTransaction, getBudget, getSumOfTransactions } from '../Shared/DataSource';
+import { getBudget } from '../Shared/DataSource';
+import { getAccountsAsync } from '../DataSources/AccountsDS';
 import TransactionModificator from '../ExpensesOverviews/Transactions/TransactionModificator';
 import Note from '../Shared/Note';
 import { Router } from '../../main';
@@ -19,7 +19,7 @@ export default class NewTransaction extends Component {
     super(props);
     this.state = {
       displayedAmount: '0',
-      account: getAccounts()[0],
+      account: '',
       note: '',
       finalAmount: 0,
       date: new Date()
@@ -28,6 +28,11 @@ export default class NewTransaction extends Component {
     this.handleConfirmButtonPressed = this.handleConfirmButtonPressed.bind(this);
     this.saveNewTransaction = this.saveNewTransaction.bind(this);
     this.parseDate = this.parseDate.bind(this);
+  }
+
+  componentWillMount(){
+    getAccountsAsync(result =>
+      this.setState({account: result[0]}));
   }
 
   handleDisplayChange(toDisplay: string) {

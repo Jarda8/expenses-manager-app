@@ -3,24 +3,35 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getSumOfTransactions } from '../Shared/DataSource';
+import { getSumOfTransactionsAsync } from '../DataSources/TransactionsDS';
 import { All } from '../Shared/Categories'
 
 export default class Balance extends Component {
 
-  getBalance() {
-    return getSumOfTransactions(All, this.props.fromDate, this.props.toDate).amount;
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      balance: 0
+    }
   }
 
+  componentWillMount(){
+    getSumOfTransactionsAsync(All, this.props.fromDate, this.props.toDate, result =>
+      this.setState({balance: result.amount}));
+  }
+
+  // getBalance() {
+  //   return getSumOfTransactions(All, this.props.fromDate, this.props.toDate).amount;
+  // }
+
   render() {
-    let balance = this.getBalance();
     let color = 'green';
-    if (balance < 0) {
+    if (this.state.balance < 0) {
       color = 'red';
     }
     return (
       <FormattedCurrency
-        value={balance}
+        value={this.state.balance}
         style={[styles.balance, {color: color}]} />
       );
     }

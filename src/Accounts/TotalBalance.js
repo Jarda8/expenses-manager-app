@@ -15,10 +15,6 @@ export default class TotalBalance extends Component {
   }
 
   componentWillMount(){
-    this.loadTotalBalance();
-  }
-
-  loadTotalBalance() {
     getTotalBalanceAsync(result => this.setState({balance: result}));
   }
 
