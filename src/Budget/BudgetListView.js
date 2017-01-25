@@ -5,7 +5,7 @@ import { ListView } from 'react-native';
 import BudgetView from './BudgetView';
 import BudgetListItem from './BudgetListItem';
 import { ExpensesCategories } from '../Shared/Categories';
-import { getBudgets } from '../Shared/DataSource';
+import { getBudgetsAsync } from '../DataSources/BudgetsDS';
 
 export default class BudgetListView extends Component {
 
@@ -24,21 +24,26 @@ export default class BudgetListView extends Component {
     this.renderBudgetItem = this.renderBudgetItem.bind(this);
   }
 
+  componentWillMount() {
+    getBudgetsAsync(result =>
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(result)}));
+  }
+
   renderBudgetItem(budget : any) {
     return (
       <BudgetListItem budgetItem={budget} />
     );
   }
 
-  getBudgetsDS() {
-    return this.state.dataSource.cloneWithRows(getBudgets());
-  }
+  // getBudgetsDS() {
+  //   return this.state.dataSource.cloneWithRows(getBudgets());
+  // }
 
   render() {
     return (
       <BudgetView>
         <ListView
-          dataSource={this.getBudgetsDS()}
+          dataSource={this.state.dataSource}
           renderRow={this.renderBudgetItem}
         />
       </BudgetView>

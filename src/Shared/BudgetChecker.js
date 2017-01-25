@@ -1,9 +1,10 @@
 import { Notifications } from 'exponent';
 
-import type { Transaction } from './DataSource';
-import { getBudget, getSumOfTransactions } from  './DataSource';
+import type { Transaction } from '../DataSources/TransactionsDS';
+import type { Budget } from '../DataSources/BudgetsDS';
+import { getBudgetAsync } from  '../DataSources/BudgetsDS';
+import { getSumOfTransactions, getSumOfTransactionsAsync } from  '../DataSources/TransactionsDS';
 import { ExpensesCategories } from './Categories';
-import type { Budget } from './DataSource';
 
 
 export default class BudgetChecker {
@@ -11,7 +12,7 @@ export default class BudgetChecker {
   // Toto bude možná potřeba pro zobrazení notifikace na iOS, pokud je apliakce v popředí.
   // Možná to platí jenom pro push notifikace.
   // viz. https://docs.getexponent.com/versions/v12.0.0/guides/push-notifications.html#handle-receiving-and-or-selecting-the-notification
-  // componentWillMount() {
+  // componentDidMount() {
   //   this._notificationSubscription = Notifications.addListener(this._handleNotification);
   // }
   //
@@ -33,22 +34,42 @@ export default class BudgetChecker {
     }
   }
 
-  static checkBudgetAfterTransaction(transaction: Transaction) {
-    let budget = getBudget(transaction.category);
-    if (budget === undefined) {
-      return;
-    }
-    let toDate = new Date();
-    let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0)
-    let monthTotal = getSumOfTransactions(transaction.category, fromDate, toDate).amount * -1;
+  // static checkBudgetAfterTransaction(transaction: Transaction) {
+  //   let budget = getBudget(transaction.category);
+  //   if (budget === undefined) {
+  //     return;
+  //   }
+  //   let toDate = new Date();
+  //   let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0)
+  //   let monthTotal = getSumOfTransactions(transaction.category, fromDate, toDate).amount * -1;
+  //
+  //   if (budget.budget < monthTotal
+  //     && budget.budget >= monthTotal + transaction.amount) {
+  //     this.presentNotification(transaction.category, true, monthTotal, budget.budget);
+  //   } else if (budget.budget * budget.notificationThreshold < monthTotal
+  //   && budget.budget * budget.notificationThreshold >= monthTotal + transaction.amount) {
+  //     this.presentNotification(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
+  //   }
+  // }
 
-    if (budget.budget < monthTotal
-      && budget.budget >= monthTotal + transaction.amount) {
-      this.presentNotification(transaction.category, true, monthTotal, budget.budget);
-    } else if (budget.budget * budget.notificationThreshold < monthTotal
-    && budget.budget * budget.notificationThreshold >= monthTotal + transaction.amount) {
-      this.presentNotification(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
-    }
+  static checkBudgetAfterTransaction(transaction: Transaction) {
+    getBudgetAsync(transaction.category, budget => {
+      if (budget === undefined) {
+        return;
+      }
+      let toDate = new Date();
+      let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0)
+      getSumOfTransactionsAsync(transaction.category, fromDate, toDate, result => {
+          let monthTotal = result.amount * -1;
+          if (budget.budget < monthTotal
+            && budget.budget >= monthTotal + transaction.amount) {
+            this.presentNotification(transaction.category, true, monthTotal, budget.budget);
+          } else if (budget.budget * budget.notificationThreshold < monthTotal
+          && budget.budget * budget.notificationThreshold >= monthTotal + transaction.amount) {
+            this.presentNotification(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
+          }
+      });
+    });
   }
 
   static presentNotification(category: string, overLimit: boolean, total: number, threshold: number) {

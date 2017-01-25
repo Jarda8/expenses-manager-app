@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Picker } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation'
 
 import Calculator from '../Shared/Calculator/Calculator';
-import { getBudgets, deleteBudget } from '../Shared/DataSource';
+import { getBudgetsAsync } from '../DataSources/BudgetsDS';
 import { ExpensesCategories } from '../Shared/Categories';
 import { Router } from '../../main';
 import BudgetModificator from './BudgetModificator';
@@ -16,13 +16,15 @@ export default class BudgetForm extends Component {
     super(props);
     if (props.budget === undefined) {
       this.state = {
-        category: this.getFreeCategories()[0],
+        freeCategories: [],
+        category: '',
         budget: 0,
         notificationThreshold: 0.8,
         displayedNumber: '0'
       };
     } else {
       this.state = {
+        freeCategories: [],
         category: props.budget.category,
         budget: props.budget.budget,
         notificationThreshold: props.budget.notificationThreshold,
@@ -31,15 +33,35 @@ export default class BudgetForm extends Component {
     }
   }
 
+  componentWillMount() {
+    this.getFreeCategories();
+  }
+
+  // getFreeCategories() {
+  //   let allCategories = Object.keys(ExpensesCategories);
+  //   let occupiedCategories = getBudgets().map(
+  //     (budget) => budget.category
+  //   );
+  //   let freeCategories = allCategories.filter(
+  //     (category) => !occupiedCategories.includes(category)
+  //   );
+  //   return freeCategories;
+  // }
+
   getFreeCategories() {
     let allCategories = Object.keys(ExpensesCategories);
-    let occupiedCategories = getBudgets().map(
-      (budget) => budget.category
-    );
-    let freeCategories = allCategories.filter(
-      (category) => !occupiedCategories.includes(category)
-    );
-    return freeCategories;
+    getBudgetsAsync(result => {
+      let occupiedCategories = result.map(budget => budget.category);
+      let freeCategories = allCategories.filter(
+        category => !occupiedCategories.includes(category)
+      );
+      if (this.props.budget !== undefined) {
+        freeCategories.push(this.props.budget.category);
+        this.setState({freeCategories: freeCategories});
+      } else {
+        this.setState({freeCategories: freeCategories, category: freeCategories[0]});
+      }
+    });
   }
 
   saveNewBudget(budget: number) {
@@ -85,11 +107,7 @@ export default class BudgetForm extends Component {
   }
 
   generateCategoriesItems() {
-    let freeCategories = this.getFreeCategories();
-    if (this.props.budget !== undefined) {
-      freeCategories.push(this.props.budget.category);
-    }
-    return freeCategories.map(
+    return this.state.freeCategories.map(
       (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={category} />
     );
   }

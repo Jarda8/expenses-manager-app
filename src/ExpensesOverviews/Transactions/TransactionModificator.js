@@ -5,14 +5,12 @@ import BudgetChecker from '../../Shared/BudgetChecker';
 export default class TransactionModificator {
 
   static saveTransaction(transaction: Transaction) {
-    saveTransactionAsync(transaction);
-    // Nejspíš bude potřeba poslat jako callback do saveTransactionAsync
-    // BudgetChecker.checkBudgetAfterTransaction(transaction);
+    saveTransactionAsync(transaction, result =>
+      BudgetChecker.checkBudgetAfterTransaction(transaction));
   }
 
   static updateTransaction(oldTransaction: Transaction, newTransaction: Transaction) {
-    updateTransactionAsync(oldTransaction, newTransaction);
-    // Nejspíš bude potřeba poslat jako callback do updateTransactionAsync
-    // BudgetChecker.checkBudgetAfterTransaction(newTransaction);
+    updateTransactionAsync(oldTransaction, newTransaction, result =>
+      BudgetChecker.checkBudgetAfterTransaction(newTransaction));
   }
 }

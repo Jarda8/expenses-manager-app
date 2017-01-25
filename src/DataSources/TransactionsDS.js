@@ -46,8 +46,8 @@ function saveTransaction(transaction: Transaction) {
     });
 }
 
-function saveTransactionAsync(transaction: Transaction) {
-  DB.transactions.add(transaction);
+function saveTransactionAsync(transaction: Transaction, callback: any) {
+  DB.transactions.add(transaction, callback);
 
   getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
     updateAccountAsync(account, {balance: account.balance + transaction.amount}));
@@ -151,8 +151,8 @@ function updateTransaction(oldTransaction: Transaction, newTransaction: Transact
     });
 }
 
-function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Transaction) {
-  DB.transactions.update({_id: oldTransaction._id}, newTransaction);
+function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Transaction, callback: any) {
+  DB.transactions.update({_id: oldTransaction._id}, newTransaction, callback);
 
   getAccountAsync(oldTransaction.accountName, oldTransaction.accountNumber, oldAccount =>
     updateAccountAsync(oldAccount, {balance: oldAccount.balance - oldTransaction.amount}, res =>
@@ -178,8 +178,9 @@ function getSumOfTransactions(category: string, fromDate: Date, toDate: Date): {
 }
 
 function getSumOfTransactionsAsync(category: string, fromDate: Date, toDate: Date, callback: (p: {name: string, amount: number}) => any): void {
-  getTransactionsAsync(category, fromDate, toDate, transactions =>
-    callback(addTransactions(category, transactions)));
+  getTransactionsAsync(category, fromDate, toDate, transactions => {
+    callback(addTransactions(category, transactions))
+  });
 }
 
 function getSumOfIncomes(fromDate: Date, toDate: Date): {name: string, amount: number} {

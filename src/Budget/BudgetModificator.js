@@ -1,16 +1,16 @@
-import type { Budget } from '../Shared/DataSource';
-import { saveBudget, updateBudget } from '../Shared/DataSource';
+import type { Budget } from '../DataSources/BudgetsDS';
+import { saveBudgetAsync, updateBudgetAsync } from '../DataSources/BudgetsDS';
 import BudgetChecker from '../Shared/BudgetChecker';
 
 export default class BudgetModificator {
 
   static saveBudget(budget: Budget) {
-    saveBudget(budget);
+    saveBudgetAsync(budget);
     BudgetChecker.checkBudget(budget);
   }
 
   static updateBudget(oldBudget: Budget, newBudget: Budget) {
-    updateBudget(oldBudget, newBudget);
+    updateBudgetAsync(oldBudget, newBudget);
     BudgetChecker.checkBudget(newBudget);
   }
 }
