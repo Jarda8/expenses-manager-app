@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { ListView, StyleSheet, Text, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 
+import { arraysAreSame } from '../../Shared/Utils'
 import TransactionsListItem from './TransactionsListItem';
 import { getTransactionsAsync } from '../../DataSources/TransactionsDS';
 import { All } from '../../Shared/Categories';
@@ -19,14 +20,30 @@ export default class TransactionsList extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([])
     };
+    this.data = [];
     this.editTransaction = this.editTransaction.bind(this);
     this.renderTransactionItem = this.renderTransactionItem.bind(this);
   }
 
   componentWillMount() {
-    getTransactionsAsync(this.props.category, this.props.fromDate, this.props.toDate, result =>
+    this.loadData(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.fromDate !== this.props.fromDate
+      || nextProps.toDate !== this.props.toDate
+      || nextProps.category !== this.props.category) {
+      this.loadData(nextProps);
+    }
+  }
+
+  loadData(props) {
+    getTransactionsAsync(props.category, props.fromDate, props.toDate, result => {
+      // if (!arraysAreSame(this.data, result)) {
+      //   this.data = result;
       this.setState({dataSource: this.state.dataSource.cloneWithRows(result)})
-    );
+      // }
+    });
   }
 
   editTransaction(transaction: Transaction) {

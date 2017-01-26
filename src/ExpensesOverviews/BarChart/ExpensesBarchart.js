@@ -1,7 +1,7 @@
 /* @flow */
 import React, { Component } from 'react';
 import { Bar } from 'react-native-pathjs-charts';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 
 import { All } from '../../Shared/Categories';
 import { getSumOfTransactionsAsync, getSumOfExpensesAsync } from '../../DataSources/TransactionsDS';
@@ -14,43 +14,60 @@ export class ExpensesBarchart extends Component {
     this.state = {
       data: []
     }
+    this.period = '';
   }
 
   componentWillMount() {
-    let fromDate = new Date(this.props.fromDate);
-    let toDate = new Date(this.props.fromDate);
+    this.loadData(this.props);
+  }
 
-    if (this.props.period === periods.get('month')) {
-      this.setState({data:
-        [
-          {name: '1.týden', amount: 1},
-          {name: '2.týden', amount: 1},
-          {name: '3.týden', amount: 1},
-          {name: '4.týden', amount: 1}
-        ]});
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.fromDate !== this.props.fromDate
+      || nextProps.toDate !== this.props.toDate
+      || nextProps.category !== this.props.category) {
+      this.loadData(nextProps);
+    }
+  }
+
+  loadData(props) {
+    let fromDate = new Date(props.fromDate);
+    let toDate = new Date(props.fromDate);
+
+    if (props.period === periods.get('month')) {
+      if (this.period !== props.period) {
+        this.period = props.period;
+        this.setState({data:
+          [
+            {name: '1.týden', amount: 0},
+            {name: '2.týden', amount: 0},
+            {name: '3.týden', amount: 0},
+            {name: '4.týden', amount: 0}
+          ]});
+      }
       toDate.setDate(fromDate.getDate() + 7);
       toDate.setMilliseconds(-1);
 
       for (var i = 0; i < 4; i++) {
         if (i === 3) {
-          toDate = this.props.toDate;
+          toDate = props.toDate;
         }
-        if (this.props.category === All) {
+        if (props.category === All) {
           let j = i;
           getSumOfExpensesAsync(fromDate, toDate, result => {
+            console.log(result);
             let newData = this.state.data;
             newData[j] = result;
             newData[j].amount = -newData[j].amount;
             newData[j].name = '' + (j + 1) + '. týden';
-            console.log(newData);
             this.setState({data: newData});
           });
         } else {
-          getSumOfTransactionsAsync(this.props.category, fromDate, toDate, result => {
+          let j = i;
+          getSumOfTransactionsAsync(props.category, fromDate, toDate, result => {
             let newData = this.state.data;
-            newData[i] = result;
-            newData[i].amount = -newData[i].amount;
-            newData[i].name = '' + (i + 1) + '. týden';
+            newData[j] = result;
+            newData[j].amount = -newData[j].amount;
+            newData[j].name = '' + (j + 1) + '. týden';
             this.setState({data: newData});
           });
         }
@@ -94,57 +111,63 @@ export class ExpensesBarchart extends Component {
   //   return [data];
   // }
 
+  renderChart() {
+    if (!this.state.data.find(x => x.amount !== 0)) {
+      return <Text>Žádné údaje</Text>
+    } else {
+      return <Bar data={[this.state.data]} options={options} accessorKey="amount" />
+    }
+  }
+
   render() {
-    var options = {
-      width: 250,
-      height: 250,
-      color: '#2980B9',
-      gutter: 20,
-      animate: {
-        type: 'oneByOne',
-        duration: 200,
-        fillTransition: 3
-      },
-      axisX: {
-        showAxis: true,
-        showLines: true,
-        showLabels: true,
-        showTicks: true,
-        zeroAxis: false,
-        orient: 'bottom',
-        label: {
-          fontFamily: 'Arial',
-          fontSize: 8,
-          fontWeight: true,
-          fill: '#34495E'
-        }
-      },
-      axisY: {
-        showAxis: false,
-        showLines: true,
-        showLabels: true,
-        showTicks: true,
-        zeroAxis: false,
-        orient: 'left',
-        label: {
-          fontFamily: 'Arial',
-          fontSize: 8,
-          fontWeight: true,
-          fill: '#34495E'
-        }
-      }
-    };
 
     return (
-    <View style={[styles.chart, this.props.style]}>
-      <Bar
-        data={[this.state.data]}
-        options={options}
-        accessorKey="amount" />
-    </View>
+      <View style={[styles.chart, this.props.style]}>
+        {this.renderChart()}
+      </View>
     );
   }
 }
+
+  const options = {
+    width: 250,
+    height: 250,
+    color: '#2980B9',
+    gutter: 20,
+    animate: {
+      type: 'oneByOne',
+      duration: 200,
+      fillTransition: 3
+    },
+    axisX: {
+      showAxis: true,
+      showLines: true,
+      showLabels: true,
+      showTicks: true,
+      zeroAxis: false,
+      orient: 'bottom',
+      label: {
+        fontFamily: 'Arial',
+        fontSize: 8,
+        fontWeight: true,
+        fill: '#34495E'
+      }
+    },
+    axisY: {
+      showAxis: false,
+      showLines: true,
+      showLabels: true,
+      showTicks: true,
+      zeroAxis: false,
+      orient: 'left',
+      label: {
+        fontFamily: 'Arial',
+        fontSize: 8,
+        fontWeight: true,
+        fill: '#34495E'
+      }
+    }
+  };
 
 const styles = StyleSheet.create({
   chart: {
