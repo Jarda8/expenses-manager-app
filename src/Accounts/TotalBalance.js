@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getTotalBalanceAsync } from '../DataSources/AccountsDS';
+import { getTotalBalanceAsync, ACCOUNTS_DS_EVENT_EMITTER } from '../DataSources/AccountsDS';
 
 export default class TotalBalance extends Component {
 
@@ -15,6 +15,19 @@ export default class TotalBalance extends Component {
   }
 
   componentWillMount(){
+    this.loadData();
+  }
+
+  componentDidMount() {
+    this.accountsChangedSubsrcibtion =
+      ACCOUNTS_DS_EVENT_EMITTER.addListener('accountsChanged', this.loadData.bind(this));
+  }
+
+  componentWillUnmount() {
+    this.accountsChangedSubsrcibtion.remove();
+  }
+
+  loadData() {
     getTotalBalanceAsync(result => this.setState({balance: result}));
   }
 

@@ -1,7 +1,11 @@
+import EventEmitter from 'EventEmitter';
+
 import { DB } from './DB';
 import type { Account } from './AccountsDS';
 import { getAccount, updateAccount, getAccountAsync, updateAccountAsync } from './AccountsDS';
 import { All, ExpensesCategories } from '../Shared/Categories'
+
+const TRANSACTIONS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Transaction = {
   accountName: string,
@@ -47,7 +51,11 @@ function saveTransaction(transaction: Transaction) {
 }
 
 function saveTransactionAsync(transaction: Transaction, callback: any) {
-  DB.transactions.add(transaction, callback);
+  DB.transactions.add(transaction, result => {
+    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged');
+    callback(result);
+  });
+  // DB.transactions.erase_db();
 
   getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
     updateAccountAsync(account, {balance: account.balance + transaction.amount}));
@@ -118,7 +126,8 @@ function deleteTransaction(transaction: Transaction) {
 }
 
 function deleteTransactionAsync(transaction: Transaction) {
-  DB.transactions.remove_id(transaction._id);
+  DB.transactions.remove_id(transaction._id, result =>
+    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged'));
 
   getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
     updateAccountAsync(account, {balance: account.balance - transaction.amount}));
@@ -152,7 +161,10 @@ function updateTransaction(oldTransaction: Transaction, newTransaction: Transact
 }
 
 function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Transaction, callback: any) {
-  DB.transactions.update({_id: oldTransaction._id}, newTransaction, callback);
+  DB.transactions.update({_id: oldTransaction._id}, newTransaction, result => {
+    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged');
+    callback(result);
+  });
 
   getAccountAsync(oldTransaction.accountName, oldTransaction.accountNumber, oldAccount =>
     updateAccountAsync(oldAccount, {balance: oldAccount.balance - oldTransaction.amount}, res =>
@@ -234,4 +246,4 @@ function getSumsOfExpensesByCategoryAsync(fromDate: Date, toDate: Date, callback
   getSumsOfTransactionsAsyncRecur(categories, fromDate, toDate, [], callback);
 }
 
-export { getTransactions, deleteTransaction, updateTransaction, saveTransaction, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory, getTransactionsAsync, deleteTransactionAsync, updateTransactionAsync, saveTransactionAsync, getSumOfTransactionsAsync, getSumOfIncomesAsync, getSumOfExpensesAsync, getSumsOfExpensesByCategoryAsync }
+export { TRANSACTIONS_DS_EVENT_EMITTER, getTransactions, deleteTransaction, updateTransaction, saveTransaction, getSumOfTransactions, getSumOfIncomes, getSumOfExpenses, getSumsOfExpensesByCategory, getTransactionsAsync, deleteTransactionAsync, updateTransactionAsync, saveTransactionAsync, getSumOfTransactionsAsync, getSumOfIncomesAsync, getSumOfExpensesAsync, getSumsOfExpensesByCategoryAsync }

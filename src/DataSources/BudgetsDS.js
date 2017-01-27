@@ -1,4 +1,8 @@
+import EventEmitter from 'EventEmitter';
+
 import { DB } from './DB';
+
+const BUDGETS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Budget = {
   category: string,
@@ -37,7 +41,7 @@ function saveBudget(budget: Budget) {
 }
 
 function saveBudgetAsync(budget: Budget) {
-  DB.budgets.add(budget);
+  DB.budgets.add(budget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged'));
   // DB.budgets.erase_db();
   // DB.transactions.erase_db();
 }
@@ -48,7 +52,7 @@ function updateBudget(oldBudget: Budget, newBudget: Budget) {
 }
 
 function updateBudgetAsync(oldBudget: Budget, newBudget: Budget) {
-  DB.budgets.update(oldBudget, newBudget);
+  DB.budgets.update(oldBudget, newBudget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged'));
 }
 
 function deleteBudget(budget: Budget) {
@@ -57,7 +61,7 @@ function deleteBudget(budget: Budget) {
 }
 
 function deleteBudgetAsync(budget: Budget) {
-  DB.budgets.remove(budget);
+  DB.budgets.remove(budget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged'));
 }
 
-export { getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getBudgetsAsync, saveBudgetAsync, updateBudgetAsync, deleteBudgetAsync, getBudgetAsync }
+export { BUDGETS_DS_EVENT_EMITTER, getBudgets, saveBudget, updateBudget, deleteBudget, getBudget, getBudgetsAsync, saveBudgetAsync, updateBudgetAsync, deleteBudgetAsync, getBudgetAsync }

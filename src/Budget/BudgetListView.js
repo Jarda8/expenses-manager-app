@@ -5,7 +5,7 @@ import { ListView } from 'react-native';
 import BudgetView from './BudgetView';
 import BudgetListItem from './BudgetListItem';
 import { ExpensesCategories } from '../Shared/Categories';
-import { getBudgetsAsync } from '../DataSources/BudgetsDS';
+import { getBudgetsAsync, BUDGETS_DS_EVENT_EMITTER } from '../DataSources/BudgetsDS';
 
 export default class BudgetListView extends Component {
 
@@ -25,6 +25,19 @@ export default class BudgetListView extends Component {
   }
 
   componentWillMount() {
+    this.loadData();
+  }
+
+  componentDidMount() {
+    this.budgetsChangedSubsrcibtion =
+      BUDGETS_DS_EVENT_EMITTER.addListener('budgetsChanged', this.loadData.bind(this));
+  }
+
+  componentWillUnmount() {
+    this.budgetsChangedSubsrcibtion.remove();
+  }
+
+  loadData() {
     getBudgetsAsync(result =>
       this.setState({dataSource: this.state.dataSource.cloneWithRows(result)}));
   }

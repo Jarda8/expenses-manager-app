@@ -24,6 +24,8 @@ export default class ExpensesView extends Component {
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
+
+    // TODO vytvořit event emitter
   }
 
   handleDateChange(change : number) {
@@ -64,6 +66,7 @@ export default class ExpensesView extends Component {
         })
       }
       else {
+        // TODO: Sem budu posílat event emitter. Tam budu poslouchat, u transakcí i emitovat při editaci transakce.
         return React.cloneElement(child, {
           fromDate: this.state.fromDate,
           toDate: this.state.toDate,
@@ -95,6 +98,7 @@ export default class ExpensesView extends Component {
           {this.renderChild()}
         </View>
         <View style={styles.addTransactionControls}>
+          {/* TODO: sem předám event emitter. Tam budu emitovat. */}
           <AddTransactionControls navigator={this.props.navigator} />
         </View>
       </View>

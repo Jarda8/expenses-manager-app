@@ -4,7 +4,7 @@ import { ListView } from 'react-native';
 
 import AccountsView from './AccountsView';
 import AccountsListItem from './AccountsListItem';
-import { getAccountsAsync } from '../DataSources/AccountsDS';
+import { getAccountsAsync, ACCOUNTS_DS_EVENT_EMITTER } from '../DataSources/AccountsDS';
 import TransferButton from './TransferButton';
 
 export default class AccountsListView extends Component {
@@ -27,7 +27,16 @@ export default class AccountsListView extends Component {
   }
 
   componentWillMount(){
-    this.loadAccounts();
+    this.loadData();
+  }
+
+  componentDidMount() {
+    this.accountsChangedSubsrcibtion =
+      ACCOUNTS_DS_EVENT_EMITTER.addListener('accountsChanged', this.loadData.bind(this));
+  }
+
+  componentWillUnmount() {
+    this.accountsChangedSubsrcibtion.remove();
   }
 
   renderAccountItem(account : any) {
@@ -36,7 +45,7 @@ export default class AccountsListView extends Component {
     );
   }
 
-  loadAccounts() {
+  loadData() {
     getAccountsAsync(result => {
       this.setState({dataSource: this.state.dataSource.cloneWithRows(result)});
     });

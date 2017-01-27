@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getSumOfIncomesAsync } from '../DataSources/TransactionsDS';
+import { getSumOfIncomesAsync, TRANSACTIONS_DS_EVENT_EMITTER } from '../DataSources/TransactionsDS';
 
 export default class SumOfIncomes extends Component {
 
@@ -15,6 +15,19 @@ export default class SumOfIncomes extends Component {
   }
 
   componentWillMount(){
+    this.loadData();
+  }
+
+  componentDidMount() {
+    this.transactionsChangedSubsrcibtion =
+      TRANSACTIONS_DS_EVENT_EMITTER.addListener('transactionsChanged', this.loadData.bind(this));
+  }
+
+  componentWillUnmount() {
+    this.transactionsChangedSubsrcibtion.remove();
+  }
+
+  loadData() {
     getSumOfIncomesAsync(this.props.fromDate, this.props.toDate, result =>
       this.setState({sum: result.amount}));
   }

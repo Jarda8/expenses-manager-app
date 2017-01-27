@@ -3,9 +3,8 @@ import React, { Component } from 'react';
 import { ListView, StyleSheet, Text, View } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 
-import { arraysAreSame } from '../../Shared/Utils'
 import TransactionsListItem from './TransactionsListItem';
-import { getTransactionsAsync } from '../../DataSources/TransactionsDS';
+import { getTransactionsAsync, TRANSACTIONS_DS_EVENT_EMITTER } from '../../DataSources/TransactionsDS';
 import { All } from '../../Shared/Categories';
 import { Router } from '../../../main';
 
@@ -37,12 +36,19 @@ export default class TransactionsList extends Component {
     }
   }
 
+  componentDidMount() {
+    this.transactionsChangedSubsrcibtion =
+      TRANSACTIONS_DS_EVENT_EMITTER.addListener('transactionsChanged',
+        () => this.loadData(this.props));
+  }
+
+  componentWillUnmount() {
+    this.transactionsChangedSubsrcibtion.remove();
+  }
+
   loadData(props) {
     getTransactionsAsync(props.category, props.fromDate, props.toDate, result => {
-      // if (!arraysAreSame(this.data, result)) {
-      //   this.data = result;
       this.setState({dataSource: this.state.dataSource.cloneWithRows(result)})
-      // }
     });
   }
 

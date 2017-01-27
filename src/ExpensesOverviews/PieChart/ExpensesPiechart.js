@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Pie } from 'react-native-pathjs-charts';
 import { View, StyleSheet, Text } from 'react-native';
 
-import { getSumsOfExpensesByCategoryAsync } from '../../DataSources/TransactionsDS';
+import { getSumsOfExpensesByCategoryAsync, TRANSACTIONS_DS_EVENT_EMITTER } from '../../DataSources/TransactionsDS';
 import { ExpensesCategories } from '../../Shared/Categories';
 
 export class ExpensesPiechart extends Component {
@@ -24,6 +24,16 @@ export class ExpensesPiechart extends Component {
       || nextProps.toDate !== this.props.toDate) {
       this.loadData(nextProps);
     }
+  }
+
+  componentDidMount() {
+    this.transactionsChangedSubsrcibtion =
+      TRANSACTIONS_DS_EVENT_EMITTER.addListener('transactionsChanged',
+        () => this.loadData(this.props));
+  }
+
+  componentWillUnmount() {
+    this.transactionsChangedSubsrcibtion.remove();
   }
 
   loadData(props) {

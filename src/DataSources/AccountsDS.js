@@ -1,4 +1,8 @@
+import EventEmitter from 'EventEmitter';
+
 import { DB } from './DB';
+
+const ACCOUNTS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Account = {
   name: string,
@@ -53,7 +57,7 @@ function saveAccount(account: Account) {
 }
 
 function saveAccountAsync(account: Account) {
-  DB.accounts.add(account);
+  DB.accounts.add(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged'));
 }
 
 function updateAccount(oldAccount: Account, newAccount: Account) {
@@ -62,7 +66,10 @@ function updateAccount(oldAccount: Account, newAccount: Account) {
 }
 
 function updateAccountAsync(oldAccount: Account, newAccount: Account, callback: any) {
-  DB.accounts.update(oldAccount, newAccount, callback);
+  DB.accounts.update(oldAccount, newAccount, result => {
+    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged');
+    callback(result);
+  });
 }
 
 function deleteAccount(account: Account) {
@@ -71,7 +78,7 @@ function deleteAccount(account: Account) {
 }
 
 function deleteAccountAsync(account: Account) {
-  DB.accounts.remove(account);
+  DB.accounts.remove(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged'));
 }
 
 function getTotalBalance() {
@@ -84,4 +91,4 @@ function getTotalBalanceAsync(callback: (result: number) => void) {
   });
 }
 
-export { accountTypes, getAccount, getAccounts, saveAccount, updateAccount, deleteAccount, getTotalBalance, getAccountAsync, getAccountsAsync, saveAccountAsync, updateAccountAsync, deleteAccountAsync, getTotalBalanceAsync }
+export { ACCOUNTS_DS_EVENT_EMITTER, accountTypes, getAccount, getAccounts, saveAccount, updateAccount, deleteAccount, getTotalBalance, getAccountAsync, getAccountsAsync, saveAccountAsync, updateAccountAsync, deleteAccountAsync, getTotalBalanceAsync }

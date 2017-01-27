@@ -4,7 +4,7 @@ import { Bar } from 'react-native-pathjs-charts';
 import { View, StyleSheet, Text } from 'react-native';
 
 import { All } from '../../Shared/Categories';
-import { getSumOfTransactionsAsync, getSumOfExpensesAsync } from '../../DataSources/TransactionsDS';
+import { getSumOfTransactionsAsync, getSumOfExpensesAsync, TRANSACTIONS_DS_EVENT_EMITTER } from '../../DataSources/TransactionsDS';
 import { periods } from '../../Shared/DataSource';
 
 export class ExpensesBarchart extends Component {
@@ -27,6 +27,16 @@ export class ExpensesBarchart extends Component {
       || nextProps.category !== this.props.category) {
       this.loadData(nextProps);
     }
+  }
+
+  componentDidMount() {
+    this.transactionsChangedSubsrcibtion =
+      TRANSACTIONS_DS_EVENT_EMITTER.addListener('transactionsChanged',
+        () => this.loadData(this.props));
+  }
+
+  componentWillUnmount() {
+    this.transactionsChangedSubsrcibtion.remove();
   }
 
   loadData(props) {
