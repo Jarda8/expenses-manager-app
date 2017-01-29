@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import ReactNative, { Keyboard, View, ScrollView, StyleSheet, Text, TextInput, Picker } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import TMPicker from 'react-native-picker-xg';
 
 import { banks, currencies } from '../Shared/DataSource';
 import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
 import FullWidthButton from '../Shared/FullWidthButton'
+import CSAPIClient from '../DataImport/CSAPIClient';
 
 @withNavigation
 export default class AccountForm extends Component {
@@ -24,12 +26,16 @@ export default class AccountForm extends Component {
         padding: 0
       };
     } else {
+      let bank = props.account.bankName;
+      if (bank === '') {
+        bank = banks[0].name;
+      }
       this.state = {
         type: props.account.type,
         currency: props.account.currency,
         name: props.account.name,
         number: props.account.number ? props.account.number : '',
-        bank: props.account.bankName,
+        bank: bank,
         initialBalance: props.account.balance,
         padding: 0
       };
@@ -58,19 +64,27 @@ export default class AccountForm extends Component {
     let number = this.state.number;
     let bank = this.state.bank;
     if (this.state.type === 'Cash') {
-      number = '';
-      bank = '';
+      number = null;
+      bank = null;
     }
-    saveAccountAsync(
-      {
-        name: this.state.name,
-        number: number,
-        bankName: bank,
-        type: this.state.type,
-        balance: this.state.initialBalance,
-        currency: this.state.currency
+    if (this.state.type === 'Bank account' && bank !== 'other') {
+      switch (bank) {
+        case 'Česká spořitelna':
+          CSAPIClient.fetchAccount(this.state.name, number).then(acc => saveAccountAsync(acc));
+          break;
       }
-    )
+    } else {
+      saveAccountAsync(
+        {
+          name: this.state.name,
+          number: number,
+          bankName: bank,
+          type: this.state.type,
+          balance: this.state.initialBalance,
+          currency: this.state.currency
+        }
+      )
+    }
     this.props.navigator.pop();
   }
 
@@ -95,14 +109,6 @@ export default class AccountForm extends Component {
     this.props.navigator.pop();
   }
 
-  generateAccountsTypesItems() {
-    let accountTypesArray = [];
-    accountTypes.forEach(
-      (value, key) => accountTypesArray.push(<Picker.Item key={key} label={value} value={key} />)
-    )
-    return accountTypesArray;
-  }
-
   generateCurrenciesItems() {
     return currencies.map(
       (currency) => <Picker.Item key={currency} label={currency} value={currency} />
@@ -113,7 +119,7 @@ export default class AccountForm extends Component {
     let banksArray =  banks.map(
       (bank) => <Picker.Item key={bank.name} label={bank.name} value={bank.name} />
     );
-    banksArray.push(<Picker.Item key={'other'} label={'jiná'} value={'other'} />)
+    banksArray.push(<Picker.Item key={'other'} label={'jiná - bez automatické synchronizace'} value={'other'} />)
     return banksArray;
   }
 
@@ -141,14 +147,60 @@ export default class AccountForm extends Component {
     return (
       <View style={styles.formItem}>
         <Text style={styles.label}>Banka: </Text>
-        <Picker
-          defaultValue={'' + this.state.bank}
+        {/* <Picker
           style={styles.pickerInput}
-          selectedValue={this.state.bankName}
-          onValueChange={(newBank) => this.setState({bankName: newBank})}>
+          selectedValue={this.state.bank}
+          onValueChange={(newBank) => this.setState({bank: newBank})}>
           {this.generateBanksItems()}
-        </Picker>
+        </Picker> */}
+        <TMPicker
+          inputValue ={this.state.bank}
+          inputStyle = {styles.pickerInput}
+          confirmBtnText = {'potvrdit'}
+          cancelBtnText = {'zrušit'}
+          data = {banksPickerData}
+          // selectIndex = {[0,1]}
+          onResult ={(newBank) => this.setState({bank: newBank})}
+          visible = {false}
+        />
       </View>);
+  }
+
+  renderCurrency() {
+    if (this.state.type === 'Bank account' && this.state.bank !== 'other') {
+      return;
+    }
+    return (
+    <View style={styles.formItem}>
+      <Text style={styles.label}>Měna: </Text>
+      <Picker
+        style={styles.pickerInput}
+        selectedValue={this.state.currency}
+        onValueChange={(newCurrency) => this.setState({currency: newCurrency})}>
+        {this.generateCurrenciesItems()}
+      </Picker>
+    </View>);
+  }
+
+  renderBalance() {
+    if (this.state.type === 'Bank account' && this.state.bank !== 'other') {
+      return;
+    }
+    return (
+      <View style={[styles.formTextInputItem, {paddingBottom: this.state.padding}]}>
+        <View style={styles.labelView}>
+          <Text style={styles.label}>Bilance: </Text>
+        </View>
+        <TextInput
+          onFocus={(event: Event) => {
+            this._scrollToInput(ReactNative.findNodeHandle(event.target));
+          }}
+          defaultValue={'' + this.state.initialBalance}
+          style={styles.balanceTextInput}
+          keyboardType={'numeric'}
+          onChangeText={this.changeBalance.bind(this)} />
+      </View>
+    )
   }
 
   handleOnPress() {
@@ -168,8 +220,18 @@ export default class AccountForm extends Component {
   }
 
   _scrollToInput (reactNode: any) {
-    // Add a 'scroll' ref to your ScrollView
     this.refs.scroll.scrollToFocusedInput(reactNode)
+  }
+
+  setType(type: string) {
+    accountTypes.forEach(
+      (value, key) => {
+        if (value === type) {
+          this.setState({type: key})
+          return;
+        }
+      }
+    )
   }
 
   render() {
@@ -180,22 +242,24 @@ export default class AccountForm extends Component {
           <KeyboardAwareScrollView ref='scroll'>
             <View style={styles.formItem}>
               <Text style={styles.label}>Typ: </Text>
-              <Picker
+              {/* <Picker
                 style={styles.pickerInput}
                 selectedValue={this.state.type}
                 onValueChange={(newType) => this.setState({type: newType})}>
                 {this.generateAccountsTypesItems()}
-              </Picker>
+              </Picker> */}
+              <TMPicker
+                inputValue ={accountTypes.get(this.state.type)}
+                inputStyle = {styles.pickerInput}
+                confirmBtnText = {'potvrdit'}
+                cancelBtnText = {'zrušit'}
+                data = {accountTypesPickerData}
+                // selectIndex = {[0,1]}
+                onResult ={this.setType.bind(this)}
+                visible = {false}
+              />
             </View>
-            <View style={styles.formItem}>
-              <Text style={styles.label}>Měna: </Text>
-              <Picker
-                style={styles.pickerInput}
-                selectedValue={this.state.currency}
-                onValueChange={(newCurrency) => this.setState({currency: newCurrency})}>
-                {this.generateCurrenciesItems()}
-              </Picker>
-            </View>
+            {this.renderBank()}
             <View style={styles.formTextInputItem}>
               <View style={styles.labelView}>
                 <Text style={styles.label}>Název: </Text>
@@ -206,22 +270,8 @@ export default class AccountForm extends Component {
                 onChangeText={(text) => this.setState({name: text})} />
             </View>
             {this.renderAccountNumber()}
-            {this.renderBank()}
-            <View style={[styles.formTextInputItem, {paddingBottom: this.state.padding}]}>
-              <View style={styles.labelView}>
-                <Text style={styles.label}>Bilance: </Text>
-              </View>
-              <TextInput
-                onFocus={(event: Event) => {
-                  // `bind` the function if you're using ES6 classes
-                  // this.setState({padding: 300});
-                  this._scrollToInput(ReactNative.findNodeHandle(event.target));
-                }}
-                defaultValue={'' + this.state.initialBalance}
-                style={styles.balanceTextInput}
-                keyboardType={'numeric'}
-                onChangeText={this.changeBalance.bind(this)} />
-            </View>
+            {this.renderCurrency()}
+            {this.renderBalance()}
           </KeyboardAwareScrollView>
         </View>
         <FullWidthButton text='Uložit' onPress={this.handleOnPress.bind(this)} flexSize={1} />
@@ -229,6 +279,30 @@ export default class AccountForm extends Component {
     );
   }
 }
+
+// generateAccountsTypesItems() {
+//   let accountTypesArray = [];
+//   accountTypes.forEach(
+//     (value, key) => accountTypesArray.push(<Picker.Item key={key} label={value} value={key} />)
+//   )
+//   return accountTypesArray;
+// }
+
+const accountTypesPickerData = (() => {
+  var items = [{}];
+  accountTypes.forEach(
+    (value, key) => items[0][key] = {name: value}
+  );
+  return items;
+})();
+
+const banksPickerData = (() => {
+  var items = [{}];
+  for (bank of banks) {
+    items[0][bank.name] = {name: bank.name}
+  }
+  return items;
+})();
 
 const styles = StyleSheet.create({
   accountForm: {
@@ -240,15 +314,12 @@ const styles = StyleSheet.create({
     margin: 10
   },
   formItem: {
-    // flex: 1,
     height: 70,
-    // backgroundColor: 'powderblue',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
   formTextInputItem: {
-    // flex: 1,
     height: 70,
     justifyContent: 'flex-start',
     flexDirection: 'row'

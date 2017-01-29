@@ -19,7 +19,7 @@ export default class NewTransaction extends Component {
     super(props);
     this.state = {
       displayedAmount: '0',
-      account: '',
+      account: null,
       note: '',
       finalAmount: 0,
       date: new Date()

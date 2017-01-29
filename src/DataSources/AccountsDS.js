@@ -1,3 +1,4 @@
+/* @flow */
 import EventEmitter from 'EventEmitter';
 
 import { DB } from './DB';
@@ -14,8 +15,8 @@ export type Account = {
 }
 
 var accountTypes = new Map();
-accountTypes.set('Personal account', 'Osobní účet');
-accountTypes.set('Payment card', 'Platební karta');
+accountTypes.set('Bank account', 'Bankovní účet');
+// accountTypes.set('Payment card', 'Platební karta');
 accountTypes.set('Cash', 'Hotovost');
 
 var accountsDS: Array<Account> = [

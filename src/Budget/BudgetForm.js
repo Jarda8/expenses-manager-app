@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Picker } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation'
+import TMPicker from 'react-native-picker-xg';
 
 import Calculator from '../Shared/Calculator/Calculator';
 import { getBudgetsAsync } from '../DataSources/BudgetsDS';
@@ -107,19 +108,51 @@ export default class BudgetForm extends Component {
   }
 
   generateCategoriesItems() {
-    return this.state.freeCategories.map(
-      (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={category} />
-    );
-  }
-
-  generateThresholdItems() {
-    let items = [];
-    for (var i = 25; i <= 100; i+= 5) {
-      items.push(
-        <Picker.Item key={i} label={'' + i + ' %'} value={i} />
-      );
+    // return this.state.freeCategories.map(
+    //   (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={category} />
+    // );
+    let items = [{}];
+    for (category of this.state.freeCategories) {
+      items[0][category] = {name: ExpensesCategories[category]};
     }
     return items;
+
+  }
+
+  // generateThresholdItems() {
+  //   let items = [];
+  //   for (var i = 25; i <= 100; i+= 5) {
+  //     items.push(
+  //       <Picker.Item key={i} label={'' + i + ' %'} value={i} />
+  //     );
+  //   }
+  //   return items;
+  // }
+
+  handleCategorySelect(category: string) {
+    for (categoryKey of Object.keys(ExpensesCategories)) {
+      if (ExpensesCategories[categoryKey] === category) {
+        this.setState({category: categoryKey});
+        return;
+      }
+    }
+  }
+
+  renderCategoryPicker() {
+    if (this.state.category !== '') {
+      return (
+        <TMPicker
+          inputValue ={ExpensesCategories[this.state.category]}
+          inputStyle = {styles.pickerInput}
+          confirmBtnText = {'potvrdit'}
+          cancelBtnText = {'zrušit'}
+          data = {this.generateCategoriesItems()}
+          // selectIndex = {[0,1]}
+          onResult ={this.handleCategorySelect.bind(this)}
+          visible = {false}
+        />
+      )
+    }
   }
 
   render() {
@@ -127,12 +160,13 @@ export default class BudgetForm extends Component {
       <View style={styles.budgetForm}>
         <View style={styles.formItem}>
           <Text style={styles.label}>Kategorie: </Text>
-          <Picker
+          {/* <Picker
             style={styles.pickerInput}
             selectedValue={this.state.category}
             onValueChange={(newCategory) => this.setState({category: newCategory})}>
             {this.generateCategoriesItems()}
-          </Picker>
+          </Picker> */}
+          {this.renderCategoryPicker()}
         </View>
         <View style={styles.formItem}>
           <Text style={styles.label}>Měsíční limit: </Text>
@@ -144,12 +178,22 @@ export default class BudgetForm extends Component {
         </View>
         <View style={styles.formItem}>
           <Text style={styles.label}>Upozornit při překročení </Text>
-          <Picker
+          {/* <Picker
             style={styles.pickerInput}
             selectedValue={this.state.notificationThreshold * 100}
             onValueChange={(newThreshold) => this.setState({notificationThreshold: newThreshold / 100})}>
             {this.generateThresholdItems()}
-          </Picker>
+          </Picker> */}
+          <TMPicker
+            inputValue={this.state.notificationThreshold * 100 + ' %'}
+            inputStyle={styles.pickerInput}
+            confirmBtnText={'potvrdit'}
+            cancelBtnText={'zrušit'}
+            data={tresholdPickerData}
+            // selectIndex = {[0,1]}
+            onResult={(newThreshold) => this.setState({notificationThreshold: parseInt(newThreshold) / 100})}
+            visible={false}
+          />
         </View>
         <View style={styles.calculatorView}>
           <Calculator
@@ -162,6 +206,14 @@ export default class BudgetForm extends Component {
     );
   }
 }
+
+const tresholdPickerData = (() => {
+  let items = [{}];
+  for (var i = 25; i <= 100; i+= 5) {
+    items[0][i + ''] = {name: i + ' %'};
+  }
+  return items;
+})()
 
 const styles = StyleSheet.create({
   budgetForm: {

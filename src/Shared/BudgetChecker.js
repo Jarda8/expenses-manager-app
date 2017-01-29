@@ -1,4 +1,5 @@
 import { Notifications } from 'exponent';
+import { Alert } from 'react-native';
 
 import type { Transaction } from '../DataSources/TransactionsDS';
 import type { Budget } from '../DataSources/BudgetsDS';
@@ -8,19 +9,6 @@ import { ExpensesCategories } from './Categories';
 
 
 export default class BudgetChecker {
-
-  // Toto bude možná potřeba pro zobrazení notifikace na iOS, pokud je apliakce v popředí.
-  // Možná to platí jenom pro push notifikace.
-  // viz. https://docs.getexponent.com/versions/v12.0.0/guides/push-notifications.html#handle-receiving-and-or-selecting-the-notification
-  // componentDidMount() {
-  //   this._notificationSubscription = Notifications.addListener(this._handleNotification);
-  // }
-  //
-  // componentWillUnmount() {
-  //   this._notificationSubscription && this._notificationSubscription.remove();
-  // }
-  //
-  // _handleNotification = (notification) => {};
 
   static checkBudget(budget: Budget) {
     let toDate = new Date();
@@ -34,24 +22,6 @@ export default class BudgetChecker {
     }
   }
 
-  // static checkBudgetAfterTransaction(transaction: Transaction) {
-  //   let budget = getBudget(transaction.category);
-  //   if (budget === undefined) {
-  //     return;
-  //   }
-  //   let toDate = new Date();
-  //   let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0)
-  //   let monthTotal = getSumOfTransactions(transaction.category, fromDate, toDate).amount * -1;
-  //
-  //   if (budget.budget < monthTotal
-  //     && budget.budget >= monthTotal + transaction.amount) {
-  //     this.presentNotification(transaction.category, true, monthTotal, budget.budget);
-  //   } else if (budget.budget * budget.notificationThreshold < monthTotal
-  //   && budget.budget * budget.notificationThreshold >= monthTotal + transaction.amount) {
-  //     this.presentNotification(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
-  //   }
-  // }
-
   static checkBudgetAfterTransaction(transaction: Transaction) {
     getBudgetAsync(transaction.category, budget => {
       if (budget === undefined) {
@@ -63,17 +33,27 @@ export default class BudgetChecker {
           let monthTotal = result.amount * -1;
           if (budget.budget < monthTotal
             && budget.budget >= monthTotal + transaction.amount) {
-            this.presentNotification(transaction.category, true, monthTotal, budget.budget);
+            this.showAlert(transaction.category, true, monthTotal, budget.budget);
           } else if (budget.budget * budget.notificationThreshold < monthTotal
           && budget.budget * budget.notificationThreshold >= monthTotal + transaction.amount) {
-            this.presentNotification(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
+            this.showAlert(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
           }
       });
     });
   }
 
+  static showAlert(category: string, overLimit: boolean, total: number, threshold: number) {
+    let title = 'Překročena hranice výdajů! (' + ExpensesCategories[category] + ')'
+    let body = 'Vaše výdaje: ' + total + '\nHranice: ' + threshold;
+    if (overLimit === true) {
+      title = 'Překročen rozpočet! (' + ExpensesCategories[category] + ')'
+      body = 'Vaše výdaje: ' + total + '\nRozpočet: ' + threshold;
+    }
+    Alert.alert(title, body);
+  }
+
   static presentNotification(category: string, overLimit: boolean, total: number, threshold: number) {
-    let title = 'Překročena stanovená hranice výdajů! (' + ExpensesCategories[category] + ')'
+    let title = 'Překročena hranice výdajů! (' + ExpensesCategories[category] + ')'
     let body = 'Vaše výdaje: ' + total + '\nHranice: ' + threshold;
     if (overLimit === true) {
       title = 'Překročen rozpočet! (' + ExpensesCategories[category] + ')'
