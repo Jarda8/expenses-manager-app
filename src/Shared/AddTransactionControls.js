@@ -4,6 +4,8 @@ import { View, StyleSheet, TouchableHighlight } from 'react-native';
 import { Entypo } from '@exponent/vector-icons';
 import { Router } from '../../main';
 
+import CSAPIClient from '../DataImport/CSAPIClient';
+
 export class AddTransactionControls extends Component {
 
   render() {

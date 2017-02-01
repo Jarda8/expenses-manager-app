@@ -1,9 +1,9 @@
 /* @flow */
 import React, { Component } from 'react';
-import ReactNative, { Keyboard, View, ScrollView, StyleSheet, Text, TextInput, Picker } from 'react-native';
+import ReactNative, { Keyboard, View, ScrollView, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import TMPicker from 'react-native-picker-xg';
+import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker';
 
 import { banks, currencies } from '../Shared/DataSource';
 import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
@@ -70,7 +70,15 @@ export default class AccountForm extends Component {
     if (this.state.type === 'Bank account' && bank !== 'other') {
       switch (bank) {
         case 'Česká spořitelna':
-          CSAPIClient.fetchAccount(this.state.name, number).then(acc => saveAccountAsync(acc));
+          CSAPIClient.fetchAccount(this.state.name, number).then(acc => {
+            if (acc === null) {
+              Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
+            } else {
+              console.log(acc);
+              saveAccountAsync(acc);
+              this.props.navigator.pop();
+            }
+          }).catch(() => console.log("Promise Rejected"));
           break;
       }
     } else {
@@ -78,14 +86,15 @@ export default class AccountForm extends Component {
         {
           name: this.state.name,
           number: number,
+          iban: null,
           bankName: bank,
           type: this.state.type,
           balance: this.state.initialBalance,
           currency: this.state.currency
         }
-      )
+      );
+      this.props.navigator.pop();
     }
-    this.props.navigator.pop();
   }
 
   updateOldAccount() {
@@ -109,11 +118,11 @@ export default class AccountForm extends Component {
     this.props.navigator.pop();
   }
 
-  generateCurrenciesItems() {
-    return currencies.map(
-      (currency) => <Picker.Item key={currency} label={currency} value={currency} />
-    );
-  }
+  // generateCurrenciesItems() {
+  //   return currencies.map(
+  //     (currency) => <Picker.Item key={currency} label={currency} value={currency} />
+  //   );
+  // }
 
   generateBanksItems() {
     let banksArray =  banks.map(
@@ -173,12 +182,21 @@ export default class AccountForm extends Component {
     return (
     <View style={styles.formItem}>
       <Text style={styles.label}>Měna: </Text>
-      <Picker
+      {/* <Picker
         style={styles.pickerInput}
         selectedValue={this.state.currency}
         onValueChange={(newCurrency) => this.setState({currency: newCurrency})}>
         {this.generateCurrenciesItems()}
-      </Picker>
+      </Picker> */}
+      <TMPicker
+        inputValue ={this.state.currency}
+        inputStyle = {styles.pickerInput}
+        confirmBtnText = {'potvrdit'}
+        cancelBtnText = {'zrušit'}
+        data = {currenciesPickerData}
+        onResult ={newCurrency => this.setState({currency: newCurrency})}
+        visible = {false}
+      />
     </View>);
   }
 
@@ -299,7 +317,15 @@ const accountTypesPickerData = (() => {
 const banksPickerData = (() => {
   var items = [{}];
   for (bank of banks) {
-    items[0][bank.name] = {name: bank.name}
+    items[0][bank.name] = {name: bank.name};
+  }
+  return items;
+})();
+
+const currenciesPickerData = (() => {
+  var items = [{}];
+  for (currency of currencies) {
+    items[0][currency] = {name: currency};
   }
   return items;
 })();

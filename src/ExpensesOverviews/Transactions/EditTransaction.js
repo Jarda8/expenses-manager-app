@@ -54,8 +54,9 @@ export default class NewTransaction extends Component {
 
   componentWillMount() {
     getAccountAsync(
-      this.props.route.params.transaction.accountName,
-      this.props.route.params.transaction.accountNumber,
+      // this.props.route.params.transaction.accountName,
+      // this.props.route.params.transaction.accountNumber,
+      this.props.route.params.transaction.accountId,
       account => this.setState({account: account})
     );
   }
@@ -87,8 +88,9 @@ export default class NewTransaction extends Component {
       TransactionModificator.updateTransaction(
         this.props.route.params.transaction,
         {
-        accountName: this.state.account.name,
-        accountNumber: this.state.account.number,
+        // accountName: this.state.account.name,
+        // accountNumber: this.state.account.number,
+        accountId: thist.state.account._id,
         category: category,
         amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
         date: this.state.date,

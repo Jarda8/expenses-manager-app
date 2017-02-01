@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { StatusBar } from 'react-native';
 import { createRouter, NavigationProvider, } from '@exponent/ex-navigation';
 import { FormattedWrapper } from 'react-native-globalize';
+import 'babel-polyfill';
 
 import DrawerNavigationPanel from './src/DrawerNavigationPanel';
 import ExpensesPieChartView from './src/ExpensesOverviews/PieChart/ExpensesPieChartView';
@@ -41,7 +42,7 @@ export const Router = createRouter(() => ({
 class App extends Component {
   render() {
     return (
-      <FormattedWrapper locale="cs" currency="CZK">
+      <FormattedWrapper locale="cs" currency="CZK" cldr={[require('./localization/currencies-cs-cldr.json')]}>
         <NavigationProvider router={Router}>
           <StatusBar barStyle="light-content" />
           <DrawerNavigationPanel />

@@ -1,0 +1,129 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "react-native-picker-xg",
+        "scope": null,
+        "escapedName": "react-native-picker-xg",
+        "name": "react-native-picker-xg",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "D:\\Jarda\\Various projects\\expenses-manager\\expenses-manager-app"
+    ]
+  ],
+  "_from": "react-native-picker-xg@latest",
+  "_id": "react-native-picker-xg@0.0.8",
+  "_inCache": true,
+  "_location": "/react-native-picker-xg",
+  "_nodeVersion": "6.1.0",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/react-native-picker-xg-0.0.8.tgz_1472179319022_0.28498604777269065"
+  },
+  "_npmUser": {
+    "name": "lulutia",
+    "email": "nowillnowill@gmail.com"
+  },
+  "_npmVersion": "3.10.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-picker-xg",
+    "scope": null,
+    "escapedName": "react-native-picker-xg",
+    "name": "react-native-picker-xg",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-picker-xg/-/react-native-picker-xg-0.0.8.tgz",
+  "_shasum": "94712646721d6801f566fadbc4247048b9d00f84",
+  "_shrinkwrap": null,
+  "_spec": "react-native-picker-xg",
+  "_where": "D:\\Jarda\\Various projects\\expenses-manager\\expenses-manager-app",
+  "author": {
+    "name": "lulutia"
+  },
+  "bugs": {
+    "url": "https://github.com/xgfe/react-native-picker-xg/issues"
+  },
+  "config": {
+    "validate-commit-msg": {
+      "warnOnFail": true
+    },
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "ghooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  },
+  "dependencies": {},
+  "description": "react native Picker component for both Android and iOS.",
+  "devDependencies": {
+    "babel-core": "^6.9.1",
+    "babel-preset-react-native": "^1.9.0",
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
+    "cz-conventional-changelog": "^1.1.6",
+    "enzyme": "^2.3.0",
+    "eslint": "^2.10.2",
+    "eslint-plugin-react": "^5.1.1",
+    "ghooks": "^1.2.1",
+    "istanbul": "^1.0.0-alpha.2",
+    "jsdom": "^9.2.1",
+    "mocha": "^2.5.3",
+    "react": "15.0.2",
+    "react-addons-test-utils": "15.0.2",
+    "react-dom": "15.0.2",
+    "react-native": "0.26.2",
+    "react-native-mock": "^0.2.2",
+    "sinon": "^1.17.4",
+    "validate-commit-msg": "^2.6.1"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "94712646721d6801f566fadbc4247048b9d00f84",
+    "tarball": "https://registry.npmjs.org/react-native-picker-xg/-/react-native-picker-xg-0.0.8.tgz"
+  },
+  "gitHead": "1a8cf8640b0fd2487aad116cda3bc64dc26973cf",
+  "homepage": "https://github.com/xgfe/react-native-picker-xg#readme",
+  "keywords": [
+    "react-native",
+    "picker"
+  ],
+  "license": "MIT",
+  "main": "app/picker.js",
+  "maintainers": [
+    {
+      "name": "yuebin01",
+      "email": "yuebin01@gmail.com"
+    }
+  ],
+  "name": "react-native-picker-xg",
+  "optionalDependencies": {},
+  "pre-commit": [
+    "lint"
+  ],
+  "private": false,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/xgfe/react-native-picker-xg.git"
+  },
+  "scripts": {
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "changelogsee": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint .",
+    "mocha": "./node_modules/mocha/bin/_mocha ./test/*.test.js --watch",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "node ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha ./test/*.test.js"
+  },
+  "version": "0.0.8"
+}

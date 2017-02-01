@@ -1,7 +1,8 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet, Picker } from 'react-native';
-import TMPicker from 'react-native-picker-xg';
+// import TMPicker from 'react-native-picker-xg';
+import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker';
 
 import { getAccountsAsync } from '../DataSources/AccountsDS';
 

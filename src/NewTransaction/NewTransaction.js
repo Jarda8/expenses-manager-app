@@ -41,8 +41,9 @@ export default class NewTransaction extends Component {
 
   saveNewTransaction(category: string) {
     TransactionModificator.saveTransaction({
-      accountName: this.state.account.name,
-      accountNumber: this.state.account.number,
+      // accountName: this.state.account.name,
+      // accountNumber: this.state.account.number,
+      accountId: this.state.account._id,
       category: category,
       amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
       date: this.state.date,

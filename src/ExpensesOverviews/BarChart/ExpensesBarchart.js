@@ -125,7 +125,7 @@ export class ExpensesBarchart extends Component {
     if (!this.state.data.find(x => x.amount !== 0)) {
       return <Text>Žádné údaje</Text>
     } else {
-      return <Bar data={[this.state.data]} options={options} accessorKey="amount" />
+      // return <Bar data={[this.state.data]} options={options} accessorKey="amount" />
     }
   }
 

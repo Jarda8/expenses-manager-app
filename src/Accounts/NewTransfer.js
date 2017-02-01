@@ -24,8 +24,8 @@ export default class NewTransfer extends Component {
     super(props);
     this.state = {
       displayedAmount: '0',
-      fromAccount: '',
-      toAccount: '',
+      fromAccount: null,
+      toAccount: null,
       note: '',
       finalAmount: 0,
       date: new Date()

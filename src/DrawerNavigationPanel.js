@@ -139,7 +139,7 @@ export default class DrawerNavigationPanel extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    flex: 1,
+    // flex: 1,
     height: 180
     // width: null,
     // resizeMode: 'cover',

@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Picker } from 'react-native';
 import { withNavigation } from '@exponent/ex-navigation'
-import TMPicker from 'react-native-picker-xg';
+// import TMPicker from 'react-native-picker-xg';
+import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker';
 
 import Calculator from '../Shared/Calculator/Calculator';
 import { getBudgetsAsync } from '../DataSources/BudgetsDS';

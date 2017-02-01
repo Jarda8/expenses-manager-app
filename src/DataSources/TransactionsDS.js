@@ -8,8 +8,9 @@ import { All, ExpensesCategories } from '../Shared/Categories'
 const TRANSACTIONS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Transaction = {
-  accountName: string,
-  accountNumber: string,
+  // accountName: string,
+  // accountNumber: string,
+  accountId: number,
   category: string,
   amount: number,
   date: Date,
@@ -57,8 +58,10 @@ function saveTransactionAsync(transaction: Transaction, callback: any) {
   });
   // DB.transactions.erase_db();
 
-  getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
-    updateAccountAsync(account, {balance: account.balance + transaction.amount}));
+  // getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
+  //   updateAccountAsync(account, {balance: account.balance + transaction.amount}));
+    getAccountAsync(transaction.accountId, account =>
+      updateAccountAsync(account, {balance: account.balance + transaction.amount}));
 
 }
 
@@ -129,8 +132,10 @@ function deleteTransactionAsync(transaction: Transaction) {
   DB.transactions.remove_id(transaction._id, result =>
     TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged'));
 
-  getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
-    updateAccountAsync(account, {balance: account.balance - transaction.amount}));
+  // getAccountAsync(transaction.accountName, transaction.accountNumber, account =>
+  //   updateAccountAsync(account, {balance: account.balance - transaction.amount}));
+    getAccountAsync(transaction.accountId, account =>
+      updateAccountAsync(account, {balance: account.balance - transaction.amount}));
 }
 
 function updateTransaction(oldTransaction: Transaction, newTransaction: Transaction) {
@@ -166,9 +171,16 @@ function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Tra
     callback(result);
   });
 
-  getAccountAsync(oldTransaction.accountName, oldTransaction.accountNumber, oldAccount =>
+  // getAccountAsync(oldTransaction.accountName, oldTransaction.accountNumber, oldAccount =>
+  //   updateAccountAsync(oldAccount, {balance: oldAccount.balance - oldTransaction.amount}, res =>
+  //     getAccountAsync(newTransaction.accountName, newTransaction.accountNumber, newAccount =>
+  //       updateAccountAsync(newAccount, {balance: newAccount.balance + newTransaction.amount})
+  //     )
+  //   )
+  // );
+  getAccountAsync(oldTransaction.accountId, oldAccount =>
     updateAccountAsync(oldAccount, {balance: oldAccount.balance - oldTransaction.amount}, res =>
-      getAccountAsync(newTransaction.accountName, newTransaction.accountNumber, newAccount =>
+      getAccountAsync(newTransaction.accountId, newAccount =>
         updateAccountAsync(newAccount, {balance: newAccount.balance + newTransaction.amount})
       )
     )

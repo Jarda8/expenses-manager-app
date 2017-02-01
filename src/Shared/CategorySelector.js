@@ -1,7 +1,8 @@
 /* @flow */
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Picker } from 'react-native';
-import TMPicker from 'react-native-picker-xg';
+// import TMPicker from 'react-native-picker-xg';
+import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker';
 
 import { ExpensesCategories, All } from './Categories';
 

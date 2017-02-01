@@ -8,6 +8,7 @@ const ACCOUNTS_DS_EVENT_EMITTER = new EventEmitter();
 export type Account = {
   name: string,
   number: string,
+  iban: string,
   bankName: string,
   type: string,
   balance: number,
@@ -20,8 +21,8 @@ accountTypes.set('Bank account', 'Bankovní účet');
 accountTypes.set('Cash', 'Hotovost');
 
 var accountsDS: Array<Account> = [
-  {name: 'Osobní účet', number: '123465798', bankName: 'Česká spořitelna', type: 'Personal account', balance: 19500, currency: 'CZK'},
-  {name: 'Peněženka', number: null, bankName: null, type: 'Cash', balance: 2154, currency: 'CZK'}
+  {name: 'Osobní účet', number: '123465798', iban: 'CZ5508000000000379554193', bankName: 'Česká spořitelna', type: 'Personal account', balance: 19500, currency: 'CZK'},
+  {name: 'Peněženka', number: null, iban: null, bankName: null, type: 'Cash', balance: 2154, currency: 'CZK'}
 ]
 
 function getAccounts(): Array<Account> {
@@ -47,8 +48,14 @@ function getAccount(name: string, number: string) {
   return accountsDS.find((acc) => acc.name === name && acc.number === number);
 }
 
-function getAccountAsync(name: string, number: string, callback: (result: Account) => void) {
-  DB.accounts.get({name: name, number: number}, result => {
+// function getAccountAsync(name: string, number: string, callback: (result: Account) => void) {
+//   DB.accounts.get({name: name, number: number}, result => {
+//     callback(result[0]);
+//   });
+// }
+
+function getAccountAsync(id: number, callback: (result: Account) => void) {
+  DB.accounts.get_id(id, result => {
     callback(result[0]);
   });
 }
@@ -88,7 +95,7 @@ function getTotalBalance() {
 
 function getTotalBalanceAsync(callback: (result: number) => void) {
   getAccountsAsync(result => {
-    callback(result.reduce((x, y) => {return {balance: x.balance + y.balance}}).balance);
+    callback(result.reduce((x, y) => {return {balance: x.balance + y.balance}}, {balance: 0}).balance);
   });
 }
 
