@@ -9,6 +9,7 @@ import { banks, currencies } from '../Shared/DataSource';
 import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
 import FullWidthButton from '../Shared/FullWidthButton'
 import CSAPIClient from '../DataImport/CSAPIClient';
+import { Router } from '../../main';
 
 @withNavigation
 export default class AccountForm extends Component {
@@ -70,15 +71,16 @@ export default class AccountForm extends Component {
     if (this.state.type === 'Bank account' && bank !== 'other') {
       switch (bank) {
         case 'Česká spořitelna':
-          CSAPIClient.fetchAccount(this.state.name, number).then(acc => {
-            if (acc === null) {
-              Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
-            } else {
-              console.log(acc);
-              saveAccountAsync(acc);
-              this.props.navigator.pop();
-            }
-          }).catch(() => console.log("Promise Rejected"));
+          // CSAPIClient.fetchAccount(this.state.name, number).then(acc => {
+          //   if (acc === null) {
+          //     Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
+          //   } else {
+          //     acc.connected = true;
+          //     saveAccountAsync(acc);
+          //     this.props.navigator.pop();
+          //   }
+          // }).catch(() => console.log("Promise Rejected"));
+          this.props.navigator.push(Router.getRoute('csasTokensForm', {accountName: this.state.name, accountNumber: number}));
           break;
       }
     } else {

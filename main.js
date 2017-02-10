@@ -18,6 +18,7 @@ import CategoriesList from './src/NewTransaction/CategoriesList';
 import EditTransaction from './src/ExpensesOverviews/Transactions/EditTransaction';
 import NewAccount from './src/Accounts/NewAccount';
 import EditAccount from './src/Accounts/EditAccount';
+import CSASTokensForm from './src/Authorization/CSASTokensForm';
 import NewBudget from './src/Budget/NewBudget';
 import EditBudget from './src/Budget/EditBudget';
 import NewTransfer from './src/Accounts/NewTransfer';
@@ -34,6 +35,7 @@ export const Router = createRouter(() => ({
   editTransaction: () => EditTransaction,
   newAccount: () => NewAccount,
   editAccount: () => EditAccount,
+  csasTokensForm: () => CSASTokensForm,
   newBudget: () => NewBudget,
   editBudget: () => EditBudget,
   newTransfer: () => NewTransfer
