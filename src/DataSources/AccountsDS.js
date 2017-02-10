@@ -6,13 +6,17 @@ import { DB } from './DB';
 const ACCOUNTS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Account = {
+  _id: number,
   name: string,
   number: string,
   iban: string,
   bankName: string,
   type: string,
   balance: number,
-  currency: string
+  currency: string,
+  connected: boolean,
+  accessToken: string,
+  refreshToken: string
 }
 
 var accountTypes = new Map();
@@ -76,7 +80,18 @@ function updateAccount(oldAccount: Account, newAccount: Account) {
 function updateAccountAsync(oldAccount: Account, newAccount: Account, callback: any) {
   DB.accounts.update(oldAccount, newAccount, result => {
     ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged');
-    callback(result);
+    if (callback) {
+      callback(result);
+    }
+  });
+}
+
+function updateAccountByIdAsync(id: number, newData: Object, callback: any) {
+  DB.accounts.update_id(id, newData, result => {
+    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged');
+    if (callback) {
+      callback(result);
+    }
   });
 }
 
@@ -99,4 +114,4 @@ function getTotalBalanceAsync(callback: (result: number) => void) {
   });
 }
 
-export { ACCOUNTS_DS_EVENT_EMITTER, accountTypes, getAccount, getAccounts, saveAccount, updateAccount, deleteAccount, getTotalBalance, getAccountAsync, getAccountsAsync, saveAccountAsync, updateAccountAsync, deleteAccountAsync, getTotalBalanceAsync }
+export { ACCOUNTS_DS_EVENT_EMITTER, accountTypes, getAccount, getAccounts, saveAccount, updateAccount, deleteAccount, getTotalBalance, getAccountAsync, getAccountsAsync, saveAccountAsync, updateAccountAsync, updateAccountByIdAsync, deleteAccountAsync, getTotalBalanceAsync }

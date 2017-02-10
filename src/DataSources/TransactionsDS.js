@@ -8,13 +8,27 @@ import { All, ExpensesCategories } from '../Shared/Categories'
 const TRANSACTIONS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Transaction = {
-  // accountName: string,
-  // accountNumber: string,
+  _id: number,
   accountId: number,
   category: string,
   amount: number,
+  currency: string,
   date: Date,
-  note: string
+  note: string, // payer note
+  accountParty: {
+    info: string, // name of transaction party. For ATM transaction, masked card number used in transaction
+    description: string, // whole account number including bank of transaction party. For ATM transaction, address of ATM if known. For card transaction, identification (name) of the merchant.
+    iban: string,
+    bic: string,
+    accountNumber: string,
+    prefix: string,
+    bankCode: string
+  },
+  constantSymbol: string,
+  variableSymbol: string,
+  specificSymbol: string,
+  description: string, // user description of the transaction
+  payeeNote: string
 }
 
 var transactionsDS: Array<Transaction> = [
