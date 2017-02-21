@@ -64,7 +64,7 @@ export class ExpensesBarchart extends Component {
         if (props.category === All) {
           let j = i;
           getSumOfExpensesAsync(fromDate, toDate, result => {
-            console.log(result);
+            // console.log(result);
             let newData = this.state.data;
             newData[j] = result;
             newData[j].amount = -newData[j].amount;
@@ -122,33 +122,68 @@ export class ExpensesBarchart extends Component {
   // }
 
   renderChart() {
+    // let testData =
+    // [[
+    //   {"name":"1. týden","amount":0},
+    //   {"name":"2. týden","amount":0},
+    //   {"name":"3. týden","amount":75},
+    //   {"name":"4.týden","amount":0}
+    // ]];
+
     if (!this.state.data.find(x => x.amount !== 0)) {
       return <Text>Žádné údaje</Text>
     } else {
-      // return <Bar data={[this.state.data]} options={options} accessorKey="amount" />
+    //   console.log([this.state.data]);
+      return (
+      <Bar data={[this.state.data]} options={options} accessorKey="amount" />
+        // <Bar data={testData} options={options} accessorKey='amount'/>
+      )
     }
   }
 
   render() {
-
     return (
       <View style={[styles.chart, this.props.style]}>
         {this.renderChart()}
       </View>
     );
   }
+
+  // render() {
+  //   let testData =
+  //   [
+  //     [{
+  //       "amount": 49,
+  //       "name": "apple"
+  //     }, {
+  //       "amount": 42,
+  //       "name": "apple"
+  //     }]
+  //   ];
+  //   return (
+  //     <View>
+  //       <Bar data={undefined} options={options} accessorKey='amount'/>
+  //     </View>
+  //   )
+  // }
 }
 
   const options = {
     width: 250,
     height: 250,
+    margin: {
+      top: 20,
+      left: 25,
+      bottom: 50,
+      right: 20
+    },
     color: '#2980B9',
     gutter: 20,
-    animate: {
-      type: 'oneByOne',
-      duration: 200,
-      fillTransition: 3
-    },
+    // animate: {
+    //   type: 'oneByOne',
+    //   duration: 200,
+    //   fillTransition: 3
+    // },
     axisX: {
       showAxis: true,
       showLines: true,

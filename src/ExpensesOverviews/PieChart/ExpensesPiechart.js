@@ -59,7 +59,7 @@ export class ExpensesPiechart extends Component {
 
     return (
     <View style={[styles.chart, this.props.style]}>
-      {/* {this.renderChart()} */}
+      {this.renderChart()}
     </View>
     );
   }

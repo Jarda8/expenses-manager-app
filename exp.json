@@ -1,8 +1,8 @@
 {
   "name": "expenses-manager-app",
-  "description": "An empty new project",
+  "description": "An Android/iOS application for personal finances management.",
   "slug": "expenses-manager-app",
-  "sdkVersion": "13.0.0",
+  "sdkVersion": "14.0.0",
   "version": "0.2.0",
   "orientation": "portrait",
   "primaryColor": "#cccccc",
