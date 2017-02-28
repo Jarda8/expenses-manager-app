@@ -16,7 +16,8 @@ export type Account = {
   currency: string,
   connected: boolean,
   accessToken: string,
-  refreshToken: string
+  refreshToken: string,
+  lastTransactionsDownload: Date
 }
 
 var accountTypes = new Map();

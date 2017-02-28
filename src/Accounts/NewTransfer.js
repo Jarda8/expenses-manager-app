@@ -1,6 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Ionicons } from '@exponent/vector-icons';
 
@@ -37,7 +37,12 @@ export default class NewTransfer extends Component {
 
   componentWillMount() {
     getAccountsAsync(result => {
-      this.setState({fromAccount: result[0], toAccount: result[1]});
+      if (result.length < 2) {
+        Alert.alert('K provedení převodu je třeba mít přidané alespoň dva účty.');
+        this.props.navigator.popToTop();
+      } else {
+        this.setState({fromAccount: result[0], toAccount: result[1]});
+      }
     });
   }
 

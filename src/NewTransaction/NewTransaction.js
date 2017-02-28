@@ -1,6 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 
 import Calculator from '../Shared/Calculator/Calculator';
@@ -31,8 +31,14 @@ export default class NewTransaction extends Component {
   }
 
   componentWillMount(){
-    getAccountsAsync(result =>
-      this.setState({account: result[0]}));
+    getAccountsAsync(result => {
+      if (result.length === 0) {
+        Alert.alert('Nemáte přidaný žádný účet. Nejdříve je třeba přidat účet v sekci "Účty".');
+        this.props.navigator.popToTop();
+      } else {
+        this.setState({account: result[0]});
+      }
+    });
   }
 
   handleDisplayChange(toDisplay: string) {

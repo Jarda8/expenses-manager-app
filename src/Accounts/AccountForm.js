@@ -8,7 +8,7 @@ import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker'
 import { banks, currencies } from '../Shared/DataSource';
 import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
 import FullWidthButton from '../Shared/FullWidthButton'
-import CSAPIClient from '../DataImport/CSAPIClient';
+// import CSAPIClient from '../DataImport/CSAPIClient';
 import { Router } from '../../main';
 
 @withNavigation
@@ -68,7 +68,7 @@ export default class AccountForm extends Component {
       number = null;
       bank = null;
     }
-    if (this.state.type === 'Bank account' && bank !== 'other') {
+    if (this.state.type === 'Bank account' && bank !== 'Jiná') {
       switch (bank) {
         case 'Česká spořitelna':
           // CSAPIClient.fetchAccount(this.state.name, number).then(acc => {
@@ -80,7 +80,7 @@ export default class AccountForm extends Component {
           //     this.props.navigator.pop();
           //   }
           // }).catch(() => console.log("Promise Rejected"));
-          this.props.navigator.push(Router.getRoute('csasTokensForm', {accountName: this.state.name, accountNumber: number}));
+          this.props.navigator.push(Router.getRoute('csTokensForm', {accountName: this.state.name, accountNumber: number}));
           break;
       }
     } else {
@@ -92,7 +92,8 @@ export default class AccountForm extends Component {
           bankName: bank,
           type: this.state.type,
           balance: this.state.initialBalance,
-          currency: this.state.currency
+          currency: this.state.currency,
+          connected: false
         }
       );
       this.props.navigator.pop();
@@ -178,7 +179,7 @@ export default class AccountForm extends Component {
   }
 
   renderCurrency() {
-    if (this.state.type === 'Bank account' && this.state.bank !== 'other') {
+    if (this.state.type === 'Bank account' && this.state.bank !== 'Jiná') {
       return;
     }
     return (
@@ -203,13 +204,13 @@ export default class AccountForm extends Component {
   }
 
   renderBalance() {
-    if (this.state.type === 'Bank account' && this.state.bank !== 'other') {
+    if (this.state.type === 'Bank account' && this.state.bank !== 'Jiná') {
       return;
     }
     return (
       <View style={[styles.formTextInputItem, {paddingBottom: this.state.padding}]}>
         <View style={styles.labelView}>
-          <Text style={styles.label}>Bilance: </Text>
+          <Text style={styles.label}>Zůstatek: </Text>
         </View>
         <TextInput
           onFocus={(event: Event) => {
@@ -321,6 +322,7 @@ const banksPickerData = (() => {
   for (bank of banks) {
     items[0][bank.name] = {name: bank.name};
   }
+  items[0]['other'] = {name: 'Jiná'};
   return items;
 })();
 
@@ -358,7 +360,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 20,
-    width: 80
+    width: 85
   },
   textInput: {
     width: 250,
