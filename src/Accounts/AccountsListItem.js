@@ -10,7 +10,7 @@ import { Router } from '../../main';
 @withNavigation
 export default class AccountsListItem extends Component {
 
-  renderBalance(balance : number) {
+  renderBalance(balance : number, currency: string) {
   let balanceStyle = [styles.balance];
     if (balance < 0) {
       balanceStyle.push({ color: 'red'});
@@ -20,6 +20,7 @@ export default class AccountsListItem extends Component {
     return (
       <FormattedCurrency
         value={balance}
+        currency={currency}
         style={balanceStyle} />
     );
   }
@@ -34,7 +35,7 @@ export default class AccountsListItem extends Component {
         <View style={styles.account}>
           <View style={styles.nameAndBalance}>
             <Text style={styles.name}>{this.props.account.name}</Text>
-            {this.renderBalance(this.props.account.balance)}
+            {this.renderBalance(this.props.account.balance, this.props.account.currency)}
           </View>
           <Text style={styles.type}>{accountTypes.get(this.props.account.type)}</Text>
         </View>

@@ -4,6 +4,7 @@ import { DB } from './DB';
 import type { Account } from './AccountsDS';
 import { getAccount, updateAccount, getAccountAsync, updateAccountAsync } from './AccountsDS';
 import { All, ExpensesCategories } from '../Shared/Categories'
+import CurrencyConverter from '../CurrencyConverter';
 
 const TRANSACTIONS_DS_EVENT_EMITTER = new EventEmitter();
 
@@ -201,8 +202,18 @@ function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Tra
   );
 }
 
-function addTransactions(category: string, transactions: Array<Transaction>): {name: string, amount: number} {
-  return transactions.reduce((x, y) => {return {name: category, amount: x.amount + y.amount}}, {name: category, amount: 0});
+async function addTransactions(category: string, transactions: Array<Transaction>): {name: string, amount: number} {
+  let convertedTransactions = await convertTransactionsToCrowns(transactions);
+  return convertedTransactions.reduce((x, y) => {return {name: category, amount: x.amount + y.amount}}, {name: category, amount: 0});
+}
+
+async function convertTransactionsToCrowns(transactions: Array<Transaction>) {
+  let result = [];
+  for (transaction of transactions) {
+      let convertedAmount = await CurrencyConverter.convertCurrency(transaction.currency, transaction.amount);
+      result.push({amount: convertedAmount});
+  }
+  return result;
 }
 
 function getSumOfTransactions(category: string, fromDate: Date, toDate: Date): {name: string, amount: number} {
@@ -217,7 +228,9 @@ function getSumOfTransactions(category: string, fromDate: Date, toDate: Date): {
 
 function getSumOfTransactionsAsync(category: string, fromDate: Date, toDate: Date, callback: (p: {name: string, amount: number}) => any): void {
   getTransactionsAsync(category, fromDate, toDate, transactions => {
-    callback(addTransactions(category, transactions))
+    addTransactions(category, transactions).then((total) => {
+      callback(total);
+    })
   });
 }
 
@@ -230,7 +243,9 @@ function getSumOfIncomesAsync(fromDate: Date, toDate: Date, callback: (p: {name:
   getTransactionsAsync(All, fromDate, toDate, transactions => {
     parseDates(transactions);
     transactions = transactions.filter(t => t.amount > 0);
-    callback(addTransactions(All, transactions));
+    addTransactions(All, transactions).then((sum) => {
+      callback(sum);
+    });
   })
 }
 
@@ -243,7 +258,9 @@ function getSumOfExpensesAsync(fromDate: Date, toDate: Date, callback: (p: {name
   getTransactionsAsync(All, fromDate, toDate, transactions => {
     parseDates(transactions);
     transactions = transactions.filter(t => t.amount < 0);
-    callback(addTransactions(All, transactions));
+    addTransactions(All, transactions).then((sum) => {
+      callback(sum);
+    });
   })
 }
 

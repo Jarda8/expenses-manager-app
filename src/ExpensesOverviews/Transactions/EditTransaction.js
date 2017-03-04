@@ -13,10 +13,11 @@ import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
 import SaveButton from '../../Shared/SaveButton'
 import DeleteButton from '../../Shared/DeleteButton'
 import TransactionModificator from './TransactionModificator';
-import Note from '../../Shared/Note'
+import Note from '../../Shared/Note';
+import Categorization from '../../DataImport/Categorization';
 
 
-export default class NewTransaction extends Component {
+export default class EditTransaction extends Component {
 
   static route = {
     navigationBar: {
@@ -85,8 +86,9 @@ export default class NewTransaction extends Component {
   }
 
   updateThisTransactionWithCategory(category: string) {
+    let oldTransaction = this.props.route.params.transaction;
       TransactionModificator.updateTransaction(
-        this.props.route.params.transaction,
+        oldTransaction,
         {
         // accountName: this.state.account.name,
         // accountNumber: this.state.account.number,
@@ -96,6 +98,9 @@ export default class NewTransaction extends Component {
         date: this.state.date,
         note: this.state.note
       });
+      if (this.state.account.connected && oldTransaction.category !== category) {
+        Categorization.addNewCategorization({category: category, accountParty: oldTransaction.accountParty});
+      }
       this.props.navigator.popToTop();
   }
 

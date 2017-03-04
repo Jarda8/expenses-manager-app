@@ -14,6 +14,6 @@ var banks: Array<Bank> = [
   {name: 'Česká spořitelna', code: "0800"}
 ]
 
-var currencies = ['CZK'];
+var currencies = ['CZK', 'EUR'];
 
 export { periods, banks, currencies }

@@ -8,7 +8,7 @@ import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
 
 export default class TransactionsListItem extends Component {
 
-  renderAmount(amount : number) {
+  renderAmount(amount : number, currency: string) {
   let amountStyle = [styles.amount];
     if (amount < 0) {
       amountStyle.push({ color: 'red'});
@@ -18,6 +18,7 @@ export default class TransactionsListItem extends Component {
     return (
       <FormattedCurrency
         value={amount}
+        currency={currency}
         style={amountStyle} />
     );
   }
@@ -42,7 +43,7 @@ export default class TransactionsListItem extends Component {
         <View style={styles.transaction}>
           <View style={styles.categoryAndAmount}>
             <Text style={styles.category}>{this.renderCategory(this.props.transaction)}</Text>
-            {this.renderAmount(this.props.transaction.amount)}
+            {this.renderAmount(this.props.transaction.amount, this.props.transaction.currency)}
           </View>
           <Text style={styles.dateAndNote}>{this.props.transaction.date.getDate()}.{this.props.transaction.date.getMonth() + 1}.{this.props.transaction.date.getFullYear()} {this.props.transaction.note}</Text>
         </View>

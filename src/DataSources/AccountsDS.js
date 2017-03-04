@@ -1,5 +1,6 @@
 /* @flow */
 import EventEmitter from 'EventEmitter';
+import CurrencyConverter from '../CurrencyConverter';
 
 import { DB } from './DB';
 
@@ -110,9 +111,17 @@ function getTotalBalance() {
 }
 
 function getTotalBalanceAsync(callback: (result: number) => void) {
-  getAccountsAsync(result => {
-    callback(result.reduce((x, y) => {return {balance: x.balance + y.balance}}, {balance: 0}).balance);
+  getAccountsAsync((accounts) => {
+    convertToCrowns(accounts).then(() => {
+      callback(accounts.reduce((x, y) => {return {balance: x.balance + y.balance}}, {balance: 0}).balance);
+    })
   });
+}
+
+async function convertToCrowns(accounts: Array<Account>) {
+  for (account of accounts) {
+    account.balance = await CurrencyConverter.convertCurrency(account.currency, account.balance);
+  }
 }
 
 export { ACCOUNTS_DS_EVENT_EMITTER, accountTypes, getAccount, getAccounts, saveAccount, updateAccount, deleteAccount, getTotalBalance, getAccountAsync, getAccountsAsync, saveAccountAsync, updateAccountAsync, updateAccountByIdAsync, deleteAccountAsync, getTotalBalanceAsync }

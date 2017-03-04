@@ -167,7 +167,7 @@ export default class CSAPIClient {
         category: defaultCategory,
         amount: t.amount.value,
         currency: t.amount.currency,
-        date: new Date(t.valuationDate),
+        date: new Date(t.bookingDate),
         note: t.payerNote,
         accountParty: {
           info: t.accountParty.partyInfo,

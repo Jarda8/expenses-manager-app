@@ -6,6 +6,7 @@ import type { Budget } from '../DataSources/BudgetsDS';
 import { getBudgetAsync } from  '../DataSources/BudgetsDS';
 import { getSumOfTransactions, getSumOfTransactionsAsync } from  '../DataSources/TransactionsDS';
 import { ExpensesCategories } from './Categories';
+import CurrencyConverter from '../CurrencyConverter';
 
 
 export default class BudgetChecker {
@@ -23,6 +24,8 @@ export default class BudgetChecker {
   }
 
   static checkBudgetAfterTransaction(transaction: Transaction) {
+    console.log('checkBudgetAfterTransaction, transaction:');
+    console.log(transaction);
     getBudgetAsync(transaction.category, budget => {
       if (budget === undefined) {
         return;
@@ -30,14 +33,18 @@ export default class BudgetChecker {
       let toDate = new Date();
       let fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0)
       getSumOfTransactionsAsync(transaction.category, fromDate, toDate, result => {
+        console.log('before CurrencyConverter.convertCurrency');
+        CurrencyConverter.convertCurrency(transaction.currency, transaction.amount).then((convertedAmount) => {
+          console.log('after conversion');
           let monthTotal = result.amount * -1;
           if (budget.budget < monthTotal
-            && budget.budget >= monthTotal + transaction.amount) {
+            && budget.budget >= monthTotal + convertedAmount) {
             this.showAlert(transaction.category, true, monthTotal, budget.budget);
           } else if (budget.budget * budget.notificationThreshold < monthTotal
-          && budget.budget * budget.notificationThreshold >= monthTotal + transaction.amount) {
+          && budget.budget * budget.notificationThreshold >= monthTotal + convertedAmount) {
             this.showAlert(transaction.category, false, monthTotal, budget.budget * budget.notificationThreshold);
           }
+        });
       });
     });
   }

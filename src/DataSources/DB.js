@@ -4,5 +4,7 @@ export var DB = {
     "accounts": new RNDBModel.create_db('accounts'),
     "transactions": new RNDBModel.create_db('transactions'),
     "transfers": new RNDBModel.create_db('transfers'),
-    "budgets": new RNDBModel.create_db('budgets')
+    "budgets": new RNDBModel.create_db('budgets'),
+    "rates": new RNDBModel.create_db('rates'),
+    "ratesLastFetch": new RNDBModel.create_db('ratesLastFetch')
 };

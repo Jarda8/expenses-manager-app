@@ -52,6 +52,7 @@ export default class NewTransaction extends Component {
       accountId: this.state.account._id,
       category: category,
       amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
+      currency: this.state.account.currency,
       date: this.state.date,
       note: this.state.note
     });
@@ -80,6 +81,12 @@ export default class NewTransaction extends Component {
     return new Date(year, month, day, 0, 0, 0, 0);
   }
 
+  renderCurrency() {
+    if (this.state.account) {
+      return this.state.account.currency;
+    }
+  }
+
   render() {
     return (
       <View style={styles.newTransaction}>
@@ -104,7 +111,7 @@ export default class NewTransaction extends Component {
         <View style={styles.amountDisplay}>
           <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
           {/* TODO lokalizovat měnu */}
-          <Text style={styles.currency}>CZK</Text>
+          <Text style={styles.currency}>{this.renderCurrency()}</Text>
         </View>
         <Note />
         <View style={styles.calculatorView}>
