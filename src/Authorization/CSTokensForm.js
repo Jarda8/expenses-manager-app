@@ -104,27 +104,6 @@ export default class CSTokensForm extends Component {
     render() {
       return (
         <View style={styles.tokensFormView}>
-          {/* <View style={styles.tokensForm}>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Následující odkaz vede na přihlašovací stránku České Spořitelny. Po přihlášení získáte tokeny nutné pro přístup aplikace k historii transakcí na vašem účtu.</Text>
-              <Text style={styles.link}
-                onPress={() => Linking.openURL(csLoginLink)}>
-                Přihlásit se
-              </Text>
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Autorizační token:</Text>
-              <TextInput
-                // style={styles.textInput}
-                onChangeText={(text) => this.accessToken = text} />
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Refresh token:</Text>
-              <TextInput
-                // style={styles.textInput}
-                onChangeText={(text) => this.refreshToken = text} />
-            </View>
-          </View> */}
           <View style={{height: 100}}>
             <FullWidthButton text='Přihlásit se k účtu' onPress={this.login.bind(this)} flexSize={1} />
           </View>
@@ -137,25 +116,6 @@ const styles = StyleSheet.create({
     tokensFormView: {
       flex: 1,
       backgroundColor: '#F5FCFF',
-      justifyContent: 'center',
-      // alignItems: 'center'
-    },
-    // tokensForm: {
-    //   flex: 7,
-    //   justifyContent: 'center',
-    //   alignItems: 'center'
-    // },
-    // formGroup: {
-    //   alignItems: 'center',
-    //   marginBottom: 50,
-    //   marginLeft: 20,
-    //   marginRight: 20
-    // },
-    // label: {
-    //   textAlign: 'center',
-    //   marginBottom: 10
-    // },
-    // link: {
-    //   color: 'blue'
-    // }
+      justifyContent: 'center'
+    }
 })

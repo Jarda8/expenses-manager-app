@@ -5,15 +5,6 @@ import { Ionicons } from '@exponent/vector-icons';
 
 import { periods } from './DataSource';
 
-
-// TODO typy pro props viz "flow react" na webu *************************************************************************************
-
-// type Props = {
-//   title: string,
-//   visited: boolean,
-//   onClick: () => void,
-// };
-
 const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
 
 export default class TimeNavigation extends Component {
@@ -58,8 +49,7 @@ const styles = StyleSheet.create({
   timeNavigation: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    // backgroundColor: 'bisque'
+    justifyContent: 'space-around'
   },
   datum: {
     fontSize: 20

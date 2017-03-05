@@ -8,8 +8,6 @@ const width = Dimensions.get('window').width;
 export default class CategoriesListItem extends Component {
 
   handleCategorySelected() {
-    // TODO zavolat callback, který uloží transakci a vrátí se zpět
-    // console.log(this.props.categoryKey);
     this.props.onCategorySelected(this.props.categoryKey);
   }
 

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text
-  // Image
 } from 'react-native';
 import {
   StackNavigation,

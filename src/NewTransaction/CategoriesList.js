@@ -42,8 +42,7 @@ export default class CategoriesList extends Component {
       <View>
         <View style={styles.amountView}>
           <Text style={styles.displayedAmount}>{this.props.route.params.amount}</Text>
-          {/* TODO lokalizovat měnu */}
-          <Text style={styles.currency}>CZK</Text>
+          <Text style={styles.currency}>{this.props.route.params.currency}</Text>
         </View>
         <ListView
           contentContainerStyle={styles.listView}

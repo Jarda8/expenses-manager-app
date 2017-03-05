@@ -55,8 +55,6 @@ export default class EditTransaction extends Component {
 
   componentWillMount() {
     getAccountAsync(
-      // this.props.route.params.transaction.accountName,
-      // this.props.route.params.transaction.accountNumber,
       this.props.route.params.transaction.accountId,
       account => this.setState({account: account})
     );
@@ -77,7 +75,7 @@ export default class EditTransaction extends Component {
 
   // updateThisTransaction() {
   //   this.updateThisTransactionWithCategory(this.props.route.params.transaction.category);
-  // TODO Vyřešit problém s updatováním finalAmount. Správnou hodnotu zná, resp. musí spočítat, Calculator.
+  // Vyřešit problém s updatováním finalAmount. Správnou hodnotu zná, resp. musí spočítat, Calculator.
   // }
 
   deleteThisTransaction() {
@@ -90,8 +88,6 @@ export default class EditTransaction extends Component {
       TransactionModificator.updateTransaction(
         oldTransaction,
         {
-        // accountName: this.state.account.name,
-        // accountNumber: this.state.account.number,
         accountId: thist.state.account._id,
         category: category,
         amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
@@ -132,6 +128,12 @@ export default class EditTransaction extends Component {
     return new Date(dateArray[2] + '-' + dateArray[1] + '-' + dayString);
   }
 
+  renderCurrency() {
+    if (this.state.account) {
+      return this.state.account.currency;
+    }
+  }
+
   render() {
     return (
       <View style={styles.newTransaction}>
@@ -148,16 +150,12 @@ export default class EditTransaction extends Component {
             format="DD.MM.YYYY"
             confirmBtnText="Potvrdit"
             cancelBtnText="Zrušit"
-            onDateChange={(date) => {
-              this.setState({date: this.parseDate(date)})
-              // console.log(date);
-            }}
+            onDateChange={(date) => {this.setState({date: this.parseDate(date)})}}
           />
         </View>
         <View style={styles.amountDisplay}>
           <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
-          {/* TODO lokalizovat měnu */}
-          <Text style={styles.currency}>CZK</Text>
+          <Text style={styles.currency}>{this.renderCurrency()}</Text>
         </View>
         <Note handleOnChangeText={(text) => this.setState({note: text})}/>
         <View style={styles.calculatorView}>
@@ -180,7 +178,6 @@ const styles = StyleSheet.create({
   },
   accountView: {
     flex: 1,
-    // backgroundColor: 'powderblue',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row'

@@ -20,8 +20,7 @@ export default class Note extends Component {
 const styles = StyleSheet.create({
   noteView: {
     flex: 1,
-    flexDirection: 'row',
-    // backgroundColor: 'aquamarine'
+    flexDirection: 'row'
   },
   noteInput: {
     flex: 1

@@ -1,8 +1,7 @@
 /* @flow */
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Picker } from 'react-native';
-import { withNavigation } from '@exponent/ex-navigation'
-// import TMPicker from 'react-native-picker-xg';
+import { withNavigation } from '@exponent/ex-navigation';
 import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker';
 
 import Calculator from '../Shared/Calculator/Calculator';
@@ -38,17 +37,6 @@ export default class BudgetForm extends Component {
   componentWillMount() {
     this.getFreeCategories();
   }
-
-  // getFreeCategories() {
-  //   let allCategories = Object.keys(ExpensesCategories);
-  //   let occupiedCategories = getBudgets().map(
-  //     (budget) => budget.category
-  //   );
-  //   let freeCategories = allCategories.filter(
-  //     (category) => !occupiedCategories.includes(category)
-  //   );
-  //   return freeCategories;
-  // }
 
   getFreeCategories() {
     let allCategories = Object.keys(ExpensesCategories);
@@ -109,26 +97,12 @@ export default class BudgetForm extends Component {
   }
 
   generateCategoriesItems() {
-    // return this.state.freeCategories.map(
-    //   (category) => <Picker.Item key={category} label={ExpensesCategories[category]} value={category} />
-    // );
     let items = [{}];
     for (category of this.state.freeCategories) {
       items[0][category] = {name: ExpensesCategories[category]};
     }
     return items;
-
   }
-
-  // generateThresholdItems() {
-  //   let items = [];
-  //   for (var i = 25; i <= 100; i+= 5) {
-  //     items.push(
-  //       <Picker.Item key={i} label={'' + i + ' %'} value={i} />
-  //     );
-  //   }
-  //   return items;
-  // }
 
   handleCategorySelect(category: string) {
     for (categoryKey of Object.keys(ExpensesCategories)) {
@@ -148,7 +122,6 @@ export default class BudgetForm extends Component {
           confirmBtnText = {'potvrdit'}
           cancelBtnText = {'zrušit'}
           data = {this.generateCategoriesItems()}
-          // selectIndex = {[0,1]}
           onResult ={this.handleCategorySelect.bind(this)}
           visible = {false}
         />
@@ -161,37 +134,23 @@ export default class BudgetForm extends Component {
       <View style={styles.budgetForm}>
         <View style={styles.formItem}>
           <Text style={styles.label}>Kategorie: </Text>
-          {/* <Picker
-            style={styles.pickerInput}
-            selectedValue={this.state.category}
-            onValueChange={(newCategory) => this.setState({category: newCategory})}>
-            {this.generateCategoriesItems()}
-          </Picker> */}
           {this.renderCategoryPicker()}
         </View>
         <View style={styles.formItem}>
           <Text style={styles.label}>Měsíční limit: </Text>
           <View style={styles.numberDisplay}>
             <Text style={styles.numberInput}>{this.state.displayedNumber}</Text>
-            {/* TODO lokalizovat měnu */}
             <Text style={styles.currency}>CZK</Text>
           </View>
         </View>
         <View style={styles.formItem}>
           <Text style={styles.label}>Upozornit při překročení </Text>
-          {/* <Picker
-            style={styles.pickerInput}
-            selectedValue={this.state.notificationThreshold * 100}
-            onValueChange={(newThreshold) => this.setState({notificationThreshold: newThreshold / 100})}>
-            {this.generateThresholdItems()}
-          </Picker> */}
           <TMPicker
             inputValue={this.state.notificationThreshold * 100 + ' %'}
             inputStyle={styles.pickerInput}
             confirmBtnText={'potvrdit'}
             cancelBtnText={'zrušit'}
             data={tresholdPickerData}
-            // selectIndex = {[0,1]}
             onResult={(newThreshold) => this.setState({notificationThreshold: parseInt(newThreshold) / 100})}
             visible={false}
           />
@@ -227,7 +186,6 @@ const styles = StyleSheet.create({
   },
   formItem: {
     flex: 1,
-    // backgroundColor: 'powderblue',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
@@ -244,7 +202,6 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   numberDisplay: {
-    // flex: 1,
     width: 200,
     flexDirection: 'row',
     justifyContent: 'flex-end',

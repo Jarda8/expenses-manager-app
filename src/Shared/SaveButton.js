@@ -7,7 +7,6 @@ export default class SaveButton extends Component {
     return (
       <TouchableHighlight
         onPress={this.props.onPress}
-        // onPress={() => console.log('baf')}
         underlayColor= 'steelblue'
         style={styles.saveButton}>
         <FontAwesome name='save' size={32} color='black' />

@@ -48,10 +48,6 @@ export default class BudgetListView extends Component {
     );
   }
 
-  // getBudgetsDS() {
-  //   return this.state.dataSource.cloneWithRows(getBudgets());
-  // }
-
   render() {
     return (
       <BudgetView>

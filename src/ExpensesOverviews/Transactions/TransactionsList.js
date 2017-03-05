@@ -62,11 +62,6 @@ export default class TransactionsList extends Component {
     );
   }
 
-  // getTransactionsDS() {
-  //   let transactionsArray = getTransactions(this.props.category, this.props.fromDate, this.props.toDate);
-  //   return this.state.dataSource.cloneWithRows(transactionsArray);
-  // }
-
   render() {
     return (
       <View style={this.props.style}>

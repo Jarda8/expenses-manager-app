@@ -6,7 +6,6 @@ import DatePicker from 'react-native-datepicker';
 import Calculator from '../Shared/Calculator/Calculator';
 import AccountSelector from '../Shared/AccountSelector';
 import { ExpensesCategories } from '../Shared/Categories';
-import { getBudget } from '../Shared/DataSource';
 import { getAccountsAsync } from '../DataSources/AccountsDS';
 import TransactionModificator from '../ExpensesOverviews/Transactions/TransactionModificator';
 import Note from '../Shared/Note';
@@ -47,8 +46,6 @@ export default class NewTransaction extends Component {
 
   saveNewTransaction(category: string) {
     TransactionModificator.saveTransaction({
-      // accountName: this.state.account.name,
-      // accountNumber: this.state.account.number,
       accountId: this.state.account._id,
       category: category,
       amount: this.state.finalAmount * this.props.ifExpenseMinusOne,
@@ -67,6 +64,7 @@ export default class NewTransaction extends Component {
         'categories',
         {
           amount: amount,
+          currency: this.state.account.currency,
           categories: this.props.categories,
           onCategorySelected: this.saveNewTransaction
         }));
@@ -77,7 +75,6 @@ export default class NewTransaction extends Component {
     let day = parseInt(dateArray[0]);
     let month = parseInt(dateArray[1]) - 1;
     let year = parseInt(dateArray[2]);
-
     return new Date(year, month, day, 0, 0, 0, 0);
   }
 
@@ -102,15 +99,11 @@ export default class NewTransaction extends Component {
             format="DD.MM.YYYY"
             confirmBtnText="Potvrdit"
             cancelBtnText="Zrušit"
-            onDateChange={(date) => {
-              this.setState({date: this.parseDate(date)})
-              // console.log(date);
-            }}
+            onDateChange={(date) => {this.setState({date: this.parseDate(date)})}}
           />
         </View>
         <View style={styles.amountDisplay}>
           <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
-          {/* TODO lokalizovat měnu */}
           <Text style={styles.currency}>{this.renderCurrency()}</Text>
         </View>
         <Note />
@@ -134,7 +127,6 @@ const styles = StyleSheet.create({
   },
   accountView: {
     flex: 1,
-    // backgroundColor: 'powderblue',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row'

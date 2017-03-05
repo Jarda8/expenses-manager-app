@@ -8,7 +8,6 @@ import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker'
 import { banks, currencies } from '../Shared/DataSource';
 import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
 import FullWidthButton from '../Shared/FullWidthButton'
-// import CSAPIClient from '../DataImport/CSAPIClient';
 import { Router } from '../../main';
 
 @withNavigation
@@ -121,12 +120,6 @@ export default class AccountForm extends Component {
     this.props.navigator.pop();
   }
 
-  // generateCurrenciesItems() {
-  //   return currencies.map(
-  //     (currency) => <Picker.Item key={currency} label={currency} value={currency} />
-  //   );
-  // }
-
   generateBanksItems() {
     let banksArray =  banks.map(
       (bank) => <Picker.Item key={bank.name} label={bank.name} value={bank.name} />
@@ -159,19 +152,12 @@ export default class AccountForm extends Component {
     return (
       <View style={styles.formItem}>
         <Text style={styles.label}>Banka: </Text>
-        {/* <Picker
-          style={styles.pickerInput}
-          selectedValue={this.state.bank}
-          onValueChange={(newBank) => this.setState({bank: newBank})}>
-          {this.generateBanksItems()}
-        </Picker> */}
         <TMPicker
           inputValue ={this.state.bank}
           inputStyle = {styles.pickerInput}
           confirmBtnText = {'potvrdit'}
           cancelBtnText = {'zrušit'}
           data = {banksPickerData}
-          // selectIndex = {[0,1]}
           onResult ={(newBank) => this.setState({bank: newBank})}
           visible = {false}
         />
@@ -185,12 +171,6 @@ export default class AccountForm extends Component {
     return (
     <View style={styles.formItem}>
       <Text style={styles.label}>Měna: </Text>
-      {/* <Picker
-        style={styles.pickerInput}
-        selectedValue={this.state.currency}
-        onValueChange={(newCurrency) => this.setState({currency: newCurrency})}>
-        {this.generateCurrenciesItems()}
-      </Picker> */}
       <TMPicker
         inputValue ={this.state.currency}
         inputStyle = {styles.pickerInput}
@@ -258,24 +238,16 @@ export default class AccountForm extends Component {
   render() {
     return (
       <View style={styles.accountForm}>
-        {/* <ScrollView style={{flex: 1}} contentContainerStyle={{flex: 1}} > */}
         <View style={styles.formItems}>
           <KeyboardAwareScrollView ref='scroll'>
             <View style={styles.formItem}>
               <Text style={styles.label}>Typ: </Text>
-              {/* <Picker
-                style={styles.pickerInput}
-                selectedValue={this.state.type}
-                onValueChange={(newType) => this.setState({type: newType})}>
-                {this.generateAccountsTypesItems()}
-              </Picker> */}
               <TMPicker
                 inputValue ={accountTypes.get(this.state.type)}
                 inputStyle = {styles.pickerInput}
                 confirmBtnText = {'potvrdit'}
                 cancelBtnText = {'zrušit'}
                 data = {accountTypesPickerData}
-                // selectIndex = {[0,1]}
                 onResult ={this.setType.bind(this)}
                 visible = {false}
               />
@@ -300,14 +272,6 @@ export default class AccountForm extends Component {
     );
   }
 }
-
-// generateAccountsTypesItems() {
-//   let accountTypesArray = [];
-//   accountTypes.forEach(
-//     (value, key) => accountTypesArray.push(<Picker.Item key={key} label={value} value={key} />)
-//   )
-//   return accountTypesArray;
-// }
 
 const accountTypesPickerData = (() => {
   var items = [{}];

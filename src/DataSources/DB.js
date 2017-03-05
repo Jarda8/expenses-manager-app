@@ -1,3 +1,4 @@
+/* @flow */
 import RNDBModel from 'react-native-db-models';
 
 export var DB = {

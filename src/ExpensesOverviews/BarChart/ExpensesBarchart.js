@@ -64,7 +64,6 @@ export class ExpensesBarchart extends Component {
         if (props.category === All) {
           let j = i;
           getSumOfExpensesAsync(fromDate, toDate, result => {
-            // console.log(result);
             let newData = this.state.data;
             newData[j] = result;
             newData[j].amount = -newData[j].amount;
@@ -89,54 +88,13 @@ export class ExpensesBarchart extends Component {
     }
   }
 
-  // getData() {
-  //   let data = [];
-  //   let fromDate = new Date(this.props.fromDate);
-  //   let toDate = new Date(this.props.fromDate);
-  //
-  //   if (this.props.period === periods.get('month')) {
-  //     toDate.setDate(fromDate.getDate() + 7);
-  //     toDate.setMilliseconds(-1);
-  //
-  //     for (var i = 1; i <= 4; i++) {
-  //       if (i === 4) {
-  //         toDate = this.props.toDate;
-  //       }
-  //       if (this.props.category === All) {
-  //         data.push(getSumOfExpenses(fromDate, toDate));
-  //       } else {
-  //         data.push(getSumOfTransactions(this.props.category, fromDate, toDate));
-  //       }
-  //       data[i - 1].amount = -data[i - 1].amount;
-  //       data[i - 1].name = '' + i + '. týden';
-  //       fromDate = toDate;
-  //       toDate = new Date(toDate);
-  //       fromDate.setMilliseconds(fromDate.getMilliseconds() + 1);
-  //       toDate.setDate(toDate.getDate() + 7)
-  //     }
-  //   }
-  //   if (data.find((x) => x.amount !== 0) === undefined) {
-  //     return;
-  //   }
-  //   return [data];
-  // }
-
   renderChart() {
-    // let testData =
-    // [[
-    //   {"name":"1. týden","amount":0},
-    //   {"name":"2. týden","amount":0},
-    //   {"name":"3. týden","amount":75},
-    //   {"name":"4.týden","amount":0}
-    // ]];
 
     if (!this.state.data.find(x => x.amount !== 0)) {
       return <Text>Žádné údaje</Text>
     } else {
-    //   console.log([this.state.data]);
       return (
       <Bar data={[this.state.data]} options={options} accessorKey="amount" />
-        // <Bar data={testData} options={options} accessorKey='amount'/>
       )
     }
   }
@@ -148,24 +106,6 @@ export class ExpensesBarchart extends Component {
       </View>
     );
   }
-
-  // render() {
-  //   let testData =
-  //   [
-  //     [{
-  //       "amount": 49,
-  //       "name": "apple"
-  //     }, {
-  //       "amount": 42,
-  //       "name": "apple"
-  //     }]
-  //   ];
-  //   return (
-  //     <View>
-  //       <Bar data={undefined} options={options} accessorKey='amount'/>
-  //     </View>
-  //   )
-  // }
 }
 
   const options = {

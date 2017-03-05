@@ -72,6 +72,12 @@ export default class NewTransfer extends Component {
     return new Date(year, month, day, 0, 0, 0, 0);
   }
 
+  renderCurrency() {
+    if (this.state.fromAccount) {
+      return this.state.fromAccount.currency;
+    }
+  }
+
   render() {
     return (
       <View style={styles.newTransfer}>
@@ -96,14 +102,11 @@ export default class NewTransfer extends Component {
             format="DD.MM.YYYY"
             confirmBtnText="Potvrdit"
             cancelBtnText="Zrušit"
-            onDateChange={(date) => {
-              this.setState({date: this.parseDate(date)})
-            }}
+            onDateChange={(date) => {this.setState({date: this.parseDate(date)})}}
           />
           <View style={styles.amountDisplay}>
             <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
-            {/* TODO lokalizovat měnu */}
-            <Text style={styles.currency}>CZK</Text>
+            <Text style={styles.currency}>{this.renderCurrency()}</Text>
           </View>
         </View>
         <Note />

@@ -54,7 +54,7 @@ export default class Calculator extends Component {
       this.setState({clearDisplay: false});
     }
     this.updateDisplay(display + number);
-    // TODO updatovat taky result v některžch případech
+    // TODO updatovat taky result v některžch případech?
   }
 
   handleFloatingPoint() {
@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    // backgroundColor: 'powderblue',
     margin: 1,
     backgroundColor: 'steelblue'
   },

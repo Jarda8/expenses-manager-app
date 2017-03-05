@@ -12,7 +12,6 @@ export default class Categorization {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({"baf": "lek"})
         body: JSON.stringify(
           [
             {
@@ -63,7 +62,6 @@ export default class Categorization {
         )
       });
       let responseJson = await response.json();
-      // console.log(JSON.stringify({"baf": "lek"}));
       console.log('response: ' + responseJson);
       return responseJson;
     } catch(error) {
@@ -80,12 +78,9 @@ export default class Categorization {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({"baf": "lek"})
         body: JSON.stringify(transactions)
       });
       let responseJson = await response.json();
-      // console.log(JSON.stringify({"baf": "lek"}));
-      // console.log(responseJson.hello);
       return responseJson;
     } catch(error) {
       console.log('categorizeTransactions error:');
@@ -100,7 +95,6 @@ export default class Categorization {
         headers: {
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({"baf": "lek"})
         body: JSON.stringify(categorizedTransaction)
       });
     } catch(error) {

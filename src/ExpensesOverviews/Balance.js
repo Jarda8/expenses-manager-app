@@ -33,10 +33,6 @@ export default class Balance extends Component {
       this.setState({balance: result.amount}));
   }
 
-  // getBalance() {
-  //   return getSumOfTransactions(All, this.props.fromDate, this.props.toDate).amount;
-  // }
-
   render() {
     let color = 'green';
     if (this.state.balance < 0) {

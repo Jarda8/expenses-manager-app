@@ -36,13 +36,13 @@ export default class SumOfIncomes extends Component {
     return (
       <FormattedCurrency
         value={this.state.sum}
-        style={styles.expenses} />
+        style={styles.incomes} />
       );
     }
   }
 
 const styles = StyleSheet.create({
-  expenses: {
+  incomes: {
     color: 'green',
     textAlign: 'center',
     fontSize: 15

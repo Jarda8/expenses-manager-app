@@ -5,27 +5,24 @@ import { csApiKey, csClientId, csClientSecret, csProfileURI, csAccountsURI, csTo
 
 export default class CSAPIClient {
 
-  static async fetchProfileInfo(accessToken: string) {
-    try {
-      let response = await fetch(csProfileURI, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          // 'Accept-Encoding': 'gzip',
-          // 'WEB-API-key': 'dec841d5-0e40-4a40-94ec-42de1b4f9631',// demo údaj
-          // 'Authorization': 'Bearer demo_001'// demo údaj
-          'WEB-API-key': csApiKey,
-          'Authorization': accessToken
-        }
-      });
-      let responseJson = await response.json();
-      // Check for access token validity error. If there is one, refresh token.
-      // Do something with the profile info data.
-    } catch(error) {
-      console.log('fetchProfileInfo error:');
-      console.log(error);
-    }
-  }
+  // static async fetchProfileInfo(accessToken: string) {
+  //   try {
+  //     let response = await fetch(csProfileURI, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'WEB-API-key': csApiKey,
+  //         'Authorization': accessToken
+  //       }
+  //     });
+  //     let responseJson = await response.json();
+  //     // Check for access token validity error. If there is one, refresh token.
+  //     // Do something with the profile info data.
+  //   } catch(error) {
+  //     console.log('fetchProfileInfo error:');
+  //     console.log(error);
+  //   }
+  // }
 
   static async fetchAccount(name: string, number: string, accessToken: string, refreshToken: string) {
     let accounts = await this.fetchAccounts(accessToken, refreshToken);
@@ -45,9 +42,6 @@ export default class CSAPIClient {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            // 'Accept-Encoding': 'gzip',
-            // 'WEB-API-key': 'dec841d5-0e40-4a40-94ec-42de1b4f9631',
-            // 'Authorization': 'Bearer demo_001'
             'WEB-API-key': csApiKey,
             'Authorization': accessToken
           }
@@ -111,9 +105,6 @@ export default class CSAPIClient {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        // 'Accept-Encoding': 'gzip',
-        // 'WEB-API-key': 'dec841d5-0e40-4a40-94ec-42de1b4f9631',
-        // 'Authorization': 'Bearer demo_001'
         'WEB-API-key': csApiKey,
         'Authorization': accessToken
       }
@@ -122,7 +113,6 @@ export default class CSAPIClient {
 
   static async fetchTransactions(fromDate: Date, toDate: Date, account: Account) {
     try {
-      // let response = await fetch('https://api.csas.cz/sandbox/webapi/api/v1/netbanking/my/accounts/' +
       let response;
       while (true) {
         response = await this.requestFetchTransactions(fromDate, toDate, account.iban, account.accessToken);
@@ -134,19 +124,8 @@ export default class CSAPIClient {
         } else {
           throw 'Unhandled error: ' + status.status;
         }
-        // if (response.status == 403) {
-        //   let errors = await response.json();
-        //   for (error of errors) {
-        //     if (error.error === 'TOKEN_EXPIRED') {
-        //       let newAccessToken = await this.refreshAccessToken(account.refreshToken, account._id);
-        //       response = await this.requestFetchTransactions(fromDate, toDate, account.iban, newAccessToken);
-        //     }
-        //     break;
-        //   }
-        // }
       }
       let responseJson = await response.json();
-      // console.log(responseJson.transactions);
       return this.parseTransactions(responseJson.transactions, account._id);
     } catch(error) {
       console.log('fetchTransactions error:');
