@@ -70,15 +70,6 @@ export default class AccountForm extends Component {
     if (this.state.type === 'Bank account' && bank !== 'Jiná') {
       switch (bank) {
         case 'Česká spořitelna':
-          // CSAPIClient.fetchAccount(this.state.name, number).then(acc => {
-          //   if (acc === null) {
-          //     Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
-          //   } else {
-          //     acc.connected = true;
-          //     saveAccountAsync(acc);
-          //     this.props.navigator.pop();
-          //   }
-          // }).catch(() => console.log("Promise Rejected"));
           this.props.navigator.push(Router.getRoute('csTokensForm', {accountName: this.state.name, accountNumber: number}));
           break;
       }
