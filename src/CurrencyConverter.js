@@ -83,8 +83,6 @@ export default class CurrencyConverter {
         rate: parseFloat(columns[4].replace(',', '.'))
       }
     });
-    console.log('parseRates result:');
-    console.log(result);
     return result;
   }
 }
