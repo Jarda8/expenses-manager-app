@@ -32,14 +32,20 @@ export type Transaction = {
   payeeNote: string
 }
 
-function saveTransactionAsync(transaction: Transaction, callback: any) {
-  DB.transactions.add(transaction, result => {
-    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged');
-    callback(result);
+async function saveTransactionAsync(transaction: Transaction, callback: any) {
+  return new Promise((resolve,reject) => {
+    DB.transactions.add(transaction, result => {
+      TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {});
+      getAccountAsync(transaction.accountId, account => {
+        updateAccountAsync(account, {balance: account.balance + transaction.amount}, updateResult => {
+          if (callback) {
+            callback();
+          }
+          resolve();
+        });
+      });
+    });
   });
-  getAccountAsync(transaction.accountId, account =>
-    updateAccountAsync(account, {balance: account.balance + transaction.amount}));
-
 }
 
 function compareTransactionsByDate(a: Transaction, b: Transaction): number {
@@ -79,14 +85,14 @@ function getTransactionsAsync(category: string, fromDate: Date, toDate: Date, ca
 
 function deleteTransactionAsync(transaction: Transaction) {
   DB.transactions.remove_id(transaction._id, result =>
-    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged'));
+    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {}));
   getAccountAsync(transaction.accountId, account =>
     updateAccountAsync(account, {balance: account.balance - transaction.amount}));
 }
 
 function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Transaction, callback: any) {
   DB.transactions.update({_id: oldTransaction._id}, newTransaction, result => {
-    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged');
+    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {});
     callback(result);
   });
   getAccountAsync(oldTransaction.accountId, oldAccount =>

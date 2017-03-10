@@ -16,20 +16,27 @@ export default class Balance extends Component {
   }
 
   componentWillMount(){
-    this.loadData();
+    this.loadData(this.props);
   }
 
   componentDidMount() {
     this.transactionsChangedSubsrcibtion =
-      TRANSACTIONS_DS_EVENT_EMITTER.addListener('transactionsChanged', this.loadData.bind(this));
+      TRANSACTIONS_DS_EVENT_EMITTER.addListener('transactionsChanged', () => this.loadData(this.props));
   }
 
   componentWillUnmount() {
     this.transactionsChangedSubsrcibtion.remove();
   }
 
-  loadData() {
-    getSumOfTransactionsAsync(All, this.props.fromDate, this.props.toDate, result =>
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.fromDate !== this.props.fromDate
+      || nextProps.toDate !== this.props.toDate) {
+      this.loadData(nextProps);
+    }
+  }
+
+  loadData(props) {
+    getSumOfTransactionsAsync(All, props.fromDate, props.toDate, result =>
       this.setState({balance: result.amount}));
   }
 

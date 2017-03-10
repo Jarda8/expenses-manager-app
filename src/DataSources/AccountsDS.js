@@ -8,6 +8,7 @@ const ACCOUNTS_DS_EVENT_EMITTER = new EventEmitter();
 
 export type Account = {
   _id: number,
+  accountId: string,
   name: string,
   number: string,
   iban: string,
@@ -29,6 +30,11 @@ function getAccountsAsync(callback: (result: Array<Account>) => void) {
   DB.accounts.get_all(result => {
     let resultArray: Array<Account> = [];
     Object.keys(result.rows).map(key => resultArray.push(result.rows[key]));
+    for (account of resultArray) {
+      if (account.lastTransactionsDownload) {
+        account.lastTransactionsDownload = new Date(account.lastTransactionsDownload);
+      }
+    }
     callback(resultArray);
   });
 }
@@ -40,12 +46,12 @@ function getAccountAsync(id: number, callback: (result: Account) => void) {
 }
 
 function saveAccountAsync(account: Account) {
-  DB.accounts.add(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged'));
+  DB.accounts.add(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {}));
 }
 
 function updateAccountAsync(oldAccount: Account, newAccount: Account, callback: any) {
   DB.accounts.update(oldAccount, newAccount, result => {
-    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged');
+    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {});
     if (callback) {
       callback(result);
     }
@@ -54,7 +60,7 @@ function updateAccountAsync(oldAccount: Account, newAccount: Account, callback: 
 
 function updateAccountByIdAsync(id: number, newData: Object, callback: any) {
   DB.accounts.update_id(id, newData, result => {
-    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged');
+    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {});
     if (callback) {
       callback(result);
     }
@@ -62,7 +68,7 @@ function updateAccountByIdAsync(id: number, newData: Object, callback: any) {
 }
 
 function deleteAccountAsync(account: Account) {
-  DB.accounts.remove(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged'));
+  DB.accounts.remove(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {}));
 }
 
 function getTotalBalanceAsync(callback: (result: number) => void) {

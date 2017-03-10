@@ -24,15 +24,15 @@ function getBudgetAsync(category: string, callback: (p: Budget) => any) {
 }
 
 function saveBudgetAsync(budget: Budget) {
-  DB.budgets.add(budget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged'));
+  DB.budgets.add(budget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged', {}));
 }
 
 function updateBudgetAsync(oldBudget: Budget, newBudget: Budget) {
-  DB.budgets.update(oldBudget, newBudget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged'));
+  DB.budgets.update(oldBudget, newBudget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged', {}));
 }
 
 function deleteBudgetAsync(budget: Budget) {
-  DB.budgets.remove(budget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged'));
+  DB.budgets.remove(budget, result => BUDGETS_DS_EVENT_EMITTER.emit('budgetsChanged', {}));
 }
 
 export { BUDGETS_DS_EVENT_EMITTER, getBudgetsAsync, saveBudgetAsync, updateBudgetAsync, deleteBudgetAsync, getBudgetAsync }
