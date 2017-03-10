@@ -12,13 +12,14 @@ const csApiDomain =  'https://www.csast.csas.cz'; // test
 // const csApiDomain =  'https://api.csas.cz/sandbox'; // sandbox
 export const csLoginLink =
 csApiDomain + '/widp/oauth2/auth?state=profil&redirect_uri=' + encodeURIComponent(redirectURI)
-+ '&client_id=' + encodeURIComponent(csClientId) + '&response_type=code&access_type=offline';
++ '&client_id=' + encodeURIComponent(csClientId) + '&response_type=code&access_type=offline&approval_prompt=force';
 export const csProfileURI = csApiDomain + '/webapi/api/v3/netbanking/my/profile';
 export const csAccountsURI = csApiDomain + '/webapi/api/v3/netbanking/my/accounts';
+export const csTransactionsURI = csApiDomain + '/webapi/api/v3/netbanking/cz/my/accounts';
 export const csTokenURI = csApiDomain + '/widp/oauth2/token';
 export const csTokensRequestBody = {
   'client_id': encodeURIComponent(csClientId),
-  'cleint_secret': encodeURIComponent(csClientSecret),
+  'client_secret': encodeURIComponent(csClientSecret),
   'redirect_uri': encodeURIComponent(redirectURI),
   'grant_type': 'authorization_code'
 };
