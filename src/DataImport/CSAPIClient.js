@@ -1,7 +1,7 @@
 /* @flow */
 import type { Account } from '../DataSources/AccountsDS';
-import type { updateAccountByIdAsync } from '../DataSources/AccountsDS';
-import { csApiKey, csClientId, csClientSecret, csProfileURI, csAccountsURI, csTokenURI, redirectURI } from '../Shared/Constants';
+import { updateAccountByIdAsync } from '../DataSources/AccountsDS';
+import { csApiKey, csClientId, csClientSecret, csProfileURI, csAccountsURI, csTokenURI, redirectURI, csTransactionsURI } from '../Shared/Constants';
 
 export default class CSAPIClient {
 
@@ -25,16 +25,22 @@ export default class CSAPIClient {
   // }
 
   static async fetchAccount(name: string, number: string, accessToken: string, refreshToken: string) {
+    // console.log('fetchAccount called');
     let accounts = await this.fetchAccounts(accessToken, refreshToken);
-    console.log('accounts: ' + accounts);
-    let account = accounts.find(acc => acc.accountno.number === number);
+    // console.log('accounts:');
+    // console.log(accounts);
+    let account = accounts.find(acc => {
+      // console.log('account number: ' + acc.accountno.number);
+      return acc.accountno.number === number;
+    });
     if (account === undefined) {
       return null;
     }
-    return {name: name, number: number, iban: account.accountno['cz-iban'], bankName: 'Česká spořitelna', type: 'Bank account', balance: account.balance.value, currency: account.balance.currency, accessToken: accessToken, refreshToken: refreshToken, lastTransactionsDownload: null};
+    return {name: name, number: number, accountId: account.id, iban: account.accountno['cz-iban'], bankName: 'Česká spořitelna', type: 'Bank account', balance: account.balance.value, currency: account.balance.currency, accessToken: accessToken, refreshToken: refreshToken, lastTransactionsDownload: null};
   }
 
   static async fetchAccounts(accessToken: string, refreshToken: string) {
+    // console.log('fetchAccounts called');
     try {
       let response;
       while (true) {
@@ -46,8 +52,12 @@ export default class CSAPIClient {
             'Authorization': accessToken
           }
         });
-        let status = this.resolveErrors(response);
+        // console.log('fetchAccounts response:');
+        // console.log(response);
+        let status = await this.resolveErrors(response, null);
+        // console.log('status: ' + status.status);
         if (status.status === 'OK') {
+          // console.log('status OK');
           break;
         } else {
           throw 'Unhandled error: ' + status.status;
@@ -58,13 +68,14 @@ export default class CSAPIClient {
     } catch(error) {
       console.log('fetchAccounts error:');
       console.log(error);
+      throw error;
     }
   }
 
   static async refreshAccessToken(refreshToken: string, accountId: number) {
     let requestBody = {
       'client_id': csClientId,
-      'cleint_secret': csClientSecret,
+      'client_secret': csClientSecret,
       'redirect_uri': redirectURI,
       'refresh_token': refreshToken,
       'grant_type': 'refresh_token'
@@ -83,7 +94,7 @@ export default class CSAPIClient {
             encodeURIComponent(key) + '=' + encodeURIComponent(requestBody[key])
           ).join('&')
         });
-        let status = this.resolveErrors(response);
+        let status = await this.resolveErrors(response);
         if (status.status === 'OK') {
           break;
         } else {
@@ -92,7 +103,10 @@ export default class CSAPIClient {
       }
       let responseJson = await response.json();
       let newAccessToken = responseJson.token_type + ' ' + responseJson.access_token;
+      // console.log('newAccessToken v refreshAccessToken:');
+      // console.log(newAccessToken);
       updateAccountByIdAsync(accountId, {accessToken: newAccessToken});
+      // console.log('after updateAccountByIdAsync');
       return newAccessToken;
     } catch(error) {
       console.log('refreshAccessToken error:');
@@ -100,15 +114,38 @@ export default class CSAPIClient {
     }
   }
 
+  static formatDate(date: Date): string {
+    let dateString = date.toISOString();
+    let [dateWithoutMilis, ] = dateString.split('.');
+    let result = dateWithoutMilis + 'Z';
+    // console.log(result);
+    return result;
+  }
+
   static async requestFetchTransactions(fromDate: Date, toDate: Date, iban: string, accessToken: string) {
-    return fetch(csAccountsURI + '/' + iban + '/transactions?dateStart=' + encodeURIComponent(fromDate.toISOString()) + '&dateEnd=' + encodeURIComponent(toDate.toISOString()), {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'WEB-API-key': csApiKey,
-        'Authorization': accessToken
-      }
-    });
+    // iban = 'CZ5508000000000379554193'; // sandbox account
+    // console.log('iban: ' + iban + ' fromDate: ' + fromDate + ' toDate: ' + toDate + ' accessToken: ' + accessToken + ' api key: ' + csApiKey);
+    let formattedFromDate = this.formatDate(fromDate);
+    let formattedToDate = this.formatDate(toDate);
+    try {
+      let response = await fetch(csTransactionsURI + '/' + iban + '/transactions?dateStart=' + encodeURIComponent(formattedFromDate) + '&dateEnd=' + encodeURIComponent(formattedToDate), {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'WEB-API-key': csApiKey,
+          'Authorization': accessToken
+          // 'WEB-API-key': '35bd5a35-5909-460e-b3c2-20073d9c4c2e',
+          // 'Authorization': 'Bearer demo_001'
+        }
+      });
+      console.log('requestFetchTransactions response:');
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.log('requestFetchTransactions error:');
+      console.log(error);
+      throw error;
+    }
   }
 
   static async fetchTransactions(fromDate: Date, toDate: Date, account: Account) {
@@ -116,11 +153,14 @@ export default class CSAPIClient {
       let response;
       while (true) {
         response = await this.requestFetchTransactions(fromDate, toDate, account.iban, account.accessToken);
-        let status = this.resolveErrors(response, account);
+        let status = await this.resolveErrors(response, account);
         if (status.status === 'OK') {
           break;
         } else if (status.status === 'TOKEN_EXPIRED'){
           account.accessToken = status.data;
+          if (account.accessToken === undefined) {
+            throw 'access token error';
+          }
         } else {
           throw 'Unhandled error: ' + status.status;
         }
@@ -164,22 +204,23 @@ export default class CSAPIClient {
         payeeNote: t.payeeNote
       })
     });
-    console.log('end parseTransactions');
     return parsedTransactions;
   }
 
-  async resolveErrors(response: Object, account: Object): {status: string, data: string} {
+  static async resolveErrors(response: Object, account: Object): {status: string, data: string} {
     let status;
     if (response.status === 200 || response.status === 204) {
       status = {status: 'OK'};
     } else if (response.status === 403) {
-      let errors = await response.json();
+      let responseJson = await response.json();
+      let errors = responseJson.errors;
       for (error of errors) {
-        if (error.error === 'TOKEN_EXPIRED') {
+        console.log('error: ' + error.error);
+        if ((error.error === 'TOKEN_EXPIRED' || error.error.includes('invalid_token')) && account !== undefined) {
+          // console.log('expired/ invalid token');
           let newAccessToken = await this.refreshAccessToken(account.refreshToken, account._id);
           status = {status: 'TOKEN_EXPIRED', data: newAccessToken};
         } else {
-          console.log('resolveErrors unknown error: status:' + response.status + ', error: ' + error.error);
           status = {status: 'UNKNOWN_ERROR'};
           break;
         }

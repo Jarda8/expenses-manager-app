@@ -7,6 +7,7 @@ import Exponent from 'exponent';
 import { saveAccountAsync, updateAccountByIdAsync } from '../DataSources/AccountsDS';
 import { csLoginLink, csTokenURI, csTokensRequestBody } from '../Shared/Constants';
 import FullWidthButton from '../Shared/FullWidthButton';
+import CSAPIClient from '../DataImport/CSAPIClient';
 
 
 export default class CSTokensForm extends Component {
@@ -26,17 +27,18 @@ export default class CSTokensForm extends Component {
     }
 
     login = async () => {
-      console.log('Login link: ' + csLoginLink);
+      // console.log('Login link: ' + csLoginLink);
       Exponent.WebBrowser.openBrowserAsync(csLoginLink);
     }
 
     handleRedirect = async (event) => {
-      console.log(event.url);
+      // console.log(event.url);
       if (!event.url.includes('+/redirect')) {
+        // console.log('+/redirect missing');
         return;
       }
       Exponent.WebBrowser.dismissBrowser();
-      const [, queryString] = event.url.split('#');
+      const [, queryString] = event.url.split('?');
       const responseObj = queryString.split('&').reduce((map, pair) => {
         const [key, value] = pair.split('=');
         map[key] = value;
@@ -47,7 +49,7 @@ export default class CSTokensForm extends Component {
     }
 
     async getTokens(code: string) {
-      console.log("code: " + code);
+      // console.log("getTokens code: " + code);
       let requestBody = Object.assign({'code': code}, csTokensRequestBody);
       try {
           let response = await fetch(csTokenURI, {
@@ -62,13 +64,14 @@ export default class CSTokensForm extends Component {
           ).join('&')
         });
         let responseJson = await response.json();
-        console.log("responseJson: " + responseJson);
+        // console.log("getTokens responseJson:");
+        // console.log(responseJson);
         let accessToken = responseJson.token_type + ' ' + responseJson.access_token;
         let refreshToken = responseJson.refresh_token;
         if (this.props.route.params.accountId) {
-          updateTokens(accessToken, refreshToken);
+          this.updateTokens(accessToken, refreshToken);
         } else {
-          saveNewAccount(accessToken, refreshToken);
+          this.saveNewAccount(accessToken, refreshToken);
         }
       } catch(error) {
         console.log('getTokens error:');
@@ -77,21 +80,29 @@ export default class CSTokensForm extends Component {
     }
 
     saveNewAccount(accessToken: string, refreshToken: string) {
-      console.log('accessToken: ' + accessToken + ' refreshToken: ' + refreshToken);
+      // console.log('saveNewAccount accessToken: ' + accessToken + ' refreshToken: ' + refreshToken);
       CSAPIClient.fetchAccount(
         this.props.route.params.accountName,
         this.props.route.params.accountNumber,
         accessToken,
         refreshToken
       ).then(acc => {
+        // console.log('saveNewAccount fetchAccount.then acc:');
+        // console.log(acc);
         if (acc === null) {
           Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
+          this.props.navigator.pop();
         } else {
           acc.connected = true;
           saveAccountAsync(acc);
           this.props.navigator.popToTop();
+          console.log('account successfully imported');
         }
-      }).catch(() => console.log("saveNewAccount() promise rejected"));
+      }).catch(() => {
+        console.log("saveNewAccount error");
+        Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Opakujte prosím pokus později.');
+        this.props.navigator.pop();
+      });
     }
 
     updateTokens(accessToken: string, refreshToken: string) {
