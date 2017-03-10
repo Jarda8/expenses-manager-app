@@ -26,7 +26,7 @@ export default class ExpensesView extends Component {
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
   }
 
-  handleDateChange(change : number) {
+  handleDateChange(change: number) {
     let newFromDate = new Date(this.state.fromDate);
     let newToDate = new Date(this.state.toDate);
     if (this.state.period === periods.get('month')) {

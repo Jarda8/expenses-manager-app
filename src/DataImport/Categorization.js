@@ -62,7 +62,6 @@ export default class Categorization {
         )
       });
       let responseJson = await response.json();
-      console.log('response: ' + responseJson);
       return responseJson;
     } catch(error) {
       console.log('categorizeTransactions error:');

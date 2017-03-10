@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
   },
   accountsView: {
     flex: 1,
-    backgroundColor: 'powderblue',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row'

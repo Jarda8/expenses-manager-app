@@ -24,7 +24,7 @@ async function getRatesLastFetchAsync() {
 
 async function updateRatesLastFetchAsync(oldLastFetch: Date, newLastFetch: Date) {
   return new Promise((resolve,reject) => {
-    DB.ratesLastFetch.update({date: oldLastFetch}, {date: newLastFetch}, () => resolve());
+    DB.ratesLastFetch.update({date: oldLastFetch}, {date: newLastFetch}, resolve);
   });
 }
 
