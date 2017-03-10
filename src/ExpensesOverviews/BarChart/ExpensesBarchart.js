@@ -59,7 +59,7 @@ export class ExpensesBarchart extends Component {
 
       for (var i = 0; i < 4; i++) {
         if (i === 3) {
-          toDate = props.toDate;
+          toDate = new Date(props.toDate);
         }
         if (props.category === All) {
           let j = i;
