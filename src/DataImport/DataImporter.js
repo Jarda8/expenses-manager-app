@@ -3,8 +3,10 @@ import { Alert } from 'react-native';
 
 import CSAPIClient from './CSAPIClient';
 import { accountTypes, getAccountsAsync, updateAccountByIdAsync } from '../DataSources/AccountsDS';
+import type { Account } from '../DataSources/AccountsDS';
 import { saveTransactionAsync } from '../DataSources/TransactionsDS';
 import type { Transaction } from '../DataSources/TransactionsDS';
+import { getPendingTransfersAsync, saveTransferAsync, updateTransferAsync } from '../DataSources/TransfersDS';
 import Categorization from './Categorization';
 
 export default class DataImporter {
@@ -27,7 +29,7 @@ export default class DataImporter {
           switch (account.bankName) {
             case 'Česká spořitelna':
             CSAPIClient.fetchTransactions(fromDate, toDate, account).then((transactions) => {
-              this.processTransactions(transactions, account._id, toDate);
+              this.processTransactions(transactions, account._id, toDate, accounts);
             });
               break;
           }
@@ -36,21 +38,122 @@ export default class DataImporter {
     });
   }
 
-  static async processTransactions(transactions: Array<Transaction>, accountId: number, date: Date) {
+  static async processTransactions(transactions: Array<Transaction>, accountId: number, date: Date, accounts: Array<Account>) {
     console.log(transactions);
     if (transactions.length === 0) {
       return;
     }
-    Categorization.categorizeTransactions(transactions).then(async (categories) => {
+    let nonTransferTransactions = await this.processTransfers(transactions, accounts);
+    Categorization.categorizeTransactions(nonTransferTransactions).then(async (categories) => {
       console.log('categorizedTransactions: ');
       console.log(categories);
-      for (var i = 0; i < transactions.length; i++) {
-        transactions[i].category = categories[i];
+      for (var i = 0; i < nonTransferTransactions.length; i++) {
+        nonTransferTransactions[i].category = categories[i];
       }
-      for (transaction of transactions) {
+      for (transaction of nonTransferTransactions) {
         await saveTransactionAsync(transaction);
       }
       updateAccountByIdAsync(accountId, {lastTransactionsDownload: date});
     });
+  }
+
+  static async processTransfers(transactions: Array<Transaction>, accounts: Array<Account>) {
+    let transfers = transactions.filter((transaction) => {
+      for (account of accounts) {
+        if (account.number === transaction.accountParty.accountNumber) {
+          return true;
+        }
+      }
+      return false;
+    });
+    let otherTransactions = transactions.filter(transaction => transfers.indexOf(transaction) < 0 );
+    for (transfer of transfers) {
+      let transferAccount = accounts.find(account => account._id === transfer.accountId);
+      let transferAccountParty = accounts.find(account => account.number === transfer.accountParty.accountNumber);
+      await this.processTransfer(transfer, transferAccount, transferAccountParty, otherTransactions);
+    }
+    return otherTransactions;
+  }
+
+  static async processTransfer(transaction: Transaction, account: Account, accountParty: Account, nonTransferTransactions: Array<Transaction>) {
+    let pendingTransfers = await getPendingTransfersAsync();
+    let pendingTransfer = pendingTransfers.find((transfer) => {
+      // Pokud bude několik pending transfers mezi dvěma stejnými účty, není zaručeno, že se vybere ten správný. Momentálně se bere první.
+      // Můžu porovnávat booking date?
+      if (transaction.amount > 0) {
+        return (transfer.toAccountName === account.name && transfer.toAccountNumber === account.number
+        && transfer.fromAccountName === accountParty.name && transfer.fromAccountNumber === accountParty.number)
+      } else {
+        return (transfer.fromAccountName === account.name && transfer.fromAccountNumber === account.number
+        && transfer.toAccountName === accountParty.name && transfer.toAccountNumber === accountParty.number);
+      }
+    });
+    let fromAccount;
+    let toAccount;
+    let fromAmount;
+    let toAmount;
+    if (transaction.amount > 0) {
+      fromAccount = acountParty;
+      toAccount = account;
+      fromAmount = 0;
+      if (!accountParty.connected) {
+        fromAmount = transaction.amount;
+      }
+      toAmount = transaction.amount;
+    } else {
+      fromAccount = acount;
+      toAccount = acountParty;
+      fromAmount = -transaction.amount;
+      toAmount = 0;
+      if (!accountParty.connected) {
+        toAmount = -transaction.amount;
+      }
+    }
+    if (pendingTransfer) {
+      if (pendingTransfer.fromAmount === 0) {
+        await updateTransferAsync(pendingTransfer, {fromAmount: fromAmount, state: 'finished', note: transaction.note});
+      } else {
+        await updateTransferAsync(pendingTransfer, {toAmount: toAmount, state: 'finished'});
+      }
+    } else {
+      if (accountParty.connected) {
+        await saveTransferAsync(
+          {
+            fromAccountName: fromAccount.name,
+            fromAccountNumber: fromAccount.number,
+            toAccountName: toAccount.name,
+            toAccountNumber: toAccount.number,
+            fromAmount: fromAmount,
+            toAmount: toAmount,
+            date: new Date(t.bookingDate),
+            note: transaction.note,
+            state: 'pending',
+            fromCurrency: fromAccount.currency,
+            toCurrency: toAccount.currency
+          }
+        );
+      } else {
+        if (fromAccount.currency === toAccount.currency) {
+          await saveTransferAsync(
+            {
+              fromAccountName: fromAccount.name,
+              fromAccountNumber: fromAccount.number,
+              toAccountName: toAccount.name,
+              toAccountNumber: toAccount.number,
+              fromAmount: fromAmount,
+              toAmount: toAmount,
+              date: new Date(t.bookingDate),
+              note: transaction.note,
+              state: "finished",
+              fromCurrency: fromAccount.currency,
+              toCurrency: toAccount.currency
+            }
+          );
+        } else {
+          // TODO: Pokud není protistrana připojena a je v jiné měně, nevím, kolik se má přičíst/ odečíst. Uloží se jako transakce. Uživatel si ji pak může změnit na převod.
+          nonTransferTransactions.push(transaction);
+        }
+      }
+    }
   }
 }

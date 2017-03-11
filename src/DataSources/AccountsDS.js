@@ -45,6 +45,14 @@ function getAccountAsync(id: number, callback: (result: Account) => void) {
   });
 }
 
+// async function getAccountByNumberAsync(number: string) {
+//   return new Promise((resolve,reject) => {
+//     DB.accounts.get({number: number}, result => {
+//       resolve(result[0]);
+//     });
+//   });
+// }
+
 function saveAccountAsync(account: Account) {
   DB.accounts.add(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {}));
 }

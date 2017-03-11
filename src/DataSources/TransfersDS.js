@@ -7,9 +7,13 @@ export type Transfer = {
   fromAccountNumber: string,
   toAccountName: string,
   toAccountNumber: string,
-  amount: number,
+  fromAmount: number,
+  toAmount: number,
   date: Date,
-  note: string
+  note: string,
+  state: string,
+  fromCurrency: string,
+  toCurrency: string
 }
 
 function saveTransferAsync(transfer: Transfer) {
@@ -19,17 +23,31 @@ function saveTransferAsync(transfer: Transfer) {
     account =>
     {
       updateAccountAsync(account,
-        {balance: account.balance - transfer.amount},
+        {balance: account.balance - transfer.fromAmount},
           result => {
             getAccountAsync(transfer.toAccountName, transfer.toAccountNumber,
               account =>
               {
                 updateAccountAsync(account,
-                {balance: account.balance + transfer.amount})
+                {balance: account.balance + transfer.toAmount})
               })
         }
       )
     });
+}
+
+async function updateTransferAsync(oldTransfer: Transfer, dataToUpdate: Object) {
+  return new Promise((resolve,reject) => {
+    DB.transfers.update(oldTransfer, dataToUpdate);
+  });
+}
+
+async function getPendingTransfersAsync() {
+  return new Promise((resolve,reject) => {
+    DB.transfers.get({state: 'pending'}, result => {
+      resolve(result);
+    });
+  });
 }
 
 function deleteTransferAsync(transfer: Transfer) {
@@ -39,13 +57,13 @@ function deleteTransferAsync(transfer: Transfer) {
     account =>
     {
       updateAccountAsync(account,
-        {balance: account.balance + transfer.amount},
+        {balance: account.balance + transfer.fromAmount},
         result => {
           getAccountAsync(transfer.toAccountName, transfer.toAccountNumber,
             account =>
             {
               updateAccountAsync(account,
-              {balance: account.balance - transfer.amount})
+              {balance: account.balance - transfer.toAmount})
             }
           )
         }
@@ -53,4 +71,4 @@ function deleteTransferAsync(transfer: Transfer) {
     });
 }
 
-export { saveTransferAsync, deleteTransferAsync }
+export { saveTransferAsync, deleteTransferAsync, getPendingTransfersAsync, updateTransferAsync }
