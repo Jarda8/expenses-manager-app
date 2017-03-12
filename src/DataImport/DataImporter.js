@@ -39,22 +39,21 @@ export default class DataImporter {
   }
 
   static async processTransactions(transactions: Array<Transaction>, accountId: number, date: Date, accounts: Array<Account>) {
-    console.log(transactions);
     if (transactions.length === 0) {
       return;
     }
     let nonTransferTransactions = await this.processTransfers(transactions, accounts);
-    Categorization.categorizeTransactions(nonTransferTransactions).then(async (categories) => {
-      console.log('categorizedTransactions: ');
-      console.log(categories);
-      for (var i = 0; i < nonTransferTransactions.length; i++) {
-        nonTransferTransactions[i].category = categories[i];
-      }
-      for (transaction of nonTransferTransactions) {
-        await saveTransactionAsync(transaction);
-      }
-      updateAccountByIdAsync(accountId, {lastTransactionsDownload: date});
-    });
+    if (nonTransferTransactions.length > 0) {
+      Categorization.categorizeTransactions(nonTransferTransactions).then(async (categories) => {
+        for (var i = 0; i < nonTransferTransactions.length; i++) {
+          nonTransferTransactions[i].category = categories[i];
+        }
+        for (transaction of nonTransferTransactions) {
+          await saveTransactionAsync(transaction);
+        }
+      });
+    }
+    await updateAccountByIdAsync(accountId, {lastTransactionsDownload: date});
   }
 
   static async processTransfers(transactions: Array<Transaction>, accounts: Array<Account>) {
@@ -93,7 +92,7 @@ export default class DataImporter {
     let fromAmount;
     let toAmount;
     if (transaction.amount > 0) {
-      fromAccount = acountParty;
+      fromAccount = accountParty;
       toAccount = account;
       fromAmount = 0;
       if (!accountParty.connected) {
@@ -101,8 +100,8 @@ export default class DataImporter {
       }
       toAmount = transaction.amount;
     } else {
-      fromAccount = acount;
-      toAccount = acountParty;
+      fromAccount = account;
+      toAccount = accountParty;
       fromAmount = -transaction.amount;
       toAmount = 0;
       if (!accountParty.connected) {
@@ -127,7 +126,7 @@ export default class DataImporter {
             toAccountId: toAccount._id,
             fromAmount: fromAmount,
             toAmount: toAmount,
-            date: new Date(t.bookingDate),
+            date: new Date(transaction.date),
             note: transaction.note,
             state: 'pending',
             fromCurrency: fromAccount.currency,
