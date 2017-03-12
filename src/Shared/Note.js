@@ -9,9 +9,10 @@ export default class Note extends Component {
     return (
       <View style={styles.noteView}>
         <TextInput
-          style={styles.noteInput}
+          onFocus={this.props.onFocus}
+          style={[styles.noteInput, this.props.style]}
           placeholder="Poznámka"
-          onChangeText={this.props.handleOnChangeText} />
+          onChangeText={this.props.onChangeText} />
       </View>
     )
   }

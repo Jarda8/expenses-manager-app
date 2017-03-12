@@ -81,11 +81,11 @@ export default class DataImporter {
       // Pokud bude několik pending transfers mezi dvěma stejnými účty, není zaručeno, že se vybere ten správný. Momentálně se bere první.
       // Můžu porovnávat booking date?
       if (transaction.amount > 0) {
-        return (transfer.toAccountName === account.name && transfer.toAccountNumber === account.number
-        && transfer.fromAccountName === accountParty.name && transfer.fromAccountNumber === accountParty.number)
+        return (transfer.toAccountId === account._id
+        && transfer.fromAccountId === accountParty._id)
       } else {
-        return (transfer.fromAccountName === account.name && transfer.fromAccountNumber === account.number
-        && transfer.toAccountName === accountParty.name && transfer.toAccountNumber === accountParty.number);
+        return (transfer.fromAccountId === account._id
+        && transfer.toAccountId === accountParty._id);
       }
     });
     let fromAccount;
@@ -119,10 +119,12 @@ export default class DataImporter {
       if (accountParty.connected) {
         await saveTransferAsync(
           {
-            fromAccountName: fromAccount.name,
-            fromAccountNumber: fromAccount.number,
-            toAccountName: toAccount.name,
-            toAccountNumber: toAccount.number,
+            // fromAccountName: fromAccount.name,
+            // fromAccountNumber: fromAccount.number,
+            // toAccountName: toAccount.name,
+            // toAccountNumber: toAccount.number,
+            fromAccountId: fromAccount._id,
+            toAccountId: toAccount._id,
             fromAmount: fromAmount,
             toAmount: toAmount,
             date: new Date(t.bookingDate),
@@ -136,10 +138,12 @@ export default class DataImporter {
         if (fromAccount.currency === toAccount.currency) {
           await saveTransferAsync(
             {
-              fromAccountName: fromAccount.name,
-              fromAccountNumber: fromAccount.number,
-              toAccountName: toAccount.name,
-              toAccountNumber: toAccount.number,
+              // fromAccountName: fromAccount.name,
+              // fromAccountNumber: fromAccount.number,
+              // toAccountName: toAccount.name,
+              // toAccountNumber: toAccount.number,
+              fromAccountId: fromAccount._id,
+              toAccountId: toAccount._id,
               fromAmount: fromAmount,
               toAmount: toAmount,
               date: new Date(t.bookingDate),

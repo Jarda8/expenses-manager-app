@@ -27,6 +27,7 @@ export default class NewTransaction extends Component {
     this.handleConfirmButtonPressed = this.handleConfirmButtonPressed.bind(this);
     this.saveNewTransaction = this.saveNewTransaction.bind(this);
     this.parseDate = this.parseDate.bind(this);
+    this.handleNoteChange = this.handleNoteChange.bind(this);
   }
 
   componentWillMount(){
@@ -42,6 +43,10 @@ export default class NewTransaction extends Component {
 
   handleDisplayChange(toDisplay: string) {
     this.setState({displayedAmount: toDisplay});
+  }
+
+  handleNoteChange(text) {
+    this.setState({note: text});
   }
 
   saveNewTransaction(category: string) {
@@ -106,7 +111,9 @@ export default class NewTransaction extends Component {
           <Text style={styles.displayedAmount}>{this.state.displayedAmount}</Text>
           <Text style={styles.currency}>{this.renderCurrency()}</Text>
         </View>
-        <Note />
+        <Note
+          onChangeText={this.handleNoteChange}
+        />
         <View style={styles.calculatorView}>
           <Calculator
             initialNumber={0}

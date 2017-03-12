@@ -9,9 +9,10 @@ import AccountSelector from '../../Shared/AccountSelector';
 import { getAccountAsync } from '../../DataSources/AccountsDS';
 import { deleteTransactionAsync } from '../../DataSources/TransactionsDS';
 import { Router } from '../../../main';
-import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories'
-import SaveButton from '../../Shared/SaveButton'
-import DeleteButton from '../../Shared/DeleteButton'
+import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories';
+// import SaveButton from '../../Shared/SaveButton';
+import DeleteButton from '../../Shared/DeleteButton';
+import ChangeToTransferButton from './ChangeToTransferButton';
 import TransactionModificator from './TransactionModificator';
 import Note from '../../Shared/Note';
 import Categorization from '../../DataImport/Categorization';
@@ -26,6 +27,7 @@ export default class EditTransaction extends Component {
         <View style={styles.navbarMenu}>
           {/* <SaveButton onPress={route.params.update} /> */}
           <DeleteButton onPress={route.params.delete} />
+          <ChangeToTransferButton onPress={route.params.changeToTransfer} />
         </View>
     },
   }
@@ -50,6 +52,7 @@ export default class EditTransaction extends Component {
     this.updateThisTransactionWithCategory = this.updateThisTransactionWithCategory.bind(this);
     // this.updateThisTransaction = this.updateThisTransaction.bind(this);
     this.deleteThisTransaction = this.deleteThisTransaction.bind(this);
+    this.changeToTransfer = this.changeToTransfer.bind(this);
     this.parseDate = this.parseDate.bind(this);
   }
 
@@ -64,7 +67,8 @@ export default class EditTransaction extends Component {
     setTimeout(() => {
       this.props.navigator.updateCurrentRouteParams({
         // update: this.updateThisTransaction,
-        delete: this.deleteThisTransaction
+        delete: this.deleteThisTransaction,
+        changeToTransfer: this.changeToTransfer
       })
     }, 1000);
   }
@@ -81,6 +85,15 @@ export default class EditTransaction extends Component {
   deleteThisTransaction() {
     deleteTransactionAsync(this.props.route.params.transaction);
     this.props.navigator.popToTop();
+  }
+
+  changeToTransfer() {
+    this.props.navigator.push(
+      Router.getRoute(
+        'newTransfer',
+        {
+          transaction: this.props.route.params.transaction
+        }));
   }
 
   updateThisTransactionWithCategory(category: string) {

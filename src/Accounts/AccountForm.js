@@ -7,7 +7,7 @@ import TMPicker from '../../modifiedLibraries/react-native-picker-xg/app/picker'
 
 import { banks, currencies } from '../Shared/DataSource';
 import { accountTypes, saveAccountAsync, updateAccountAsync } from '../DataSources/AccountsDS';
-import FullWidthButton from '../Shared/FullWidthButton'
+import FullWidthButton from '../Shared/FullWidthButton';
 import { Router } from '../../main';
 
 @withNavigation
@@ -43,13 +43,13 @@ export default class AccountForm extends Component {
   }
 
   componentDidMount() {
-    Keyboard.addListener('keyboardDidShow', this.addPadding.bind(this))
-    Keyboard.addListener('keyboardDidHide', this.removePadding.bind(this))
+    Keyboard.addListener('keyboardDidShow', this.addPadding.bind(this));
+    Keyboard.addListener('keyboardDidHide', this.removePadding.bind(this));
   }
 
   componentWillUnmount() {
-    Keyboard.removeListener('keyboardDidShow', (message) => {})
-    Keyboard.removeListener('keyboardDidHide', (message) => {})
+    Keyboard.removeListener('keyboardDidShow', (message) => {});
+    Keyboard.removeListener('keyboardDidHide', (message) => {});
   }
 
   addPadding(event: any) {
@@ -111,13 +111,13 @@ export default class AccountForm extends Component {
     this.props.navigator.pop();
   }
 
-  generateBanksItems() {
-    let banksArray =  banks.map(
-      (bank) => <Picker.Item key={bank.name} label={bank.name} value={bank.name} />
-    );
-    banksArray.push(<Picker.Item key={'other'} label={'jiná - bez automatické synchronizace'} value={'other'} />)
-    return banksArray;
-  }
+  // generateBanksItems() {
+  //   let banksArray =  banks.map(
+  //     (bank) => <Picker.Item key={bank.name} label={bank.name} value={bank.name} />
+  //   );
+  //   banksArray.push(<Picker.Item key={'other'} label={'jiná - bez automatické synchronizace'} value={'other'} />)
+  //   return banksArray;
+  // }
 
   renderAccountNumber() {
     if (this.state.type === 'Cash') {
