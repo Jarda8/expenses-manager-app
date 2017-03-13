@@ -167,20 +167,53 @@ export default class NewTransfer extends Component {
               defaultValue={'' + this.state.toAmount}
               style={styles.displayedAmount}
               keyboardType={'numeric'}
-              onChangeText={(text) => this.setState({toAmount: parseFloat(text)})} />
+              onChangeText={(text) => this.setState({toAmount: this.getNumber(text)})} />
             <Text style={styles.currency}>{this.renderCurrency(this.state.toAccount)}</Text>
           </View>
         )
     }
   }
 
-  handleOnPress() {
-    this.saveTransfer();
-    if (this.props.route.params.transaction) {
-      deleteTransactionAsync(this.props.route.params.transaction);
+  getNumber(text: string): number {
+    let number = parseFloat(text);
+    if (text === '') {
+      number = 0;
     }
-    this.props.navigator.popToTop();
+    return number;
   }
+
+  handleOnPress() {
+    if (this.state.fromAccount._id === this.state.toAccount._id) {
+        Alert.alert('Musíte vybrat dva různé účty.');
+    } else {
+      this.saveTransfer();
+      if (this.props.route.params.transaction) {
+        deleteTransactionAsync(this.props.route.params.transaction);
+      }
+      this.props.navigator.popToTop();
+    }
+  }
+
+  // setAccount(selectedAccount: Account, isFromAccount: boolean) {
+  //   let fromAccount = this.state.fromAccount;
+  //   let toAccount = this.state.toAccount;
+  //   if (isFromAccount) {
+  //     if (selectedAccount._id === toAccount._id) {
+  //       console.log('same');
+  //       toAccount = fromAccount;
+  //     }
+  //     fromAccount = selectedAccount;
+  //   } else {
+  //     // console.log(selectedAccount);
+  //     // console.log(fromAccount);
+  //     if (selectedAccount._id === fromAccount._id) {
+  //       console.log('same');
+  //       fromAccount = toAccount;
+  //     }
+  //     toAccount = selectedAccount;
+  //   }
+  //   this.setState({fromAccount: fromAccount, toAccount: toAccount});
+  // }
 
   render() {
     let flexSize = {flex: 1};
@@ -227,7 +260,7 @@ export default class NewTransfer extends Component {
                   defaultValue={'' + this.state.fromAmount}
                   style={styles.displayedAmount}
                   keyboardType={'numeric'}
-                  onChangeText={(text) => this.setState({fromAmount: parseFloat(text)})} />
+                  onChangeText={(text) => this.setState({fromAmount: this.getNumber(text)})} />
                 <Text style={styles.currency}>{this.renderCurrency(this.state.fromAccount)}</Text>
               </View>
               {this.renderSecondAmountInput()}

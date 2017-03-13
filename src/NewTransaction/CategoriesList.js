@@ -57,7 +57,8 @@ export default class CategoriesList extends Component {
 const styles = StyleSheet.create({
   listView: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    paddingBottom: 60
   },
   amountView: {
     flexDirection: 'row',

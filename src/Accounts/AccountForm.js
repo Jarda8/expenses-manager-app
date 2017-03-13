@@ -311,16 +311,18 @@ const styles = StyleSheet.create({
   },
   labelView: {
     height: 70,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: 85
   },
   label: {
     fontSize: 20,
     width: 85
   },
   textInput: {
-    width: 250,
+    width: 220,
     fontSize: 20,
-    height: 70
+    height: 70,
+    marginLeft: 20
   },
   balanceTextInput: {
     width: 250,
@@ -329,6 +331,6 @@ const styles = StyleSheet.create({
     height: 70
   },
   pickerInput: {
-    width: 250
+    width: 220
   }
 });
