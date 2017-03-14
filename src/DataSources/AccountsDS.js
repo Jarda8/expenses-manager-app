@@ -76,7 +76,7 @@ function updateAccountByIdAsync(id: number, newData: Object, callback: any) {
 }
 
 function deleteAccountAsync(account: Account) {
-  DB.accounts.remove(account, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {}));
+  DB.accounts.remove_id(account._id, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {}));
 }
 
 function getTotalBalanceAsync(callback: (result: number) => void) {
