@@ -61,18 +61,22 @@ export default class NewTransaction extends Component {
     this.props.navigator.popToTop();
   }
 
-  handleConfirmButtonPressed(amount : number) {
+  handleConfirmButtonPressed(amount: number) {
     // TODO blokovat záporný result -> upozornit uživatele a jinak nic
-    this.setState({finalAmount: amount});
-    this.props.navigator.push(
-      Router.getRoute(
-        'categories',
-        {
-          amount: amount,
-          currency: this.state.account.currency,
-          categories: this.props.categories,
-          onCategorySelected: this.saveNewTransaction
-        }));
+    if (amount === 0) {
+      Alert.alert('Částka transakce musí být nenulová.');
+    } else {
+      this.setState({finalAmount: amount});
+      this.props.navigator.push(
+        Router.getRoute(
+          'categories',
+          {
+            amount: amount,
+            currency: this.state.account.currency,
+            categories: this.props.categories,
+            onCategorySelected: this.saveNewTransaction
+          }));
+    }
   }
 
   parseDate(date: string): Date {
