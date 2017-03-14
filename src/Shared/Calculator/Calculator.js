@@ -7,6 +7,7 @@ import NumberKey from './NumberKey';
 import OperatorKey from './OperatorKey';
 import IconKey from './IconKey';
 
+const maxInputLength = 11;
 
 export default class Calculator extends Component {
 
@@ -46,15 +47,15 @@ export default class Calculator extends Component {
 
   handleNumber(number : number) {
     let display = this.state.display;
-
-    // TODO omezit délku vstupu
-
     if (this.state.clearDisplay || display === '0') {
       display = '';
       this.setState({clearDisplay: false});
     }
-    this.updateDisplay(display + number);
-    // TODO updatovat taky result v některžch případech?
+    let [wholePart, fractionalPart] = display.split(".");
+    if (wholePart.length < maxInputLength
+      || (fractionalPart && fractionalPart.length < 2) || fractionalPart === '') {
+      this.updateDisplay(display + number);
+    }
   }
 
   handleFloatingPoint() {
@@ -87,16 +88,27 @@ export default class Calculator extends Component {
 
   handleEquals(): number {
     var result;
+    let secondOperand = parseFloat(this.state.display);
     if (this.state.operator === '') {
-      return parseFloat(this.state.display);
+      return secondOperand;
     } else if (this.state.operator === '+') {
-      result = this.state.result + parseFloat(this.state.display);
+      result = this.state.result + secondOperand;
     } else if (this.state.operator === '-') {
-      result = this.state.result - parseFloat(this.state.display);
+      result = this.state.result - secondOperand;
     } else if (this.state.operator === '*') {
-      result = this.state.result * parseFloat(this.state.display);
+      result = this.state.result * secondOperand;
     } else if (this.state.operator === '÷') {
-      result = this.state.result / parseFloat(this.state.display);
+      if (secondOperand !== 0) {
+        result = this.state.result / secondOperand;
+      } else {
+        result = this.state.result;
+      }
+    }
+    result = Math.round(result * 100) / 100;
+    let resultString = '' + result;
+    let [wholePart,] = resultString.split(".");
+    if (wholePart.length > maxInputLength) {
+      result = 0;
     }
     this.setResultState(result);
     return result;

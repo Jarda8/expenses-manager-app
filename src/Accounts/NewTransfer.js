@@ -167,6 +167,7 @@ export default class NewTransfer extends Component {
               defaultValue={'' + this.state.toAmount}
               style={styles.displayedAmount}
               keyboardType={'numeric'}
+              selectTextOnFocus={true}
               onChangeText={(text) => this.setState({toAmount: this.getNumber(text)})} />
             <Text style={styles.currency}>{this.renderCurrency(this.state.toAccount)}</Text>
           </View>
@@ -260,6 +261,7 @@ export default class NewTransfer extends Component {
                   defaultValue={'' + this.state.fromAmount}
                   style={styles.displayedAmount}
                   keyboardType={'numeric'}
+                  selectTextOnFocus={true}
                   onChangeText={(text) => this.setState({fromAmount: this.getNumber(text)})} />
                 <Text style={styles.currency}>{this.renderCurrency(this.state.fromAccount)}</Text>
               </View>

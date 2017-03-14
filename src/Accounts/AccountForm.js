@@ -22,7 +22,7 @@ export default class AccountForm extends Component {
         name: '',
         number: '',
         bank: banks[0].name,
-        initialBalance: 0,
+        initialBalance: '0',
         padding: 0
       };
     } else {
@@ -36,7 +36,7 @@ export default class AccountForm extends Component {
         name: props.account.name,
         number: props.account.number ? props.account.number : '',
         bank: bank,
-        initialBalance: props.account.balance,
+        initialBalance: '' + props.account.balance,
         padding: 0
       };
     }
@@ -81,7 +81,7 @@ export default class AccountForm extends Component {
           iban: null,
           bankName: bank,
           type: this.state.type,
-          balance: this.state.initialBalance,
+          balance: parseFloat(this.state.initialBalance),
           currency: this.state.currency,
           connected: false
         }
@@ -104,7 +104,7 @@ export default class AccountForm extends Component {
         number: number,
         bankName: bank,
         type: this.state.type,
-        balance: this.state.initialBalance,
+        balance: parseFloat(this.state.initialBalance),
         currency: this.state.currency
       }
     )
@@ -119,6 +119,13 @@ export default class AccountForm extends Component {
   //   return banksArray;
   // }
 
+  setAccountNumber(number: string) {
+    let pattern = /^[0-9]*$/;
+    if (pattern.test(number)) {
+      this.setState({number: number})
+    }
+  }
+
   renderAccountNumber() {
     if (this.state.type === 'Cash') {
       return;
@@ -129,10 +136,12 @@ export default class AccountForm extends Component {
         <Text style={styles.label}>Číslo: </Text>
       </View>
       <TextInput
-        defaultValue={'' + this.state.number}
+        // defaultValue={'' + this.state.number}
+        value={'' + this.state.number}
         style={styles.textInput}
         keyboardType={'numeric'}
-        onChangeText={(text) => this.setState({number: text})} />
+        maxLength={13}
+        onChangeText={this.setAccountNumber.bind(this)} />
     </View>);
   }
 
@@ -187,9 +196,11 @@ export default class AccountForm extends Component {
           onFocus={(event: Event) => {
             this._scrollToInput(ReactNative.findNodeHandle(event.target));
           }}
-          defaultValue={'' + this.state.initialBalance}
+          value={this.state.initialBalance}
           style={styles.balanceTextInput}
           keyboardType={'numeric'}
+          maxLength={12}
+          selectTextOnFocus={true}
           onChangeText={this.changeBalance.bind(this)} />
       </View>
     )
@@ -203,12 +214,14 @@ export default class AccountForm extends Component {
     }
   }
 
-  changeBalance(text: string) {
-    let number = parseFloat(text);
-    if (text === '') {
-      number = 0;
+  changeBalance(input: string) {
+    let pattern = /(^-?[0-9]*\.?[0-9]{0,2}$)/;
+    if (pattern.test(input)) {
+      if (input === '') {
+        input = '0';
+      }
+      this.setState({initialBalance: input});
     }
-    this.setState({initialBalance: number});
   }
 
   _scrollToInput (reactNode: any) {
