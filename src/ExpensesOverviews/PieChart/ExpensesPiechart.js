@@ -39,7 +39,7 @@ export class ExpensesPiechart extends Component {
   loadData(props) {
     getSumsOfExpensesByCategoryAsync(props.fromDate, props.toDate, result => {
       for (category of result) {
-        category.name = ExpensesCategories[category.name];
+        category.name = ExpensesCategories[category.name] + '\n' + (-category.amount) + ' Kč';
         category.amount = -category.amount;
       };
       this.setState({data: result});

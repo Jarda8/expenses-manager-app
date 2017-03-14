@@ -101,7 +101,7 @@ export default class EditTransaction extends Component {
       TransactionModificator.updateTransaction(
         oldTransaction,
         {
-        accountId: thist.state.account._id,
+        accountId: this.state.account._id,
         category: category,
         amount: this.state.finalAmount * this.state.ifExpenseMinusOne,
         date: this.state.date,
