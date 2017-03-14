@@ -12,15 +12,15 @@ import Categorization from './Categorization';
 export default class DataImporter {
 
   static async fetchTransactions() {
-    getAccountsAsync(accounts => {
+    getAccountsAsync(async accounts => {
       let toDate = new Date();
       let fromDate;
       let connectedAccounts = accounts.filter(acc => acc.connected);
       for (account of connectedAccounts) {
-        fromDate = account.lastTransactionsDownload;
-        if (fromDate === null) {
+        // fromDate = account.lastTransactionsDownload;
+        // if (fromDate === null) {
           fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0);
-        }
+        // }
         if (fromDate.getFullYear() === toDate.getFullYear()
         && fromDate.getMonth() === toDate.getMonth()
         && fromDate.getDate() === toDate.getDate()) {
@@ -28,9 +28,16 @@ export default class DataImporter {
         } else {
           switch (account.bankName) {
             case 'Česká spořitelna':
-            CSAPIClient.fetchTransactions(fromDate, toDate, account).then((transactions) => {
-              this.processTransactions(transactions, account._id, toDate, accounts);
-            });
+            try {
+              let transactions = await CSAPIClient.fetchTransactions(fromDate, toDate, account);
+              // .then((transactions) => {
+              await this.processTransactions(transactions, account._id, toDate, accounts);
+              // }).catch((e) => {
+                // Alert.alert('Při stahování transakcí se vyskytla neznámá chyba. Opakujte prosím později.');
+              // });
+            } catch (e) {
+              Alert.alert('Vyskytla se neznámá chyba. Opakujte prosím později.');
+            }
               break;
           }
         }
@@ -51,6 +58,7 @@ export default class DataImporter {
         for (transaction of nonTransferTransactions) {
           await saveTransactionAsync(transaction);
         }
+        await checkBudgetsAfterTransactions(nonTransferTransactions);
       });
     }
     await updateAccountByIdAsync(accountId, {lastTransactionsDownload: date});

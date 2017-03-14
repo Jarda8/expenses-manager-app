@@ -19,8 +19,16 @@ function getBudgetsAsync(callback: (p: Array<Budget>) => any) {
   });
 }
 
-function getBudgetAsync(category: string, callback: (p: Budget) => any) {
-  DB.budgets.get({category: category}, result => callback(result[0]));
+async function getBudgetAsync(category: string, callback: (p: Budget) => any): Object {
+  return new Promise((resolve,reject) => {
+    DB.budgets.get({category: category}, result => {
+      if (callback) {
+        callback(result[0]);
+      } else {
+        resolve(result[0]);
+      }
+    });
+  });
 }
 
 function saveBudgetAsync(budget: Budget) {

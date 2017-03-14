@@ -118,11 +118,22 @@ async function convertTransactionsToCrowns(transactions: Array<Transaction>) {
   return result;
 }
 
-function getSumOfTransactionsAsync(category: string, fromDate: Date, toDate: Date, callback: (p: {name: string, amount: number}) => any): void {
-  getTransactionsAsync(category, fromDate, toDate, transactions => {
-    addTransactions(category, transactions).then((total) => {
-      callback(total);
-    })
+async function getSumOfTransactionsAsync(category: string, fromDate: Date, toDate: Date, callback: (p: {name: string, amount: number}) => any): Object {
+  // console.log('getSumOfTransactionsAsync called');
+  return new Promise((resolve,reject) => {
+    getTransactionsAsync(category, fromDate, toDate, transactions => {
+      // console.log('getTransactionsAsync callback');
+      addTransactions(category, transactions).then((total) => {
+        // console.log('addTransactions callback');
+        if (callback) {
+          // console.log('getSumOfTransactionsAsync callback');
+          callback(total);
+        } else {
+          console.log('getSumOfTransactionsAsync resolve');
+          resolve(total);
+        }
+      })
+    });
   });
 }
 
