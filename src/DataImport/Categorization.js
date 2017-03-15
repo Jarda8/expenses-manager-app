@@ -1,12 +1,13 @@
 /* @flow */
 import type { Transaction } from '../DataSources/TransactionsDS';
+import { categorizeURI, addCategorizationURI } from '../Shared/Constants'
 
 export default class Categorization {
 
   static async categorizeTransactionsTest() {
     console.log('categorizeTransactionsTest');
     try {
-      let response = await fetch('http://10.0.3.2:8081/', {
+      let response = await fetch(categorizeURI, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -71,7 +72,7 @@ export default class Categorization {
 
   static async categorizeTransactions(transactions: Array<Transaction>) {
     try {
-      let response = await fetch('http://10.0.3.2:8081/', {
+      let response = await fetch(categorizeURI, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -87,9 +88,9 @@ export default class Categorization {
     }
   }
 
-  static async addNewCategorization(categorizedTransaction) {
+  static addNewCategorization(categorizedTransaction) {
     try {
-      fetch('http://10.0.3.2:8081/new-categorized-transaction', {
+      fetch(addCategorizationURI, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

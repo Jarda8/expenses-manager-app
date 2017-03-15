@@ -23,3 +23,6 @@ export const csTokensRequestBody = {
   'redirect_uri': encodeURIComponent(redirectURI),
   'grant_type': 'authorization_code'
 };
+
+export const categorizeURI = 'http://10.0.3.2:8081/';
+export const addCategorizationURI = 'http://10.0.3.2:8081/new-categorized-transaction';

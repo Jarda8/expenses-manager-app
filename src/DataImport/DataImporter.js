@@ -8,6 +8,7 @@ import { saveTransactionAsync } from '../DataSources/TransactionsDS';
 import type { Transaction } from '../DataSources/TransactionsDS';
 import { getPendingTransfersAsync, saveTransferAsync, updateTransferAsync } from '../DataSources/TransfersDS';
 import Categorization from './Categorization';
+import BudgetChecker from '../Shared/BudgetChecker'
 
 export default class DataImporter {
 
@@ -58,7 +59,10 @@ export default class DataImporter {
         for (transaction of nonTransferTransactions) {
           await saveTransactionAsync(transaction);
         }
-        await checkBudgetsAfterTransactions(nonTransferTransactions);
+        let alertText = await BudgetChecker.checkBudgetsAfterTransactions(nonTransferTransactions);
+        if (alertText) {
+          Alert.alert(alertText.title, alertText.body);
+        }
       });
     }
     await updateAccountByIdAsync(accountId, {lastTransactionsDownload: date});

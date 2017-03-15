@@ -1,3 +1,4 @@
+/* @flow */
 import EventEmitter from 'EventEmitter';
 
 import { DB } from './DB';
@@ -33,7 +34,10 @@ export type Transaction = {
 }
 
 async function saveTransactionAsync(transaction: Transaction, callback: any) {
+  console.log('saving transaction:');
+  console.log(transaction);
   return new Promise((resolve,reject) => {
+    console.log('transaction saved');
     DB.transactions.add(transaction, result => {
       TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {});
       getAccountAsync(transaction.accountId, account => {
@@ -129,7 +133,6 @@ async function getSumOfTransactionsAsync(category: string, fromDate: Date, toDat
           // console.log('getSumOfTransactionsAsync callback');
           callback(total);
         } else {
-          console.log('getSumOfTransactionsAsync resolve');
           resolve(total);
         }
       })

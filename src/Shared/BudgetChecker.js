@@ -1,5 +1,4 @@
 import { Notifications } from 'exponent';
-// import { Alert } from 'react-native';
 
 import type { Transaction } from '../DataSources/TransactionsDS';
 import type { Budget } from '../DataSources/BudgetsDS';
@@ -50,7 +49,7 @@ export default class BudgetChecker {
     }
   }
 
-  static async checkBudgetsAfterTransactions(transactions: Array<Transaction>) {
+  static async checkBudgetsAfterTransactions(transactions: Array<Transaction>): {title: string, body: string} {
     let amountsPerCategory = [];
     for (transaction of transactions) {
       if (transaction.amount < 0) {
@@ -65,20 +64,21 @@ export default class BudgetChecker {
     let alertTexts = [];
     let alertText;
     for (item of amountsPerCategory) {
-      alertText = await checkBudgetAfterTransaction({category: item.category, amount: item.amount, currency: item.currency});
+      alertText = await this.checkBudgetAfterTransaction({category: item.category, amount: item.amount, currency: item.currency});
       if (alertText) {
         alertTexts.push(alertText);
       }
     }
-    // TODO: alert - all alerts together
     if (alertTexts.length === 1) {
-      Alert.alert(alertTexts[0].title, alertTexts[0].body);
+      // Alert.alert(alertTexts[0].title, alertTexts[0].body);
+      return alertTexts[0];
     } else if (alertTexts.length > 1) {
       let multiText = '';
       for (text of alertTexts) {
         multiText += text.title + '\n' + text.body + '\n';
       }
-      Alert.alert('Překročeny rozpočty!', multiText);
+      // Alert.alert('Překročeny rozpočty!', multiText);
+      return {title: 'Překročeny rozpočty!', body: multiText};
     }
   }
 

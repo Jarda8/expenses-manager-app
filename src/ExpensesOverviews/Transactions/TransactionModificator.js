@@ -1,3 +1,4 @@
+/* @flow */
 import { Alert } from 'react-native';
 
 import type { Transaction } from '../../DataSources/TransactionsDS';
