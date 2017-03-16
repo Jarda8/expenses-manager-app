@@ -18,10 +18,10 @@ export default class DataImporter {
       let fromDate;
       let connectedAccounts = accounts.filter(acc => acc.connected);
       for (account of connectedAccounts) {
-        // fromDate = account.lastTransactionsDownload;
-        // if (fromDate === null) {
+        fromDate = account.lastTransactionsDownload;
+        if (fromDate === null) {
           fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1, 0, 0, 0, 0);
-        // }
+        }
         if (fromDate.getFullYear() === toDate.getFullYear()
         && fromDate.getMonth() === toDate.getMonth()
         && fromDate.getDate() === toDate.getDate()) {
