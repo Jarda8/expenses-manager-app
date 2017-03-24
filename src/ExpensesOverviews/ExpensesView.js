@@ -6,10 +6,8 @@ import TimeNavigation from '../Shared/TimeNavigation';
 import { AddTransactionControls } from '../Shared/AddTransactionControls';
 import { ExpensesCategories, All } from '../Shared/Categories';
 import CategorySelector from '../Shared/CategorySelector';
-import Balance from './Balance';
 import { periods } from '../Shared/DataSource';
-import SumOfExpenses from './SumOfExpenses'
-import SumOfIncomes from './SumOfIncomes'
+import BalanceBar from './BalanceBar/BalanceBar';
 
 export default class ExpensesView extends Component {
 
@@ -86,11 +84,7 @@ export default class ExpensesView extends Component {
             period={this.state.period}
           />
         </View>
-        <View style={styles.balance}>
-          <SumOfIncomes fromDate={this.state.fromDate} toDate={this.state.toDate} />
-          <Balance fromDate={this.state.fromDate} toDate={this.state.toDate} />
-          <SumOfExpenses fromDate={this.state.fromDate} toDate={this.state.toDate} />
-        </View>
+        <BalanceBar style={styles.balance} fromDate={this.state.fromDate} toDate={this.state.toDate} />
         <View style={styles.content}>
           {this.renderChild()}
         </View>
@@ -120,9 +114,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'steelblue'
   },
   balance: {
-    flex: 0.25,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    flex: 0.25
   }
 });

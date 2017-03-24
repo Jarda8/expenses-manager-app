@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { FormattedCurrency } from 'react-native-globalize';
 
-import { getSumOfIncomesAsync, TRANSACTIONS_DS_EVENT_EMITTER } from '../DataSources/TransactionsDS';
+import { getSumOfTransactionsAsync, TRANSACTIONS_DS_EVENT_EMITTER } from '../../DataSources/TransactionsDS';
+import { All } from '../../Shared/Categories'
 
-export default class SumOfIncomes extends Component {
+export default class Balance extends Component {
 
   constructor(props: any) {
     super(props);
     this.state = {
-      sum: 0
+      balance: 0
     }
   }
 
@@ -35,23 +36,26 @@ export default class SumOfIncomes extends Component {
   }
 
   loadData(props) {
-    getSumOfIncomesAsync(props.fromDate, props.toDate, result =>
-      this.setState({sum: result.amount}));
+    getSumOfTransactionsAsync(All, props.fromDate, props.toDate, result =>
+      this.setState({balance: result.amount}));
   }
 
   render() {
+    let color = 'green';
+    if (this.state.balance < 0) {
+      color = 'red';
+    }
     return (
       <FormattedCurrency
-        value={this.state.sum}
-        style={styles.incomes} />
+        value={this.state.balance}
+        style={[styles.balance, {color: color}]} />
       );
     }
   }
 
 const styles = StyleSheet.create({
-  incomes: {
-    color: 'green',
+  balance: {
     textAlign: 'center',
-    fontSize: 15
+    fontSize: 18
   }
 })
