@@ -12,7 +12,7 @@ import BudgetChecker from '../Shared/BudgetChecker'
 
 export default class DataImporter {
 
-  static async fetchTransactions() {
+  static async fetchTransactions(callback: () => void) {
     getAccountsAsync(async accounts => {
       let toDate = new Date();
       let fromDate;
@@ -25,7 +25,8 @@ export default class DataImporter {
         if (fromDate.getFullYear() === toDate.getFullYear()
         && fromDate.getMonth() === toDate.getMonth()
         && fromDate.getDate() === toDate.getDate()) {
-          Alert.alert('Transakce lze stahovat pouze jednou za den.');
+          // Alert.alert('Transakce lze stahovat pouze jednou za den.');
+          // do nothing
         } else {
           switch (account.bankName) {
             case 'Česká spořitelna':
@@ -43,6 +44,10 @@ export default class DataImporter {
           }
         }
       }
+      if (callback) {
+        callback();
+      }
+
     });
   }
 
@@ -52,18 +57,18 @@ export default class DataImporter {
     }
     let nonTransferTransactions = await this.processTransfers(transactions, accounts);
     if (nonTransferTransactions.length > 0) {
-      Categorization.categorizeTransactions(nonTransferTransactions).then(async (categories) => {
-        for (var i = 0; i < nonTransferTransactions.length; i++) {
-          nonTransferTransactions[i].category = categories[i];
-        }
-        for (transaction of nonTransferTransactions) {
-          await saveTransactionAsync(transaction);
-        }
-        let alertText = await BudgetChecker.checkBudgetsAfterTransactions(nonTransferTransactions);
-        if (alertText) {
-          Alert.alert(alertText.title, alertText.body);
-        }
-      });
+      let categories = await Categorization.categorizeTransactions(nonTransferTransactions);
+      // .then(async (categories) => {
+      for (var i = 0; i < nonTransferTransactions.length; i++) {
+        nonTransferTransactions[i].category = categories[i];
+      }
+      for (transaction of nonTransferTransactions) {
+        await saveTransactionAsync(transaction);
+      }
+      let alertText = await BudgetChecker.checkBudgetsAfterTransactions(nonTransferTransactions);
+      if (alertText) {
+        Alert.alert(alertText.title, alertText.body);
+      }
     }
     await updateAccountByIdAsync(accountId, {lastTransactionsDownload: date});
   }
