@@ -33,7 +33,7 @@ export default class NewTransaction extends Component {
   componentWillMount(){
     getAccountsAsync(result => {
       if (result.length === 0) {
-        Alert.alert('Nemáte přidaný žádný účet. Nejdříve je třeba přidat účet v sekci "Účty".');
+        Alert.alert( 'Nelze přidat transakci!', 'Nemáte přidaný žádný účet. Nejprve je třeba přidat účet v sekci "Účty".');
         this.props.navigator.popToTop();
       } else {
         this.setState({account: result[0]});

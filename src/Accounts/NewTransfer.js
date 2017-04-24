@@ -43,7 +43,7 @@ export default class NewTransfer extends Component {
   componentWillMount() {
     getAccountsAsync(accounts => {
       if (accounts.length < 2) {
-        Alert.alert('K provedení převodu je třeba mít přidané alespoň dva účty.');
+        Alert.alert('Nelze přidat nový převod!', 'K provedení převodu je třeba mít přidané alespoň dva účty.');
         this.props.navigator.popToTop();
       } else {
         if (this.props.route.params.transaction) {
