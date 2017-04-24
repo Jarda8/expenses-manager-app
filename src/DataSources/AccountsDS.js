@@ -3,6 +3,7 @@ import EventEmitter from 'EventEmitter';
 import CurrencyConverter from '../CurrencyConverter';
 
 import { DB } from './DB';
+import { deleteTransactionsByAccountIdAsync } from './TransactionsDS';
 
 const ACCOUNTS_DS_EVENT_EMITTER = new EventEmitter();
 
@@ -76,21 +77,28 @@ function updateAccountByIdAsync(id: number, newData: Object, callback: any) {
 }
 
 function deleteAccountAsync(account: Account) {
-  DB.accounts.remove_id(account._id, result => ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {}));
+  DB.accounts.remove_id(account._id, result => {
+    ACCOUNTS_DS_EVENT_EMITTER.emit('accountsChanged', {});
+    deleteTransactionsByAccountIdAsync(account._id);
+  });
 }
 
 function getTotalBalanceAsync(callback: (result: number) => void) {
   getAccountsAsync((accounts) => {
-    convertToCrowns(accounts).then(() => {
-      callback(accounts.reduce((x, y) => {return {balance: x.balance + y.balance}}, {balance: 0}).balance);
+    convertToCrowns(accounts).then((convertedAccounts) => {
+      let totalBalance = convertedAccounts.reduce((x, y) => {return {balance: x.balance + y.balance}}, {balance: 0}).balance;
+      callback(totalBalance);
     })
   });
 }
 
-async function convertToCrowns(accounts: Array<Account>) {
+async function convertToCrowns(accounts: Array<Account>): Array<Account> {
+  let accountsWithCovertedCurrecy = [];
   for (account of accounts) {
     account.balance = await CurrencyConverter.convertCurrency(account.currency, account.balance);
+    accountsWithCovertedCurrecy.push(account);
   }
+  return accountsWithCovertedCurrecy;
 }
 
 export { ACCOUNTS_DS_EVENT_EMITTER, accountTypes, getAccountAsync, getAccountsAsync, saveAccountAsync, updateAccountAsync, updateAccountByIdAsync, deleteAccountAsync, getTotalBalanceAsync }

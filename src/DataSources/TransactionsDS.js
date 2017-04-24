@@ -94,6 +94,11 @@ function deleteTransactionAsync(transaction: Transaction) {
     updateAccountAsync(account, {balance: account.balance - transaction.amount}));
 }
 
+function deleteTransactionsByAccountIdAsync(accountId: number) {
+  DB.transactions.remove({accountId: accountId}, result =>
+    TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {}));
+}
+
 function updateTransactionAsync(oldTransaction: Transaction, newTransaction: Transaction, callback: any) {
   DB.transactions.update({_id: oldTransaction._id}, newTransaction, result => {
     TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {});
@@ -177,4 +182,8 @@ function getSumsOfExpensesByCategoryAsync(fromDate: Date, toDate: Date, callback
   getSumsOfTransactionsAsyncRecur(categories, fromDate, toDate, [], callback);
 }
 
-export { TRANSACTIONS_DS_EVENT_EMITTER, getTransactionsAsync, deleteTransactionAsync, updateTransactionAsync, saveTransactionAsync, getSumOfTransactionsAsync, getSumOfIncomesAsync, getSumOfExpensesAsync, getSumsOfExpensesByCategoryAsync }
+function wipeAllTransactions() {
+  DB.transactions.erase_db(removedData => TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {}));
+}
+
+export { TRANSACTIONS_DS_EVENT_EMITTER, getTransactionsAsync, deleteTransactionAsync, updateTransactionAsync, saveTransactionAsync, getSumOfTransactionsAsync, getSumOfIncomesAsync, getSumOfExpensesAsync, getSumsOfExpensesByCategoryAsync, deleteTransactionsByAccountIdAsync, wipeAllTransactions }
