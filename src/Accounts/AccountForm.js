@@ -338,12 +338,12 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   balanceTextInput: {
-    width: 250,
+    width: 200,
     fontSize: 20,
     textAlign: 'right',
     height: 70
   },
   pickerInput: {
-    width: 220
+    width: 180
   }
 });
