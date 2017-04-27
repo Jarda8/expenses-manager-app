@@ -195,14 +195,14 @@ const styles = StyleSheet.create({
     width: 130
   },
   pickerInput: {
-    width: 200
+    width: 170
   },
   currency: {
     fontSize: 25,
     marginLeft: 10
   },
   numberDisplay: {
-    width: 200,
+    width: 180,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center'
