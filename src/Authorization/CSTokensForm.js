@@ -37,7 +37,6 @@ export default class CSTokensForm extends Component {
         // console.log('+/redirect missing');
         return;
       }
-      Exponent.WebBrowser.dismissBrowser();
       const [, queryString] = event.url.split('?');
       const responseObj = queryString.split('&').reduce((map, pair) => {
         const [key, value] = pair.split('=');
@@ -92,16 +91,19 @@ export default class CSTokensForm extends Component {
         if (acc === null) {
           Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
           this.props.navigator.pop();
+          Exponent.WebBrowser.dismissBrowser();
         } else {
           acc.connected = true;
           saveAccountAsync(acc);
           this.props.navigator.popToTop();
-          console.log('account successfully imported');
+          Exponent.WebBrowser.dismissBrowser();
+          // console.log('account successfully imported');
         }
       }).catch(() => {
-        console.log("saveNewAccount error");
+        // console.log("saveNewAccount error");
         Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Opakujte prosím pokus později.');
         this.props.navigator.pop();
+        Exponent.WebBrowser.dismissBrowser();
       });
     }
 
