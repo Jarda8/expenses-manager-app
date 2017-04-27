@@ -62,9 +62,8 @@ export default class NewTransaction extends Component {
   }
 
   handleConfirmButtonPressed(amount: number) {
-    // TODO blokovat záporný result -> upozornit uživatele a jinak nic
-    if (amount === 0) {
-      Alert.alert('Částka transakce musí být nenulová.');
+    if (amount <= 0) {
+      Alert.alert('Částka transakce musí být větší než nula.');
     } else {
       this.setState({finalAmount: amount});
       this.props.navigator.push(

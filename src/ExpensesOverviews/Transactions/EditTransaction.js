@@ -1,6 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableHighlight, Alert } from 'react-native';
 import { FontAwesome } from '@exponent/vector-icons';
 import DatePicker from 'react-native-datepicker'
 
@@ -114,31 +114,42 @@ export default class EditTransaction extends Component {
   }
 
   handleConfirmButtonPressed(amount : number) {
-    // TODO blokovat záporný a nulový amount -> upozornit uživatele a jinak nic
-    let categories = ExpensesCategories;
-    if (this.props.route.params.transaction.amount >= 0) {
-      categories = IncomeCategories;
-    }
+    if (amount <= 0) {
+      Alert.alert('Částka transakce musí být větší než nula.');
+    } else {
+      let categories = ExpensesCategories;
+      if (this.props.route.params.transaction.amount >= 0) {
+        categories = IncomeCategories;
+      }
 
-    this.setState({finalAmount: amount});
-    this.props.navigator.push(
-      Router.getRoute(
-        'categories',
-        {
-          amount: amount,
-          categories: categories,
-          onCategorySelected: this.updateThisTransactionWithCategory
-        }));
+      this.setState({finalAmount: amount});
+      this.props.navigator.push(
+        Router.getRoute(
+          'categories',
+          {
+            amount: amount,
+            categories: categories,
+            onCategorySelected: this.updateThisTransactionWithCategory
+          }));
+    }
   }
+
+  // parseDate(date: string): Date {
+  //   let dateArray = date.split('.');
+  //   let day = parseInt(dateArray[0]) + 1;
+  //   let dayString = '' + day;
+  //   if (day < 10) {
+  //     dayString = '0' + dayString;
+  //   }
+  //   return new Date(dateArray[2] + '-' + dateArray[1] + '-' + dayString);
+  // }
 
   parseDate(date: string): Date {
     let dateArray = date.split('.');
-    let day = parseInt(dateArray[0]) + 1;
-    let dayString = '' + day;
-    if (day < 10) {
-      dayString = '0' + dayString;
-    }
-    return new Date(dateArray[2] + '-' + dateArray[1] + '-' + dayString);
+    let day = parseInt(dateArray[0]);
+    let month = parseInt(dateArray[1]) - 1;
+    let year = parseInt(dateArray[2]);
+    return new Date(year, month, day, 0, 0, 0, 0);
   }
 
   renderCurrency() {
