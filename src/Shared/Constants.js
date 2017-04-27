@@ -1,6 +1,7 @@
 /* @flow */
 
-export const redirectURI = 'exp://k4-v34.sevcijar.expenses-manager-app.exp.direct/+/redirect';
+// export const redirectURI = 'exp://k4-v34.sevcijar.expenses-manager-app.exp.direct/+/redirect';//development
+export const redirectURI = 'https://exp.host/@sevcijar/expenses-manager-app/+/redirect';//production
 // export const redirectURI = 'exp://k4-v34.sevcijar.expenses-manager-app.exp.direct:80';
 
 // CS constants
