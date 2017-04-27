@@ -5,8 +5,7 @@ import DatePicker from 'react-native-datepicker';
 import { Ionicons } from '@exponent/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import type { Account } from '../DataSources/AccountsDS'
-import Calculator from '../Shared/Calculator/Calculator';
+import type { Account } from '../DataSources/AccountsDS';
 import AccountSelector from '../Shared/AccountSelector';
 import { Transfer } from '../Shared/Categories';
 import { saveTransferAsync } from '../DataSources/TransfersDS';
@@ -35,9 +34,6 @@ export default class NewTransfer extends Component {
       date: new Date(),
       padding: 0
     };
-    // this.handleDisplayChange = this.handleDisplayChange.bind(this);
-    // this.saveTransfer = this.saveTransfer.bind(this);
-    // this.parseDate = this.parseDate.bind(this);
   }
 
   componentWillMount() {
@@ -113,20 +109,12 @@ export default class NewTransfer extends Component {
     this.refs.scroll.scrollToFocusedInput(reactNode);
   }
 
-  // handleDisplayChange(toDisplay: string) {
-  //   this.setState({displayedAmount: toDisplay});
-  // }
-
   saveTransfer() {
     let toAmount = this.state.fromAmount;
     if (this.state.fromAccount.currency !== this.state.toAccount.currency) {
       toAmount = this.state.toAmount;
     }
     saveTransferAsync({
-      // fromAccountName: this.state.fromAccount.name,
-      // fromAccountNumber: this.state.fromAccount.number,
-      // toAccountName: this.state.toAccount.name,
-      // toAccountNumber: this.state.toAccount.number,
       fromAccountId: this.state.fromAccount._id,
       toAccountId: this.state.toAccount._id,
       fromAmount: this.state.fromAmount,
@@ -195,27 +183,6 @@ export default class NewTransfer extends Component {
     }
   }
 
-  // setAccount(selectedAccount: Account, isFromAccount: boolean) {
-  //   let fromAccount = this.state.fromAccount;
-  //   let toAccount = this.state.toAccount;
-  //   if (isFromAccount) {
-  //     if (selectedAccount._id === toAccount._id) {
-  //       console.log('same');
-  //       toAccount = fromAccount;
-  //     }
-  //     fromAccount = selectedAccount;
-  //   } else {
-  //     // console.log(selectedAccount);
-  //     // console.log(fromAccount);
-  //     if (selectedAccount._id === fromAccount._id) {
-  //       console.log('same');
-  //       fromAccount = toAccount;
-  //     }
-  //     toAccount = selectedAccount;
-  //   }
-  //   this.setState({fromAccount: fromAccount, toAccount: toAccount});
-  // }
-
   render() {
     let flexSize = {flex: 1};
     if (this.state.fromAccount
@@ -267,23 +234,9 @@ export default class NewTransfer extends Component {
               </View>
               {this.renderSecondAmountInput()}
             </View>
-            {/* <Note
-              // style={{paddingBottom: this.state.padding}}
-              onFocus={(event: Event) => {
-                this._scrollToInput(ReactNative.findNodeHandle(event.target));
-              }}
-              onChangeText={(text) => {this.setState({note: text})}}
-            /> */}
           </KeyboardAwareScrollView>
         </View>
         <FullWidthButton text='Uložit' onPress={this.handleOnPress.bind(this)} flexSize={1} />
-        {/* <View style={styles.calculatorView}>
-          <Calculator
-            initialNumber={0}
-            onDisplayChange={this.handleDisplayChange}
-            onConfirmButtonPressed={this.saveTransfer}
-            confirmButtonText='Uložit'  />
-        </View> */}
       </View>
     );
   }
@@ -296,21 +249,16 @@ const styles = StyleSheet.create({
     margin: 10
   },
   datePickerView: {
-    // flex: 1,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center'
   },
   accountsView: {
-    // flex: 2,
     height: 160,
     justifyContent: 'center',
     alignItems: 'center'
-    // flexDirection: 'row'
   },
   amountView: {
-    // flex: 1,
-    // flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -330,9 +278,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginLeft: 10
   },
-  // calculatorView: {
-  //   flex: 5
-  // },
   accountSelector: {
     flex: 1,
     width: 330

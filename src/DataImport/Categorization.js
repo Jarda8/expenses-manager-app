@@ -14,7 +14,6 @@ export default class Categorization {
         },
         body: JSON.stringify(transactions)
       });
-      console.log(response);
       let responseJson = await response.json();
       return responseJson;
     } catch(error) {

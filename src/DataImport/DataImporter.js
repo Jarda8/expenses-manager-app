@@ -32,11 +32,7 @@ export default class DataImporter {
             case 'Česká spořitelna':
             try {
               let transactions = await CSAPIClient.fetchTransactions(fromDate, toDate, account);
-              // .then((transactions) => {
               await this.processTransactions(transactions, account._id, toDate, accounts);
-              // }).catch((e) => {
-                // Alert.alert('Při stahování transakcí se vyskytla neznámá chyba. Opakujte prosím později.');
-              // });
             } catch (e) {
               Alert.alert('Vyskytla se neznámá chyba. Opakujte prosím později.');
             }
@@ -58,7 +54,6 @@ export default class DataImporter {
     let nonTransferTransactions = await this.processTransfers(transactions, accounts);
     if (nonTransferTransactions.length > 0) {
       let categories = await Categorization.categorizeTransactions(nonTransferTransactions);
-      // .then(async (categories) => {
       for (var i = 0; i < nonTransferTransactions.length; i++) {
         nonTransferTransactions[i].category = categories[i];
       }
@@ -94,8 +89,6 @@ export default class DataImporter {
   static async processTransfer(transaction: Transaction, account: Account, accountParty: Account, nonTransferTransactions: Array<Transaction>) {
     let pendingTransfers = await getPendingTransfersAsync();
     let pendingTransfer = pendingTransfers.find((transfer) => {
-      // Pokud bude několik pending transfers mezi dvěma stejnými účty, není zaručeno, že se vybere ten správný. Momentálně se bere první.
-      // Můžu porovnávat booking date?
       if (transaction.amount > 0) {
         return (transfer.toAccountId === account._id
         && transfer.fromAccountId === accountParty._id)
@@ -135,10 +128,6 @@ export default class DataImporter {
       if (accountParty.connected) {
         await saveTransferAsync(
           {
-            // fromAccountName: fromAccount.name,
-            // fromAccountNumber: fromAccount.number,
-            // toAccountName: toAccount.name,
-            // toAccountNumber: toAccount.number,
             fromAccountId: fromAccount._id,
             toAccountId: toAccount._id,
             fromAmount: fromAmount,
@@ -154,10 +143,6 @@ export default class DataImporter {
         if (fromAccount.currency === toAccount.currency) {
           await saveTransferAsync(
             {
-              // fromAccountName: fromAccount.name,
-              // fromAccountNumber: fromAccount.number,
-              // toAccountName: toAccount.name,
-              // toAccountNumber: toAccount.number,
               fromAccountId: fromAccount._id,
               toAccountId: toAccount._id,
               fromAmount: fromAmount,
@@ -170,7 +155,6 @@ export default class DataImporter {
             }
           );
         } else {
-          // TODO: Pokud není protistrana připojena a je v jiné měně, nevím, kolik se má přičíst/ odečíst. Uloží se jako transakce. Uživatel si ji pak může změnit na převod.
           nonTransferTransactions.push(transaction);
         }
       }

@@ -5,32 +5,9 @@ import { csApiKey, csClientId, csClientSecret, csProfileURI, csAccountsURI, csTo
 
 export default class CSAPIClient {
 
-  // static async fetchProfileInfo(accessToken: string) {
-  //   try {
-  //     let response = await fetch(csProfileURI, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'WEB-API-key': csApiKey,
-  //         'Authorization': accessToken
-  //       }
-  //     });
-  //     let responseJson = await response.json();
-  //     // Check for access token validity error. If there is one, refresh token.
-  //     // Do something with the profile info data.
-  //   } catch(error) {
-  //     console.log('fetchProfileInfo error:');
-  //     console.log(error);
-  //   }
-  // }
-
   static async fetchAccount(name: string, number: string, accessToken: string, refreshToken: string) {
-    // console.log('fetchAccount called');
     let accounts = await this.fetchAccounts(accessToken, refreshToken);
-    // console.log('accounts:');
-    // console.log(accounts);
     let account = accounts.find(acc => {
-      // console.log('account number: ' + acc.accountno.number);
       return acc.accountno.number === number;
     });
     if (account === undefined) {
@@ -40,7 +17,6 @@ export default class CSAPIClient {
   }
 
   static async fetchAccounts(accessToken: string, refreshToken: string) {
-    // console.log('fetchAccounts called');
     try {
       let response;
       while (true) {
@@ -52,12 +28,8 @@ export default class CSAPIClient {
             'Authorization': accessToken
           }
         });
-        // console.log('fetchAccounts response:');
-        // console.log(response);
         let status = await this.resolveErrors(response, null);
-        // console.log('status: ' + status.status);
         if (status.status === 'OK') {
-          // console.log('status OK');
           break;
         } else {
           throw 'Unhandled error: ' + status.status;
@@ -103,10 +75,7 @@ export default class CSAPIClient {
       }
       let responseJson = await response.json();
       let newAccessToken = responseJson.token_type + ' ' + responseJson.access_token;
-      // console.log('newAccessToken v refreshAccessToken:');
-      // console.log(newAccessToken);
       updateAccountByIdAsync(accountId, {accessToken: newAccessToken});
-      // console.log('after updateAccountByIdAsync');
       return newAccessToken;
     } catch(error) {
       console.log('refreshAccessToken error:');
@@ -118,13 +87,10 @@ export default class CSAPIClient {
     let dateString = date.toISOString();
     let [dateWithoutMilis, ] = dateString.split('.');
     let result = dateWithoutMilis + 'Z';
-    // console.log(result);
     return result;
   }
 
   static async requestFetchTransactions(fromDate: Date, toDate: Date, iban: string, accessToken: string) {
-    // iban = 'CZ5508000000000379554193'; // sandbox account
-    // console.log('iban: ' + iban + ' fromDate: ' + fromDate + ' toDate: ' + toDate + ' accessToken: ' + accessToken + ' api key: ' + csApiKey);
     let formattedFromDate = this.formatDate(fromDate);
     let formattedToDate = this.formatDate(toDate);
     try {
@@ -138,8 +104,6 @@ export default class CSAPIClient {
           // 'Authorization': 'Bearer demo_001'
         }
       });
-      console.log('requestFetchTransactions response:');
-      console.log(response);
       return response;
     } catch (error) {
       console.log('requestFetchTransactions error:');
@@ -215,9 +179,7 @@ export default class CSAPIClient {
       let responseJson = await response.json();
       let errors = responseJson.errors;
       for (error of errors) {
-        console.log('error: ' + error.error);
         if ((error.error === 'TOKEN_EXPIRED' || error.error.includes('invalid_token')) && account !== undefined) {
-          // console.log('expired/ invalid token');
           let newAccessToken = await this.refreshAccessToken(account.refreshToken, account._id);
           status = {status: 'TOKEN_EXPIRED', data: newAccessToken};
         } else {
