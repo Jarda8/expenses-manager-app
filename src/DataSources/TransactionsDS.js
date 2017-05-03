@@ -34,10 +34,7 @@ export type Transaction = {
 }
 
 async function saveTransactionAsync(transaction: Transaction, callback: any) {
-  console.log('saving transaction:');
-  console.log(transaction);
   return new Promise((resolve,reject) => {
-    console.log('transaction saved');
     DB.transactions.add(transaction, result => {
       TRANSACTIONS_DS_EVENT_EMITTER.emit('transactionsChanged', {});
       getAccountAsync(transaction.accountId, account => {
@@ -128,14 +125,10 @@ async function convertTransactionsToCrowns(transactions: Array<Transaction>) {
 }
 
 async function getSumOfTransactionsAsync(category: string, fromDate: Date, toDate: Date, callback: (p: {name: string, amount: number}) => any): Object {
-  // console.log('getSumOfTransactionsAsync called');
   return new Promise((resolve,reject) => {
     getTransactionsAsync(category, fromDate, toDate, transactions => {
-      // console.log('getTransactionsAsync callback');
       addTransactions(category, transactions).then((total) => {
-        // console.log('addTransactions callback');
         if (callback) {
-          // console.log('getSumOfTransactionsAsync callback');
           callback(total);
         } else {
           resolve(total);
