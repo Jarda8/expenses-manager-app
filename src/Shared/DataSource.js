@@ -1,9 +1,6 @@
 /* @flow */
 var periods = new Map();
-// periods.set('year', 'year');
 periods.set('month', 'month');
-// periods.set('week', 'week');
-// periods.set('custom', 'custom');
 
 export type Bank = {
   name: string,

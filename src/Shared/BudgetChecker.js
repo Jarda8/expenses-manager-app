@@ -70,14 +70,12 @@ export default class BudgetChecker {
       }
     }
     if (alertTexts.length === 1) {
-      // Alert.alert(alertTexts[0].title, alertTexts[0].body);
       return alertTexts[0];
     } else if (alertTexts.length > 1) {
       let multiText = '';
       for (text of alertTexts) {
         multiText += text.title + '\n' + text.body + '\n';
       }
-      // Alert.alert('Překročeny rozpočty!', multiText);
       return {title: 'Překročeny rozpočty!', body: multiText};
     }
   }
@@ -89,28 +87,7 @@ export default class BudgetChecker {
       title = 'Překročen rozpočet! (' + ExpensesCategories[category] + ')'
       body = 'Vaše výdaje: ' + total + '\nRozpočet: ' + threshold;
     }
-    // Alert.alert(title, body);
     return {title: title, body: body};
   }
-
-  // static presentNotification(category: string, overLimit: boolean, total: number, threshold: number) {
-  //   let title = 'Překročena hranice výdajů! (' + ExpensesCategories[category] + ')'
-  //   let body = 'Vaše výdaje: ' + total + '\nHranice: ' + threshold;
-  //   if (overLimit === true) {
-  //     title = 'Překročen rozpočet! (' + ExpensesCategories[category] + ')'
-  //     body = 'Vaše výdaje: ' + total + '\nRozpočet: ' + threshold;
-  //   }
-  //   Notifications.presentLocalNotificationAsync({
-  //     title: title,
-  //     body: body,
-  //     data: {},
-  //     ios: {
-  //       sound: true,
-  //     },
-  //     android: {
-  //       vibrate: true,
-  //     }
-  //   });
-  // }
 
 }

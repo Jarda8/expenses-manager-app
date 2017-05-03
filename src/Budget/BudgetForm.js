@@ -88,7 +88,6 @@ export default class BudgetForm extends Component {
   }
 
   handleConfirmButtonPressed(budget : number) {
-    // TODO blokovat záporný result -> upozornit uživatele a jinak nic
     if (this.props.budget === undefined) {
       this.saveNewBudget(budget);
     } else {

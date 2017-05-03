@@ -139,10 +139,6 @@ export default class Calculator extends Component {
   render() {
     return (
       <View style={styles.calculator}>
-        {/* <View style={styles.display}>
-          <Text>{this.state.display}</Text>
-        </View> */}
-        {/* <View style={styles.keyboard}> */}
         <View style={styles.keyRow}>
           <OperatorKey symbol='CA' onKeyPress={this.handleClearAll} />
           <IconKey onKeyPress={this.handleBackspace}>
@@ -181,7 +177,6 @@ export default class Calculator extends Component {
             <Text style={styles.buttonText}>{this.props.confirmButtonText}</Text>
           </TouchableHighlight>
         </View>
-        {/* </View> */}
       </View>
     );
   }
@@ -191,12 +186,6 @@ const styles = StyleSheet.create({
   calculator: {
     flex: 1
   },
-  // display: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   backgroundColor: 'powderblue'
-  // },
   keyRow: {
     flex: 1,
     flexDirection: 'row'
@@ -212,7 +201,4 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 30
   }
-  // keyboard: {
-  //   flex: 1
-  // }
 });

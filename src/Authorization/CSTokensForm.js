@@ -27,14 +27,11 @@ export default class CSTokensForm extends Component {
     }
 
     login = async () => {
-      // console.log('Login link: ' + csLoginLink);
       Exponent.WebBrowser.openBrowserAsync(csLoginLink);
     }
 
     handleRedirect = async (event) => {
-      // console.log(event.url);
       if (!event.url.includes('+/redirect')) {
-        // console.log('+/redirect missing');
         return;
       }
       const [, queryString] = event.url.split('?');
@@ -48,7 +45,6 @@ export default class CSTokensForm extends Component {
     }
 
     async getTokens(code: string) {
-      // console.log("getTokens code: " + code);
       let requestBody = Object.assign({'code': code}, csTokensRequestBody);
       try {
           let response = await fetch(csTokenURI, {
@@ -63,8 +59,6 @@ export default class CSTokensForm extends Component {
           ).join('&')
         });
         let responseJson = await response.json();
-        // console.log("getTokens responseJson:");
-        // console.log(responseJson);
         let accessToken = responseJson.token_type + ' ' + responseJson.access_token;
         let refreshToken = responseJson.refresh_token;
         if (this.props.route.params.accountId) {
@@ -79,15 +73,12 @@ export default class CSTokensForm extends Component {
     }
 
     saveNewAccount(accessToken: string, refreshToken: string) {
-      // console.log('saveNewAccount accessToken: ' + accessToken + ' refreshToken: ' + refreshToken);
       CSAPIClient.fetchAccount(
         this.props.route.params.accountName,
         this.props.route.params.accountNumber,
         accessToken,
         refreshToken
       ).then(acc => {
-        // console.log('saveNewAccount fetchAccount.then acc:');
-        // console.log(acc);
         if (acc === null) {
           Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Zkontrolujte si prosím zadané číslo účtu.');
           this.props.navigator.pop();
@@ -97,10 +88,8 @@ export default class CSTokensForm extends Component {
           saveAccountAsync(acc);
           this.props.navigator.popToTop();
           Exponent.WebBrowser.dismissBrowser();
-          // console.log('account successfully imported');
         }
       }).catch(() => {
-        // console.log("saveNewAccount error");
         Alert.alert('Import účtu se nezdařil!', 'Při importu dat z vaší banky došlo k chybě. Opakujte prosím pokus později.');
         this.props.navigator.pop();
         Exponent.WebBrowser.dismissBrowser();

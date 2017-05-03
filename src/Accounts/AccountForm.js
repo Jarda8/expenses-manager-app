@@ -111,14 +111,6 @@ export default class AccountForm extends Component {
     this.props.navigator.pop();
   }
 
-  // generateBanksItems() {
-  //   let banksArray =  banks.map(
-  //     (bank) => <Picker.Item key={bank.name} label={bank.name} value={bank.name} />
-  //   );
-  //   banksArray.push(<Picker.Item key={'other'} label={'jiná - bez automatické synchronizace'} value={'other'} />)
-  //   return banksArray;
-  // }
-
   setAccountNumber(number: string) {
     let pattern = /^[0-9]*$/;
     if (pattern.test(number)) {
@@ -136,7 +128,6 @@ export default class AccountForm extends Component {
         <Text style={styles.label}>Číslo: </Text>
       </View>
       <TextInput
-        // defaultValue={'' + this.state.number}
         value={'' + this.state.number}
         style={styles.textInput}
         keyboardType={'numeric'}

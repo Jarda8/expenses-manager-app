@@ -5,7 +5,6 @@ import { Entypo } from '@exponent/vector-icons';
 import { Router } from '../../main';
 
 import DataImporter from '../DataImport/DataImporter';
-// import { wipeAllTransactions } from '../DataSources/TransactionsDS'
 
 export class AddTransactionControls extends Component {
 
@@ -19,8 +18,6 @@ export class AddTransactionControls extends Component {
   async fetchTransactions() {
     this.setState({syncing: true});
     DataImporter.fetchTransactions(() => {this.setState({syncing: false})});
-
-    // wipeAllTransactions();
   }
 
   render() {
@@ -30,10 +27,7 @@ export class AddTransactionControls extends Component {
           <Entypo name="squared-minus" size={64} color="#145672" />
         </TouchableHighlight>
         {(() => {if (this.state.syncing) {
-          return (<ActivityIndicator
-            // style={[styles.centering, {height: 80}]}
-            size="large"
-                  />)
+          return (<ActivityIndicator size="large" />)
         } else {
           return (<TouchableHighlight style={styles.syncButton}  onPress={this.fetchTransactions.bind(this)}>
             <Entypo name="cycle" size={52} color="steelblue" />
@@ -53,11 +47,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-around'
   },
   syncButton: {
     backgroundColor: '#145672',
-    borderRadius: 6,
-    // borderWidth: 2
+    borderRadius: 6
   }
 });

@@ -25,7 +25,6 @@ export default class DataImporter {
         if (fromDate.getFullYear() === toDate.getFullYear()
         && fromDate.getMonth() === toDate.getMonth()
         && fromDate.getDate() === toDate.getDate()) {
-          // Alert.alert('Transakce lze stahovat pouze jednou za den.');
           // do nothing
         } else {
           switch (account.bankName) {

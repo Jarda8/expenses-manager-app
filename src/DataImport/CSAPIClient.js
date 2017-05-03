@@ -100,8 +100,8 @@ export default class CSAPIClient {
           'Accept': 'application/json',
           'WEB-API-key': csApiKey,
           'Authorization': accessToken
-          // 'WEB-API-key': '35bd5a35-5909-460e-b3c2-20073d9c4c2e',
-          // 'Authorization': 'Bearer demo_001'
+          // 'WEB-API-key': '35bd5a35-5909-460e-b3c2-20073d9c4c2e', //sandbox
+          // 'Authorization': 'Bearer demo_001' //sandbox
         }
       });
       return response;

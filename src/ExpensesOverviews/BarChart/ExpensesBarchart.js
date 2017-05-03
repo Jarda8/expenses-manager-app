@@ -119,11 +119,6 @@ export class ExpensesBarchart extends Component {
     },
     color: '#2980B9',
     gutter: 20,
-    // animate: {
-    //   type: 'oneByOne',
-    //   duration: 200,
-    //   fillTransition: 3
-    // },
     axisX: {
       showAxis: true,
       showLines: true,

@@ -1,5 +1,4 @@
 /* @flow */
-
 function objectsAreSame(x: Object, y: Object): boolean {
   let objectsAreSame = true;
   let xKeys = Object.keys(x).sort();

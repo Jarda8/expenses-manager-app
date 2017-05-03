@@ -10,7 +10,6 @@ import { getAccountAsync } from '../../DataSources/AccountsDS';
 import { deleteTransactionAsync } from '../../DataSources/TransactionsDS';
 import { Router } from '../../../main';
 import { ExpensesCategories, IncomeCategories } from '../../Shared/Categories';
-// import SaveButton from '../../Shared/SaveButton';
 import DeleteButton from '../../Shared/DeleteButton';
 import ChangeToTransferButton from './ChangeToTransferButton';
 import TransactionModificator from './TransactionModificator';
@@ -25,7 +24,6 @@ export default class EditTransaction extends Component {
       title: 'Úpravy transakce',
       renderRight: (route) =>
         <View style={styles.navbarMenu}>
-          {/* <SaveButton onPress={route.params.update} /> */}
           <DeleteButton onPress={route.params.delete} />
           <ChangeToTransferButton onPress={route.params.changeToTransfer} />
         </View>
@@ -50,7 +48,6 @@ export default class EditTransaction extends Component {
     this.handleDisplayChange = this.handleDisplayChange.bind(this);
     this.handleConfirmButtonPressed = this.handleConfirmButtonPressed.bind(this);
     this.updateThisTransactionWithCategory = this.updateThisTransactionWithCategory.bind(this);
-    // this.updateThisTransaction = this.updateThisTransaction.bind(this);
     this.deleteThisTransaction = this.deleteThisTransaction.bind(this);
     this.changeToTransfer = this.changeToTransfer.bind(this);
     this.parseDate = this.parseDate.bind(this);
@@ -66,7 +63,6 @@ export default class EditTransaction extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.props.navigator.updateCurrentRouteParams({
-        // update: this.updateThisTransaction,
         delete: this.deleteThisTransaction,
         changeToTransfer: this.changeToTransfer
       })
@@ -76,11 +72,6 @@ export default class EditTransaction extends Component {
   handleDisplayChange(toDisplay: string) {
     this.setState({displayedAmount: toDisplay});
   }
-
-  // updateThisTransaction() {
-  //   this.updateThisTransactionWithCategory(this.props.route.params.transaction.category);
-  // Vyřešit problém s updatováním finalAmount. Správnou hodnotu zná, resp. musí spočítat, Calculator.
-  // }
 
   deleteThisTransaction() {
     deleteTransactionAsync(this.props.route.params.transaction);
@@ -133,16 +124,6 @@ export default class EditTransaction extends Component {
           }));
     }
   }
-
-  // parseDate(date: string): Date {
-  //   let dateArray = date.split('.');
-  //   let day = parseInt(dateArray[0]) + 1;
-  //   let dayString = '' + day;
-  //   if (day < 10) {
-  //     dayString = '0' + dayString;
-  //   }
-  //   return new Date(dateArray[2] + '-' + dateArray[1] + '-' + dayString);
-  // }
 
   parseDate(date: string): Date {
     let dateArray = date.split('.');

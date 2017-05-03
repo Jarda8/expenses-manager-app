@@ -3,10 +3,6 @@ import { getAccountAsync, updateAccountAsync } from './AccountsDS'
 
 export type Transfer = {
   _id: number,
-  // fromAccountName: string,
-  // fromAccountNumber: string,
-  // toAccountName: string,
-  // toAccountNumber: string,
   fromAccountId: number,
   toAccountId: number,
   fromAmount: number,
@@ -92,7 +88,6 @@ async function getTransfersAsync() {
       resolve(resultArray);
     });
   });
-  // DB.transfers.erase_db();
 }
 
 function deleteTransferAsync(transfer: Transfer) {

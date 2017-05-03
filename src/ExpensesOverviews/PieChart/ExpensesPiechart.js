@@ -76,11 +76,6 @@ const options = {
   r: 50,
   R: 120,
   legendPosition: 'topLeft',
-  // animate: {
-  //   type: 'oneByOne',
-  //   duration: 200,
-  //   fillTransition: 3
-  // },
   label: {
     fontFamily: 'Arial',
     fontSize: 12,

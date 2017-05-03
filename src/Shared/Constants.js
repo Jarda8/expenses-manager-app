@@ -25,7 +25,7 @@ export const csTokensRequestBody = {
   'grant_type': 'authorization_code'
 };
 
-// export const categorizeURI = 'http://10.0.3.2:8081/';
+// export const categorizeURI = 'http://10.0.3.2:8081/'; //development
 export const categorizeURI = 'https://sleepy-scrubland-37283.herokuapp.com/';
-// export const addCategorizationURI = 'http://10.0.3.2:8081/new-categorized-transaction';
+// export const addCategorizationURI = 'http://10.0.3.2:8081/new-categorized-transaction'; //development
 export const addCategorizationURI = 'https://sleepy-scrubland-37283.herokuapp.com/new-categorized-transaction';
